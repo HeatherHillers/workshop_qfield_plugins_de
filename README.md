@@ -1,65 +1,34 @@
-# workshop_qfield_plugins_de
-QField Plugin Workshop FOSSGIS 2026
+# QField Plugin Workshop : FOSSGIS 2026
 
-## About
 
-This repository provides comprehensive documentation and guidance for building QField plugins. The workshop materials are based on practical examples from the [qfield_vegetation_monitoring](https://github.com/HeatherHillers/qfield_vegetation_monitoring) repository.
+This workshop provides guidance to developers for building QField plugins. The workshop materials are based on practical examples from the [qfield_vegetation_monitoring](https://github.com/HeatherHillers/qfield_vegetation_monitoring) repository.  
 
-## Documentation
+Participants will learn:
 
-📚 **[View the Complete Wiki Guide](docs/README.md)**
+- how to deliver a basic project plugin
+- how to open your plugin when a feature is selected on the map
+- how to add a screen button to open and close the plugin
+- how to retrieve information from a selected feature
+- how to access a project layer
+- how to retrieve a feature from a layer
+- how to add, delete and update features
 
-The documentation covers everything you need to know to develop QField plugins:
+We will introduce the user briefly to the QML required to build the plugin.  The user will need further qml instruction to successfully continue.
 
-1. **[Introduction to QField Plugins](docs/01-introduction.md)** - Learn the basics of QField plugin development
-2. **[Setting Up Your Development Environment](docs/02-setup.md)** - Get your tools and environment ready
-3. **[Plugin Structure and Architecture](docs/03-plugin-structure.md)** - Understand how plugins are organized
-4. **[Building Your First Plugin](docs/04-first-plugin.md)** - Create your first working plugin
-5. **[Working with QField Forms](docs/05-qfield-forms.md)** - Design effective mobile data collection forms
-6. **[Data Collection and Validation](docs/06-data-collection.md)** - Implement robust data validation
-7. **[Testing and Debugging](docs/07-testing.md)** - Test and debug your plugins effectively
-8. **[Deployment and Distribution](docs/08-deployment.md)** - Package and distribute your plugins
-9. **[Real-World Example: Vegetation Monitoring](docs/09-vegetation-example.md)** - Complete practical implementation
+The Qt Academy is the best place we know to learn QML.  We would suggest the [Qt Academy Introduction to QML](https://www.qt.io/academy/course-catalog#introduction-to-qml) as a good starting point.
 
-## Quick Start
+## Laptop/User Setup
 
-1. Clone this repository
-2. Follow the [setup guide](docs/02-setup.md) to configure your environment
-3. Work through the [first plugin tutorial](docs/04-first-plugin.md)
-4. Study the [vegetation monitoring example](docs/09-vegetation-example.md)
-5. Explore the [qfield_vegetation_monitoring repository](https://github.com/HeatherHillers/qfield_vegetation_monitoring) for working code
+The following laptop setup is required for the workshop and must be installed before we start.
 
-## Workshop Format
+- QGIS 
+- QField Sync QGIS Plugin
+- QField executable installed on the laptop
+- Visual Studio Code or other comfortable programming IDE.
+- User should have a (free) account on qfield.cloud.
 
-This workshop is designed for FOSSGIS 2026 and provides:
+📚 **[Start Here](demo1/README.md)**
 
-- Step-by-step tutorials
-- Practical examples
-- Best practices
-- Real-world use cases
-- Hands-on exercises
-
-## Prerequisites
-
-- Basic knowledge of QGIS
-- Familiarity with Python programming
-- Understanding of GIS concepts
-- QField app installed on a mobile device (optional but recommended)
-
-## Resources
-
-- [QField Official Documentation](https://docs.qfield.org/)
-- [QGIS Plugin Development](https://docs.qgis.org/latest/en/docs/pyqgis_developer_cookbook/)
-- [Example Repository: qfield_vegetation_monitoring](https://github.com/HeatherHillers/qfield_vegetation_monitoring)
-
-## License
-
-This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](LICENSE) file for details.
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit issues or pull requests.
-
-## Contact
+### Contact
 
 For questions or feedback about the workshop, please open an issue in this repository.
