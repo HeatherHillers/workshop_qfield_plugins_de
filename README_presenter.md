@@ -2,6 +2,7 @@
 
 
 ## Slide: Post the required Laptop/User Setup as users come in. Also display the link to the repository.
+- Presenter: make sure you are logged in to qfield.cloud.
 
 ## Introduce Workshop/Hillers Briefly (5 min)
 Narrative: Content of README.md
