@@ -17,8 +17,15 @@
 2. Open the project in QGIS.
       - you should see just a single layer (plots) with a few points in it.  This is your selection layer.
       - Each of these points has a plot_id.  This is the field queried by the plugin.
-3. Sync the project to your QFieldCloud account using the QField Sync Plugin.
-4. Load the project in the Windows QField
+3. Special Note: Make sure the Editing Mode Configuration wont cause problems:
+    - Open the Project Properties
+    - Open the QField Tab.
+    - In the QFieldCloud Packaging tab, on the top right there is a config icon.  
+    - Click on it and select "prefer Offline layers".
+    - Select Offline editing as the Packaging Action for plots and any other layers.
+    - If you dont do this, you may get a Network error when you sync changes to the project in QField.  If you get such an error, selecting prefer Offline Layers and resyncing should solve the problem.
+4. Upload the project to QFieldCloud using the QField Sync Plugin.
+5. Load the project in the Windows QField
       - this project is formatted for an iPad screen, so you are better off using your desktop QField to show the project. Unless you have an iPad.
 
 # Lets look the Plugin Structure
@@ -29,6 +36,9 @@
     - all other qml is in the components subdirectory
     - this subdirectory will be added as an attachment directory in the project
 
+# Load the Plugin in QField.
+Lets see what it does before we look at the code.
+
 2. Copy the plugin files to ${ROOT}/qfield_project_demo_1
    - ${ROOT}/qfield_vegetation_monitoring/demo1_hello/demo1_hello.qml
    - ${ROOT}/qfield_vegetation_monitoring/demo1_hello/components
@@ -38,18 +48,37 @@
 3. Reload the Plugin in QGIS
 4. Resync the Plugin in QField Sync
 5. Synchronise your Plugin in QField
+   - you will probably get a network error the first time.
+   - if so, click on synchronise again.
+   - then return to the Project List and reopen the project.
+   - You should now see a dialog about enabling the plugin.  If not, the sync did not work.  If yes, click yes.
+
+## What's it do?
+- You should see a camara icon on the right, that wasnt there before.  Click it.
+- You will now see that the screen color changes and there is a title text.
+- Also, on the right the message icon has turned on.  That isn't an error.  The Plugin is printing some debug messages there for you to read.
+- click the camera again to turn the plugin off.  A couple more debug messages print. 
+- keep clicking.  It is oddly satisfying and good for your mental health.
+
+# Now let's take a closer look at the code and explain some QML.
+
+## [QML for demo1](qml_demo1.md)
+## Note: Make slides for this part
+
+
+
+
 
 ## Table of Contents
 
-1. [Introduction to QField Plugins](01-introduction.md)
-2. [Setting Up Your Development Environment](02-setup.md)
-3. [Plugin Structure and Architecture](03-plugin-structure.md)
-4. [Building Your First Plugin](04-first-plugin.md)
-5. [Working with QField Forms](05-qfield-forms.md)
-6. [Data Collection and Validation](06-data-collection.md)
-7. [Testing and Debugging](07-testing.md)
-8. [Deployment and Distribution](08-deployment.md)
-9. [Real-World Example: Vegetation Monitoring](09-vegetation-example.md)
+
+1. [Plugin Structure and Architecture](03-plugin-structure.md)
+2. [Building Your First Plugin](04-first-plugin.md)
+3. [Working with QField Forms](05-qfield-forms.md)
+4. [Data Collection and Validation](06-data-collection.md)
+5. [Testing and Debugging](07-testing.md)
+6. [Deployment and Distribution](08-deployment.md)
+7. [Real-World Example: Vegetation Monitoring](09-vegetation-example.md)
 
 
 ## Prerequisites
