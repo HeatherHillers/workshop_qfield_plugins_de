@@ -302,3 +302,10 @@ Like QfToolButton, I also would have the option to use a QfText here.  But I hav
 
 ### Other things to remember
 - **anchors**: pay attention to your anchors. Forgetting them or misconfiguring them causes a lot of errors.
+
+
+## Next Step
+
+Wir sind jetzt bereit für [Demo2: Search Bar](../docs/demo2/README.md)
+
+

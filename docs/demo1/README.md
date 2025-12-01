@@ -54,6 +54,7 @@ Lets see what it does before we look at the code.
    - You should now see a dialog about enabling the plugin.  If not, the sync did not work.  If yes, click yes.
 
 ## What's it do?
+## Note: Make slides for this part
 - You should see a camara icon on the right, that wasnt there before.  Click it.
 - You will now see that the screen color changes and there is a title text.
 - Also, on the right the message icon has turned on.  That isn't an error.  The Plugin is printing some debug messages there for you to read.
@@ -63,80 +64,4 @@ Lets see what it does before we look at the code.
 # Now let's take a closer look at the code and explain some QML.
 
 ## [QML for demo1](qml_demo1.md)
-## Note: Make slides for this part
-
-
-
-
-
-## Table of Contents
-
-
-1. [Plugin Structure and Architecture](03-plugin-structure.md)
-2. [Building Your First Plugin](04-first-plugin.md)
-3. [Working with QField Forms](05-qfield-forms.md)
-4. [Data Collection and Validation](06-data-collection.md)
-5. [Testing and Debugging](07-testing.md)
-6. [Deployment and Distribution](08-deployment.md)
-7. [Real-World Example: Vegetation Monitoring](09-vegetation-example.md)
-
-
-## Prerequisites
-
-- Basic knowledge of QGIS
-- Familiarity with Python programming
-- Understanding of GIS concepts
-- QField app installed on a mobile device (optional but recommended)
-
-## Getting Started
-
-Begin with the [Introduction to QField Plugins](01-introduction.md) to understand the basics, then proceed through the guides in order.
-
-## Additional Resources
-
-- [QField Official Documentation](https://docs.qfield.org/)
-- [QGIS Plugin Development](https://docs.qgis.org/latest/en/docs/pyqgis_developer_cookbook/)
-- [Vegetation Monitoring Example Repository](https://github.com/HeatherHillers/qfield_vegetation_monitoring)
-
-## Workshop Materials
-
-The workshop is based on the demonstrations available in the [qfield_vegetation_monitoring](https://github.com/HeatherHillers/qfield_vegetation_monitoring) repository. Please refer to that repository for working examples and code samples.
-
-## Documentation
-
-
-
-The documentation covers everything you need to know to develop QField plugins:
-
-1. **[Introduction to QField Plugins](docs/01-introduction.md)** - Learn the basics of QField plugin development
-2. **[Setting Up Your Development Environment](docs/02-setup.md)** - Get your tools and environment ready
-3. **[Plugin Structure and Architecture](docs/03-plugin-structure.md)** - Understand how plugins are organized
-4. **[Building Your First Plugin](docs/04-first-plugin.md)** - Create your first working plugin
-5. **[Working with QField Forms](docs/05-qfield-forms.md)** - Design effective mobile data collection forms
-6. **[Data Collection and Validation](docs/06-data-collection.md)** - Implement robust data validation
-7. **[Testing and Debugging](docs/07-testing.md)** - Test and debug your plugins effectively
-8. **[Deployment and Distribution](docs/08-deployment.md)** - Package and distribute your plugins
-9. **[Real-World Example: Vegetation Monitoring](docs/09-vegetation-example.md)** - Complete practical implementation
-
-## Quick Start
-
-1. Clone this repository
-2. Follow the [setup guide](docs/02-setup.md) to configure your environment
-3. Work through the [first plugin tutorial](docs/04-first-plugin.md)
-4. Study the [vegetation monitoring example](docs/09-vegetation-example.md)
-5. Explore the [qfield_vegetation_monitoring repository](https://github.com/HeatherHillers/qfield_vegetation_monitoring) for working code
-
-
-## Prerequisites
-
-- Basic knowledge of QGIS
-- Understanding of GIS concepts
-- QField app installed on a mobile device (optional but recommended)
-
-## Resources
-
-- [QField Official Documentation](https://docs.qfield.org/)
-- [QGIS Plugin Development](https://docs.qgis.org/latest/en/docs/pyqgis_developer_cookbook/)
-- [Example Repository: qfield_vegetation_monitoring](https://github.com/HeatherHillers/qfield_vegetation_monitoring)
-
 
