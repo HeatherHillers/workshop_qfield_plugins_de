@@ -228,10 +228,11 @@ Lets look at that plugin code that is loaded by the pluginLoader.
 It is pretty simple.  Just a vanilla screen with a label, that expands to the screen.
 
 ```qml
+  
   /*
     This plugin component is just a rectangle.
     It's size is the full size of it's parent widget, which
-    is the map canvas.
+    is the pluginLoader in demo1_hello.
     The Rectangle contains a Text Component with a title string.
     */
  
@@ -249,12 +250,10 @@ import "qrc:/qml" as QFieldItems
 Rectangle {
     id: pluginFrame
     anchors.fill: parent
-    property color background_color: "#ffecd1"
-    property color text_color: "#6baa75"
-    color: background_color
+    color: PluginTheme.vanilla
     Text {
-        text: "Vegetation Monitoring: Plugin Component"
-        color: pluginFrame.text_color
+        text: "Demo 1 Vegetation Monitoring: Plugin Component"
+        color: PluginTheme.green
         font.pixelSize: 20
         horizontalAlignment: Text.AlignHCenter             
         anchors.centerIn: parent
@@ -282,14 +281,15 @@ QObject (C++ base class for all Qt objects)
 
 This looks a lot more familiar now that we have slogged through the main qml Item.  I'll just point out the main features.
 
-### Custom Properties (are just variables)
+### QML Global Themes
 
-We know about properties like id and anchors.  They belong to the Item class.  You can also define your own custom properties.  I have 2 in the Rectangle.  
+We have a color palette for our ui that we want to use consistently throughout the plugin.  These are defined in PluginTheme.qml
 
-    - property color background_color: "#ffecd1"
-    - property color text_color: "#6baa75"
+They are registered in the qmldir file.
 
-These are constants I use to consistently apply my colors in the child widgets.  I only use them once here, but in more complicated demos this will be more useful.
+They are then used universally in any file in the components directory, without having to explicitly import them.  
+in d1_plugin_component, you will see that the color of the Rectangle is set to PluginTheme.vanilla, and the color of the Text is set to PluginTheme.green.
+
 
 ### Text vs QfText
 

@@ -43,6 +43,8 @@ Lets see what it does before we look at the code.
    - ${ROOT}/qfield_vegetation_monitoring/demo1_hello/demo1_hello.qml
    - ${ROOT}/qfield_vegetation_monitoring/demo1_hello/components
    - ${ROOT}/qfield_vegetation_monitoring/demo1_hello/components/d1_plugin_component.qml
+   - ${ROOT}/qfield_vegetation_monitoring/demo1_hello/components/PluginTheme.qml
+   - ${ROOT}/qfield_vegetation_monitoring/demo1_hello/components/qmldir
 
 
 3. Reload the Plugin in QGIS
