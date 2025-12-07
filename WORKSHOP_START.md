@@ -35,6 +35,6 @@ Clone the plugin repositories
 4. Open up QGIS and QField and log in to your account at https://qfield.cloud
 
 
-## 📚 **[>> Ready? Start Here](demo1/DEMO1_INTRO.md)**
+## 📚 **[>> Ready? Start Here](docs/demo1/DEMO1_INTRO.md)**
 
 
