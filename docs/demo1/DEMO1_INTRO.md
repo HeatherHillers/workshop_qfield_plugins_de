@@ -1,5 +1,11 @@
 # Demonstration 1: Plugin Structure and Installation
 
+## What we will learn
+
+- how to deploy and update a project level plugin
+- the structure of a project level plugin
+- basic QML
+
 ## What does it do?
 
 This is a basic Hello World plugin.  
