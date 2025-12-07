@@ -27,8 +27,14 @@ The following laptop setup is required for the workshop and must be installed be
 - Visual Studio Code or other comfortable programming IDE.
 - User should have a (free) account on qfield.cloud.
 
-📚 **[Start Here](demo1/README.md)**
+Clone the plugin repositories 
+1. Create a root directory ${ROOT} on your local computer
+2. clone or download this repository http://github.com/HeatherHillers/workshop_qfield_plugins_de under ${ROOT}
+3. clone or download the qfield vegetation monitoring plugin repository from http://github.com/HeatherHillers/qfield_vegetation_monitoring under ${ROOT}
+4. Create the qfield project directory ${ROOT}/projects
+4. Open up QGIS and QField and log in to your account at https://qfield.cloud
 
-### Contact
 
-For questions or feedback about the workshop, please open an issue in this repository.
+## 📚 **[>> Ready? Start Here](demo1/DEMO1_INTRO.md)**
+
+
