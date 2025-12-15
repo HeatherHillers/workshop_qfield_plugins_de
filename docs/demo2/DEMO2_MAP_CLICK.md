@@ -1,6 +1,6 @@
 # Setting up Feature selection from the map canvas
 
-To set up feature selection from the map canvas, we have to register a QField pointHandler, much like a QgsMapTool in pyQGIS.  This is done in the main code file demo2_searchbar.qml.  
+To set up feature selection from the map canvas, we have to register a QField pointHandler, much like a QgsMapTool in pyQGIS.  This is done in the main code file demo2_selection.qml.  
 
 In doing this bit we are also going to learn:
 
@@ -16,13 +16,13 @@ In doing this bit we are also going to learn:
 - use a spatial query to find features on the plot layer that are inside the bounding box.
 - if a feature is found, activate the plugin and pass the feature's plot id to the plugin component.
 
-## 1. Retrieve the point handler
+## 1. Retrieve the point handler from the interface
 
 Retrieve and store a reference the the QField Interface's pointHandler as a class property.
 
 ```qml
 Item{
-
+    id: plugin
     property var pointHandler: iface.findItemByObjectName("pointHandler")
 
 }
@@ -39,7 +39,8 @@ The root Item is your plugin.  It's Component.onCompleted function fires when th
 
 ```qml
 Item{
-
+    id: plugin
+    property var pointHandler: iface.findItemByObjectName("pointHandler")
     Component.onCompleted{
         pointHandler.registerHandler("demo2_searchbar", my_callback);
     }
@@ -54,7 +55,8 @@ Use Component.onDestruction to define behavior on close.
 
 ```qml
 Item{
-
+    id: plugin
+    <...>
     Component.onDestruction{
         pointHandler.deregisterHandler("demo2_searchbar");
     }
@@ -67,14 +69,15 @@ Our callback function is written in Javascript.  Instead of using a function ref
 
 ```qml
 Item{
-
+    id: plugin
+    <...>
     Component.onCompleted{
         pointHandler.registerHandler("demo2_searchbar", my_callback);
     }
 }
 ```
 
-it is more common to see a Javascript arrow function syntax, as we will see in demo2_searchbar
+it is more common to see a Javascript arrow function syntax, as we will see in demo2_selection
 
 ```qml
 Item{
@@ -88,7 +91,7 @@ Item{
 }
 
 ```
-### The boolean return on your callback
+### Do not forget the boolean return on your callback
 The boolean return value from the pointHandler callback tells QField whether your handler consumed the event or not:
 
 return true - Event consumed
@@ -96,7 +99,8 @@ return true - Event consumed
 Your handler processed the click
 - QField should stop propagating the event to other handlers
 - Prevents default QField behavior for this click
-- return false or no return - Event not consumed
+
+return false or no return - Event not consumed
 
 - Your handler didn't process the click (or wants to pass it through)
 - QField continues propagating to other registered handlers
@@ -104,35 +108,38 @@ Your handler processed the click
 
 ## 5. Define the callback to get map coordinates from the user interaction
 
-### decide which interaction you want
+### Decide which interaction you want
 
-- "clicked" : Triggering on single click can cause trouble, because the Attribute Table opens on a single click, and you can have a conflict.  
-              - In QField for Windows, single clicks dont cause a problem for our plugin. 
-              - In QField for iOS, if you use a single click, the Attribute Table will be rendered on top of the plugin.  
-- "doubleClicked" : Triggering on double click is a great idea for our plugin.  We can allow the user to view and edit plot information 
-                     on a single click, and enter the plugin with a double click.
-                     - In QField for Windows (at the moment) the double click interaction doesn't register. 
-                     - In iOS, this works great.
-- "pressAndHold": This would theoretically be a nice mode for opening our plugin as well, but in practice it is a bad choice
-                    - In iOS, the context menu that opens on press blocks our plugin from opening on this interaction.
-                    - In Windows (at the moment), the press and hold interaction doesn't register.
+- "clicked" :   
+  Triggering on single click can cause conflict, because the Feature Drawer opens on a single click.  
+  - In QField for Windows, single click will block the Feature Drawer and replace it with our plugin.   
+  - In QField for iOS, if you use a single click, the Attribute Table will be rendered on top of the plugin.
+
+- "doubleClicked" :  
+  Triggering on double click will prevent conflict.  We can allow the Feature Drawer to open on a single click, and enter the plugin with a double click.  
+  - In QField for Windows (at the moment) the double click interaction doesn't register. 
+  - In iOS, this works great.
+- "pressAndHold":  
+   This would theoretically be a nice mode for opening our plugin as well, but in practice it is a bad choice
+  - In iOS, the context menu that opens on press blocks our plugin from opening on this interaction.
+  - In Windows, the press and hold interaction doesn't register.
 
 Does this mean that the boolean return isn't quite working as advertised?  Maybe.  There is also a priority set on point handler callbacks, which may influence the processing of the boolean return from the callback.
 
 To avoid conflicts with QField and ensure our plugin works in both environments, use clicked if we are in Windows, and doubleClicked if we are in iOS.
 
-#### dont forget your return
+### Dont forget your return
 
-- return true after handling your point, in order to block other handlers. like the QField Attribute Table, from firing.
+- return true after handling your point, in order to block other handlers like the QField Attribute Table from firing.
 - return false if you are ignoring the interaction, so that the next handler can pick it up.
 
 ```qml
 
 Item{
     Component.onCompleted{
-        pointHandler.registerHandler("demo2_searchbar", (point, type, interactionType) => {
+        pointHandler.registerHandler("demo2_selection", (point, type, interactionType) => {
             var shouldHandle = (Qt.platform.os === "windows" && interactionType === "clicked") ||
-                         (Qt.platform.os !== "windows" && interactionType === "doubleClicked")
+                               (Qt.platform.os !== "windows" && interactionType === "doubleClicked")
             if (shouldHandle) {
                 iface.logMessage("Platform " + Qt.platform.os)
                 iface.logMessage("Interaction " + interactionType)      
@@ -144,7 +151,7 @@ Item{
 }
 
 ```
-### get the pixel coordinates of the screen interaction
+### Get the pixel coordinates of the screen interaction
 
 ```qml
 
@@ -156,7 +163,8 @@ pointHandler.registerHandler("demo2_searchbar", (point, type, interactionType) =
     }
 });
 ```
-### convert them into map coordinates
+
+### Convert them into map coordinates
 ```qml
 
 pointHandler.registerHandler("demo2_searchbar", (point, type, interactionType) => {
@@ -194,7 +202,10 @@ pointHandler.registerHandler("demo2_searchbar", (point, type, interactionType) =
 
 ### Retrieve a feature from the plots layer with a LayerUtils feature iterator using a simple expression
 
-LayerUtils is imported from org.qfield.  We will query our plots layer for the feature with plot_id = 'b.1'.
+getFeatures is not yet an invokable qgis function.  Instead we can pass an expression to get a feature iterator from QField's LayerUtils class, which is imported from org.qfield.  
+
+We will query our plots layer for the feature with plot_id = 'b.1'.
+
 We will retrieve this feature and print its plot id.  (Not using our coordinates yet.)
 
 ```qml
@@ -252,9 +263,9 @@ The Loader class has the property "item", which contains the Item loaded by its 
 
 In our plugin component, we have defined a function setPlotId, which will receive a plot id and use it to populate the plugin's search bar and text box.
 
-Remember to close the iterator whether or not the feature is found!
+**Remember to close the iterator whether or not the feature is found!**
 
-Remember to return the boolean for the pointHandler. 
+**Remember to return the boolean for the pointHandler. **
 
 ```qml
     pointHandler.registerHandler("demo2_searchbar", (point, type, interactionType) => {
@@ -306,14 +317,8 @@ Item {
     // ...
   }  
 
-  // we kept the plugin button
-  QfToolButton {
-    // ...
-  }
 
   Component.onCompleted: {
-    // load the plugin button into the plugins toolbar
-    iface.addItemToPluginsToolbar(pluginButton)
  
     // Map Selection: 3. register the point handler and define its callback
     pointHandler.registerHandler("demo2_searchbar", (point, type, interactionType) => {
@@ -359,7 +364,7 @@ Item {
 In demo 1 I used iface.logMessage to print debug statements for the user to see.
 In demo 2 I have swapped them out with console.log statements.  These print to the terminal.  You can see them if you start qfield from a dos or bash shell, but they wont show up in the user logs.  This is generally nicer for the developer.
 
-That was a lot.  Ready to see the menu?
+That was a lot.  Lets take a look at how that plot id gets to the messageBox. This part is pretty easy.
 
-## 📚 **[Setting up a Searchable Menu](DEMO2_MENU.md)**
+## 📚 **[Handling the plot id in the Plugin Component](DEMO2_PLOTID.md)**
 ## 📚 **[<< Demo2 Introduction](DEMO2_INTRO.md)**
