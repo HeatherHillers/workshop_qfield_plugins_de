@@ -13,7 +13,7 @@ Participants will learn:
 - how to retrieve a feature from a layer
 - how to add, delete and update features
 
-We will introduce the user briefly to the QML required to build the plugin.  The user will need further qml instruction to successfully continue.
+We will introduce the user briefly to the QML required to build the plugin.  The user will need further QML instruction to successfully continue.
 
 The Qt Academy is the best place we know to learn QML.  We would suggest the [Qt Academy Introduction to QML](https://www.qt.io/academy/course-catalog#introduction-to-qml) as a good starting point.
 

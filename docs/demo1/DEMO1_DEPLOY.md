@@ -54,11 +54,23 @@ When you update the plugin, your users will use the Synchronise button to reciev
 
    ![alt text](img/demo1_sync.png)
 
-5. QField Sync should pick up the change and upload the new version of the file.
+5. QField Sync should pick up the change and upload the new version of the file.  
    ![alt text](img/demo1_upd.png)  
 
 6. Go to QField and use the Synchronise Button to update the project and its plugin.
    - If you do not see your change straight away it may be necessary to start QField again.
+
+## Delivering and Updating the demo1_hello Project in development
+
+If you try to use this protocol in your development process you will completely lose your mind.  Until you have a deliverable plugin, set it up as a local QField Project.  I am too embarassed to say how long slogged through the synchronising process before I got wise.
+
+1. Get your path to your desktop QField.  Mine is C:\Program Files\QField\usr\bin\qfield.exe, but yours may be different.
+2. QField develops fast.  Keep your QField updated from the releases site: https://github.com/opengisch/qfield/releases
+3. Run QField from the command line to get prints to the console.log and console error messages.  Call it with the path to your project.  No QField Sync Packaging is necessary. 
+```dos
+"C:\Program Files\QField\usr\bin\qfield.exe" C:\temp\qfield\demo1_hello\demo1_hello.qgs
+```
+4. When you update your code, just close QField and run the command again.
 
 ## 📚 **[>> Let's Look at the Plugin Structure](DEMO1_STRUCTURE.md)**
 ## 📚 **[<< Demo1 Introduction](DEMO1_INTRO.md)**
