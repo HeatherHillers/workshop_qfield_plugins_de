@@ -13,14 +13,15 @@ In demo2_selection.qml, our pointHandler sent the plot id to the plugin componen
 ```qml
 
 if (shouldHandle){
+    <...>
     if (it.hasNext()){
         const feature = it.next()
-          console.log(feature.id)
-          it.close()
-          pluginLoader.active = true
-          // pass the plot id to the plugin component
-          pluginLoader.item.setPlotId(feature.attribute("plot_id"))
-          return true
+        console.log(feature.id)
+        it.close()
+        pluginLoader.active = true
+        // pass the plot id to the plugin component
+        pluginLoader.item.plotId = feature.attribute("plot_id")
+        return true
     }
 }
 ```
@@ -32,14 +33,16 @@ the function setPlotId simply sets the text in the message box. Ba Da Bing.
 ```qml
   Rectantgle{
     id: pluginFrame
-    function setPlotId(plotId) {
-        messageBox.text = "Plot loaded: " + plotId
-        console.log("component loaded with plot ID:", plotId)
-    }
+
+    // Plot ID property - set from parent, propagates via bindings
+    property string plotId: ""
+
     Rectangle{
         id: messageBoxFrame
         Text{
             id: messageBox
+
+            text: "Plot loaded: " + plotId
         }
     }
   }

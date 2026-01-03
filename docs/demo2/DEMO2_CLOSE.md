@@ -60,7 +60,7 @@ This is equivalent to the pyQt
 
 Note here that the connection between slot and function follows a mandatory naming convention whereby if the signal name is closed, the slot name must be onClosed.  Hey. I don't make the rules.
 
-I could tell you about Layouts, but I think you will be very bored if I do.  So let's skip to the next demo and I'll show you how to add and update a feature.
+I could tell you about Layouts, but I think you will be very bored if I do.  So let's skip all the way to demonstration 4 and I'll show you how to add and update a feature.
 
-## 📚 **[Demonstration 3: Adding and Updating a Feature, and a cool Tab Widget.](../demo3/DEMO3_INTRO.md)**
+## 📚 **[Demonstration 4: Adding and Updating Features](../demo4/DEMO4_INTRO.md)**
 ## 📚 **[<< Demo2 Handling the Plot id](DEMO2_MAP_CLICK.md)**

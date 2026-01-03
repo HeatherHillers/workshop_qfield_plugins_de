@@ -4,9 +4,9 @@ To set up feature selection from the map canvas, we have to register a QField po
 
 In doing this bit we are also going to learn:
 
-- how to grab a layer from a project
-- how to grab a feature with an expression
-- how to grab an attribute from a feature
+- how to get a layer from a project
+- how to get a feature with an expression
+- how to get an attribute from a feature
 
 ## What are we doing?
 
@@ -42,14 +42,14 @@ Item{
     id: plugin
     property var pointHandler: iface.findItemByObjectName("pointHandler")
     Component.onCompleted{
-        pointHandler.registerHandler("demo2_searchbar", my_callback);
+        pointHandler.registerHandler("demo2_selection", my_callback);
     }
 }
 ```
 
 ## 3. When the plugin unloads (when your project closes), deregister your callback function!
 
-If you don't, your plugin is going to contaminate your other projects. 
+If you don't, your point handler is going to contaminate your other projects. 
 
 Use Component.onDestruction to define behavior on close.
 
@@ -58,7 +58,7 @@ Item{
     id: plugin
     <...>
     Component.onDestruction{
-        pointHandler.deregisterHandler("demo2_searchbar");
+        pointHandler.deregisterHandler("demo2_selection");
     }
 }
 ```
@@ -72,7 +72,7 @@ Item{
     id: plugin
     <...>
     Component.onCompleted{
-        pointHandler.registerHandler("demo2_searchbar", my_callback);
+        pointHandler.registerHandler("demo2_selection", my_callback);
     }
 }
 ```
@@ -83,7 +83,7 @@ it is more common to see a Javascript arrow function syntax, as we will see in d
 Item{
 
     Component.onCompleted{
-        pointHandler.registerHandler("demo2_searchbar", (point, type, interactionType)=>{
+        pointHandler.registerHandler("demo2_selection", (point, type, interactionType)=>{
             iface.logMessage("Interaction Type: " + interactionType)
             return true
         });
@@ -119,6 +119,7 @@ return false or no return - Event not consumed
   Triggering on double click will prevent conflict.  We can allow the Feature Drawer to open on a single click, and enter the plugin with a double click.  
   - In QField for Windows (at the moment) the double click interaction doesn't register. 
   - In iOS, this works great.
+
 - "pressAndHold":  
    This would theoretically be a nice mode for opening our plugin as well, but in practice it is a bad choice
   - In iOS, the context menu that opens on press blocks our plugin from opening on this interaction.
@@ -268,7 +269,7 @@ In our plugin component, we have defined a function setPlotId, which will receiv
 **Remember to return the boolean for the pointHandler. **
 
 ```qml
-    pointHandler.registerHandler("demo2_searchbar", (point, type, interactionType) => {
+    pointHandler.registerHandler("demo2_selection", (point, type, interactionType) => {
       // ...
       if (shouldHandle) {
         // ...
@@ -283,7 +284,7 @@ In our plugin component, we have defined a function setPlotId, which will receiv
           pluginLoader.active = true
           
           // pass the plot id to the plugin component
-          pluginLoader.item.setPlotId(feature.attribute("plot_id"))
+          pluginLoader.item.plotId = feature.attribute("plot_id")
           
           // block the interaction signal
           return true
@@ -296,7 +297,7 @@ In our plugin component, we have defined a function setPlotId, which will receiv
     });
 ```
 
-## The whole demo2_searchbar.qml
+## The whole demo2_selection.qml
 
 ```qml
  // imports
@@ -342,7 +343,7 @@ Item {
           it.close()
           pluginLoader.active = true
           // pass the plot id to the plugin component
-          pluginLoader.item.setPlotId(feature.attribute("plot_id"))
+          pluginLoader.item.plotId = feature.attribute("plot_id")
           return true
         }
         it.close();

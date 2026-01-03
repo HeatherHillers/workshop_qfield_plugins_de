@@ -2,15 +2,6 @@
 
 This is the main qml file, which loads and unloads the plugin code and it's toolbar buttons.
 
-## QML is not quite Qt
-
-QML is basically a transformation of the Qt .ui layout file into a programming language, with some javascript smooshed in to give extra functionality.  A QML app doesn't think of itself as a program.  It thinks of itself as a user interface that does stuff.  So if you start out as a programmer used to building QGIS plugins which are programs with user interfaces, this is going to be frustrating.  But imagine the xml in a ui file, and then imagine that it was transformed into a different syntax, and this qml file structure will start to make more sense.
-
-
-<div style="display: flex; gap: 20px;">
-<div style="flex: 1;">
-
-**QML Code**
 
 ```qml
 // <!--Imports...-->
@@ -56,59 +47,16 @@ Item {
 } 
 ```
 
-</div>
-<div style="flex: 1;">
+## QML is not quite Qt
 
-**Approximate Qt .ui (XML) equivalent**
+QML is basically a transformation of the XML formatted Qt .ui layout file into a programming language, with some javascript smooshed in to give extra functionality.  A QML app doesn't think of itself as a program.  It thinks of itself as a user interface that does stuff.  So if you start out as a programmer used to building QGIS plugins which are programs with user interfaces, this is going to be frustrating.  
 
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<ui version="4.0">
- <widget class="QWidget" name="plugin">
-  <property name="geometry">
-   <!-- geometry properties -->
-  </property>
-  <layout class="QVBoxLayout">
-   <item>
-    <widget class="QWidget" name="pluginLoader">
-     <property name="visible">
-      <bool>false</bool>
-     </property>
-     <!-- Dynamic loading needs code -->
-    </widget>
-   </item>
+What you can expect is:
 
-   <item>
-    <widget class="QPushButton" name="pluginButton">
-     <property name="text">
-      <string></string>
-     </property>
-     <property name="icon">
-      <iconset theme="camera">
-       <normaloff>
-         :/icons/ic_camera_photo_black_24dp
-       </normaloff>
-      </iconset>
-     </property>
-     <property name="styleSheet">
-      <string>
-        background-color: rgb(64, 64, 64); 
-        border-radius: 20px;
-      </string>
-     </property>
-    </widget>
-   </item>
-  </layout>
- </widget>
- <!-- No Component.onCompleted -->
- <!-- No onClicked logic -->
- <!-- Would need Python/C++ code -->
-</ui>
-```
-
-</div>
-</div>
-
+- A nested, layout based code structure. 
+- A lot of emphasis on style.
+- A need to pay more than usual attention to timing.
+- Moments of frustration.
 
 ## Connections: Property expressions vs signals and slots 
 
@@ -122,7 +70,6 @@ Rectangle {id: foo
 Rectangle {id: bar
       height: foo.height + 100}
 ```
-
 
 ## Classes in our demo
 
@@ -195,7 +142,7 @@ This Item is not in the Loader because it is the Item that controls the Loader.
 #### Properties
 
 - **round**: A property of QfToolButton.  Makes the button a circle.
-- **iconSource**: A property of QfToolButton.  Out of laziness, I used one of the predefined icons in the QField Theme Module.  When I make this productive for my biologists, I will have to swap out for my own icon because a camera icon makes no sense.  
+- **iconSource**: A property of QfToolButton.  Out of sheer laziness, I used one of the predefined icons in the QField Theme Module.  We're throwing this button out in the next demo anyway.  
 - **iconColor and bgcolor**: I have taken defined colors from the imported Theme module, which is a good idea, if you want your colors to match QField's colors. 
 - **onClicked** : Is a signal handler containing javascript.  When the button is clicked, it prints a message to the log (which is the QField log that the user sees) and it toggles the pluginLoader's boolean active property which triggers either a construction or destruction of the plugin Component (collection of Items in the component QML file)
 

@@ -25,10 +25,13 @@ This demonstration builds on Demo 1 by adding the ability to select a feature fr
 # Set it up
 
 1. Create a new project directory: ${ROOT}/qfield_project_demo_2 
-2. Copy the whole demo directory ${ROOT}/qfield_vegetation_plugin/demo2_selection ${ROOT}/qfield_project_demo_2
-3. Open the project in QGIS.  The project has not changed from demo 1.
-4. Upload the project to QFieldCloud using the QField Sync Plugin.
-5. Load the project in the Windows QField
+2. Copy the whole demo directory \${ROOT}/qfield_vegetation_plugin/demo2_selection ${ROOT}/qfield_project_demo_2
+3. Open the project in QGIS if you want, but you don't have to.  The project has not changed from demo 1.
+4. Run Qfield from the command line to open the project directly as a local project.
+```dos
+"C:\Program Files\QField\usr\bin\qfield.exe C:\temp\qfield\demo2_selection\demo2_selection.qgs
+```
+
 
 ## 📚 **[Setting up Selection from the Map](DEMO2_MAP_CLICK.md)**
 ## 📚 **[<< Demonstration 1](../demo1/DEMO1_INTRO.md)**

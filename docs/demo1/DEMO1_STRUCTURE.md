@@ -3,9 +3,9 @@ Open ${ROOT}\qfield_vegetation_monitoring in Visual Studio Code or your prefered
 
 ![alt text](img/demo1_struct.png)
 
-  - The main qml file is demo1_hello.qml. It must have same name as project and must be saved in the project directory with the project file
-  - all other qml files are saved in the components subdirectory
-  - this subdirectory must be added as an attachment directory in the project
+  - The main qml file is demo1_hello.qml. It must have same name as project and must be saved in the project directory with the project file.
+  - all other qml files are saved in the components subdirectory.
+  - this subdirectory must be added as an attachment directory in the project.
 
 ## Globally imported Classes are defined in qmldir
 
