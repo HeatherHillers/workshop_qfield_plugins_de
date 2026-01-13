@@ -1,4 +1,4 @@
-````markdown
+
 # Demonstration 2: Feature-Auswahl 
 
 Diese Demonstration baut auf Demo 1 auf, indem sie die Fähigkeit hinzufügt, ein Feature aus der Karte auszuwählen und Informationen aus diesem Feature abzurufen, um sie im Plugin zu verwenden.
@@ -38,5 +38,3 @@ Diese Demonstration baut auf Demo 1 auf, indem sie die Fähigkeit hinzufügt, ei
 ## 📚 **[<< Demonstration 1](../demo1/DEMO1_INTRO.md)**
 
 
-
-````
