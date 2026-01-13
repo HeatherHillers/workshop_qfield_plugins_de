@@ -1,4 +1,4 @@
-````markdown
+
 # d1_plugin_component.qml
 
 Das war viel Theorie, ich weiß. Aber ich denke, wir haben jetzt genug von der QML-Struktur behandelt, dass der Rest viel schneller gehen wird.  
@@ -53,4 +53,3 @@ Wir haben in [Plugin-Struktur](DEMO1_STRUCTURE.md) die Definition von PluginThem
 ## 📚 **[<< Hauptmodul](DEMO1_MAIN.md)**
 
 
-````
