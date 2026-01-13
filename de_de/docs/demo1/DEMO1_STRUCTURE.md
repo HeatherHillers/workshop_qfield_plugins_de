@@ -1,4 +1,4 @@
-````markdown
+
 # Plugin-Struktur
 Öffnen Sie ${ROOT}\qfield_vegetation_monitoring in Visual Studio Code oder Ihrer bevorzugten IDE und werfen Sie einen Blick auf das Layout:
 
@@ -38,4 +38,3 @@ QtObject {
 # 📚 **[>> Schauen wir uns das Hauptmodul an](DEMO1_MAIN.md)**
 ## 📚 **[<< Plugin-Bereitstellung](DEMO1_DEPLOY.md)**
 
-````
