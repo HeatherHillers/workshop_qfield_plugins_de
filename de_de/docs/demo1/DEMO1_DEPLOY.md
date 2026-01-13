@@ -1,4 +1,4 @@
-````markdown
+
 # Bereitstellung des demo1_hello Projekts in QField
 
 1. Kopieren Sie **\${ROOT}\qfield_vegetation_monitoring\demo1_hello** nach
@@ -75,4 +75,3 @@ Wenn Sie versuchen, dieses Protokoll in Ihrem Entwicklungsprozess zu verwenden, 
 
 ## 📚 **[>> Schauen wir uns die Plugin-Struktur an](DEMO1_STRUCTURE.md)**
 ## 📚 **[<< Demo1 Einführung](DEMO1_INTRO.md)**
-````
