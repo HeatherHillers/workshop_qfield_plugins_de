@@ -1,4 +1,4 @@
-````markdown
+
 # demo1_hello.qml
 
 Dies ist die Haupt-QML-Datei, die den Plugin-Code und seine Toolbar-Schaltflächen lädt und entlädt.
@@ -153,5 +153,3 @@ Dieses Item ist nicht im Loader, weil es das Item ist, das den Loader steuert.
 
 ## 📚 **[>> Schauen wir uns die Plugin-Component an](DEMO1_COMPONENT.md)**
 ## 📚 **[<< Plugin-Struktur](DEMO1_STRUCTURE.md)**
-
-````
