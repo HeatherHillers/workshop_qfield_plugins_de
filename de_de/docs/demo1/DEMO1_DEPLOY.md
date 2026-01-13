@@ -69,7 +69,7 @@ Wenn Sie versuchen, dieses Protokoll in Ihrem Entwicklungsprozess zu verwenden, 
 2. QField entwickelt sich schnell. Halten Sie Ihr QField von der Releases-Seite aktualisiert: https://github.com/opengisch/qfield/releases
 3. Führen Sie QField von der Befehlszeile aus, um Ausgaben auf console.log und console.error-Nachrichten zu erhalten. Rufen Sie es mit dem Pfad zu Ihrem Projekt auf. Keine QField Sync-Verpackung ist notwendig. 
 ```dos
-"C:\Program Files\QField\usr\bin\qfield.exe" C:\temp\qfield\demo1_hello\demo1_hello.qgs
+"C:\Program Files\QField\usr\bin\qfield.exe" %ROOT%\projects\demo1_hello\demo1_hello.qgs
 ```
 4. Wenn Sie Ihren Code aktualisieren, schließen Sie einfach QField und führen Sie den Befehl erneut aus.
 
