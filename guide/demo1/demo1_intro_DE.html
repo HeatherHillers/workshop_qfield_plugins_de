@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Demonstration 2: Feature-Auswahl</title>
+    <title>Demonstration 1: Plugin-Struktur und Installation</title>
     <style>
         * {
             margin: 0;
@@ -82,33 +82,6 @@
             display: block;
         }
         
-        code {
-            background: #f5f5f5;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-family: 'Courier New', monospace;
-            color: #d63384;
-            font-size: 0.95em;
-        }
-        
-        pre {
-            background: #2d2d2d;
-            color: #f8f8f2;
-            padding: 20px;
-            border-radius: 8px;
-            overflow-x: auto;
-            margin: 20px 0;
-            font-family: 'Courier New', monospace;
-            font-size: 0.95em;
-            line-height: 1.5;
-        }
-        
-        pre code {
-            background: none;
-            color: inherit;
-            padding: 0;
-        }
-        
         .nav-links {
             margin-top: 50px;
             padding-top: 30px;
@@ -133,36 +106,34 @@
 </head>
 <body>
     <div class="container">
-        <h1>Demonstration 2: Feature-Auswahl</h1>
-        
-        <p>Diese Demonstration baut auf Demo 1 auf, indem sie die Fähigkeit hinzufügt, ein Feature aus der Karte auszuwählen und Informationen aus diesem Feature abzurufen, um sie im Plugin zu verwenden.</p>
+        <h1>Demonstration 1: Plugin-Struktur und Installation</h1>
 
         <h2>Was wir lernen werden</h2>
         <ul>
-            <li>Wie man über die QField-Schnittstelle auf einen Projekt-Layer zugreift</li>
-            <li>Wie man Features aus einem Layer über die QField-Schnittstelle abfragt</li>
-            <li>Wie man Objekte vom Map-Canvas mit einem Point-Handler auswählt</li>
-            <li>Wie man ein Signal zum Schließen des Plugins sendet</li>
+            <li>wie man ein Projekt-Plugin bereitstellt und aktualisiert</li>
+            <li>die Struktur eines Projekt-Plugins</li>
+            <li>grundlegendes QML</li>
         </ul>
 
         <h2>Was macht es?</h2>
+        <p>Dies ist ein einfaches Hello World Plugin.</p>
         <ul>
-            <li>Es öffnet sich, wenn der Benutzer doppelklickt auf ein Plotfeld auf dem Map-Canvas.</li>
-            <li>Es zeigt die Plot-ID des ausgewählten Features im Textrahmen an.</li>
-            <li>Ein einzelner Klick auf den Punkt führt zum üblichen Attributtabellen-Verhalten. (Auf iOS. Dies ist in der Windows-ausführbaren Datei nicht möglich.)</li>
+            <li>Es wird durch Klicken auf das Kamerasymbol rechts auf dem Bildschirm geöffnet.</li>
+            <li>Es zeigt ein einfaches Rechteck mit einem grünen Titeltext an.</li>
+            <li>Es ist auf Projektebene installiert. Sie werden es nur sehen, wenn das entsprechende Projekt geöffnet ist.</li>
         </ul>
 
-        <img src="img/demo2_screen.png" alt="Plugin screen">
+        <img src="img/demo1_screen.png" alt="Demo 1 Screenshot">
 
-        <h2>Einrichtung</h2>
-        <ol>
-            <li>Führen Sie QField von der Befehlszeile aus, um das Projekt direkt als lokales Projekt zu öffnen.</li>
-        </ol>
-<pre><code>"C:\Program Files\QField\usr\bin\qfield.exe %ROOT%\demo2_selection.qgs</code></pre>
+        <ul>
+            <li>Es gibt auch Nachrichten an das Nachrichtenprotokoll aus, wenn es geöffnet und geschlossen wird.</li>
+        </ul>
+
+        <img src="img/demo1_log.png" alt="Demo 1 Log">
 
         <div class="nav-links">
-            <a href="DEMO2_MAP_CLICK.html">📚 Einrichtung der Auswahl von der Karte</a>
-            <a href="../demo1/DEMO1_INTRO.html">📚 &lt;&lt; Demonstration 1</a>
+            <a href="demo1_deploy_DE.html">📚 >> Bereitstellung des demo1_hello Projekts in QField</a>
+            <a href="../workshop_start_DE.md">📚 &lt;&lt; Workshop-Einführung</a>
         </div>
     </div>
 </body>

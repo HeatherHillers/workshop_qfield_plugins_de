@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Demonstration 1: Plugin-Struktur und Installation</title>
+    <title>Erweiterung der Plugin-Component zur Verwendung des ausgewählten Plots</title>
     <style>
         * {
             margin: 0;
@@ -73,13 +73,31 @@
             font-size: 1.5em;
         }
         
-        img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        code {
+            background: #f5f5f5;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #d63384;
+            font-size: 0.95em;
+        }
+        
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
             margin: 20px 0;
-            display: block;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+        
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
         }
         
         .nav-links {
@@ -106,34 +124,54 @@
 </head>
 <body>
     <div class="container">
-        <h1>Demonstration 1: Plugin-Struktur und Installation</h1>
+        <h1>Erweiterung der Plugin-Component zur Verwendung des ausgewählten Plots</h1>
+        
+        <p>Dieser Teil ist fast pythonisch einfach.</p>
 
-        <h2>Was wir lernen werden</h2>
-        <ul>
-            <li>wie man ein Projekt-Plugin bereitstellt und aktualisiert</li>
-            <li>die Struktur eines Projekt-Plugins</li>
-            <li>grundlegendes QML</li>
-        </ul>
-
-        <h2>Was macht es?</h2>
-        <p>Dies ist ein einfaches Hello World Plugin.</p>
-        <ul>
-            <li>Es wird durch Klicken auf das Kamerasymbol rechts auf dem Bildschirm geöffnet.</li>
-            <li>Es zeigt ein einfaches Rechteck mit einem grünen Titeltext an.</li>
-            <li>Es ist auf Projektebene installiert. Sie werden es nur sehen, wenn das entsprechende Projekt geöffnet ist.</li>
-        </ul>
-
-        <img src="img/demo1_screen.png" alt="Demo 1 Screenshot">
+        <h2>Senden der Plot-ID an die Component</h2>
+        <p>In demo2_selection.qml hat unser pointHandler die Plot-ID an die Plugin-Component gesendet, indem er sie an die setPlotId-Funktion übergeben hat.</p>
 
         <ul>
-            <li>Es gibt auch Nachrichten an das Nachrichtenprotokoll aus, wenn es geöffnet und geschlossen wird.</li>
+            <li>Wir haben den Plot-ID-Wert mit der QgsFeature invokable attribute-Funktion erhalten</li>
+            <li>Die item-Property des pluginLoaders enthält das Root-Element der Plugin-Component, in diesem Fall d2_plugin_component.pluginFrame</li>
+            <li>setPlotId ist eine Funktion, die zu pluginFrame hinzugefügt wurde.</li>
         </ul>
 
-        <img src="img/demo1_log.png" alt="Demo 1 Log">
+<pre><code>if (shouldHandle){
+    &lt;...&gt;
+    if (it.hasNext()){
+        const feature = it.next()
+        iface.logMessage(feature.id)
+        it.close()
+        pluginLoader.active = true
+        // Übergeben Sie die Plot-ID an die Plugin-Component
+        pluginLoader.item.plotId = feature.attribute("plot_id")
+        return true
+    }
+}</code></pre>
+
+        <h2>Handhabung der Plot-ID in demo2_plugin_component</h2>
+        <p>Die Funktion setPlotId setzt einfach den Text in der MessageBox. Ba Da Bing.</p>
+
+<pre><code>  Rectantgle{
+    id: pluginFrame
+
+    // Plot ID Property - von Parent gesetzt, propagiert über Bindungen
+    property string plotId: ""
+
+    Rectangle{
+        id: messageBoxFrame
+        Text{
+            id: messageBox
+
+            text: "Plot loaded: " + plotId
+        }
+    }
+  }</code></pre>
 
         <div class="nav-links">
-            <a href="DEMO1_DEPLOY.html">📚 >> Bereitstellung des demo1_hello Projekts in QField</a>
-            <a href="../../WORKSHOP_START.md">📚 &lt;&lt; Workshop-Einführung</a>
+            <a href="demo2_close_DE.html">📚 Schließen des Plugins</a>
+            <a href="demo2_map_click_DE.html">📚 &lt;&lt; Demo2 Map-Klick-Logik</a>
         </div>
     </div>
 </body>

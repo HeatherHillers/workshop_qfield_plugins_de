@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Erweiterung der Plugin-Component zur Verwendung des ausgewählten Plots</title>
+    <title>Demonstration 2: Feature-Auswahl</title>
     <style>
         * {
             margin: 0;
@@ -73,6 +73,15 @@
             font-size: 1.5em;
         }
         
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin: 20px 0;
+            display: block;
+        }
+        
         code {
             background: #f5f5f5;
             padding: 3px 8px;
@@ -124,54 +133,36 @@
 </head>
 <body>
     <div class="container">
-        <h1>Erweiterung der Plugin-Component zur Verwendung des ausgewählten Plots</h1>
+        <h1>Demonstration 2: Feature-Auswahl</h1>
         
-        <p>Dieser Teil ist fast pythonisch einfach.</p>
+        <p>Diese Demonstration baut auf Demo 1 auf, indem sie die Fähigkeit hinzufügt, ein Feature aus der Karte auszuwählen und Informationen aus diesem Feature abzurufen, um sie im Plugin zu verwenden.</p>
 
-        <h2>Senden der Plot-ID an die Component</h2>
-        <p>In demo2_selection.qml hat unser pointHandler die Plot-ID an die Plugin-Component gesendet, indem er sie an die setPlotId-Funktion übergeben hat.</p>
-
+        <h2>Was wir lernen werden</h2>
         <ul>
-            <li>Wir haben den Plot-ID-Wert mit der QgsFeature invokable attribute-Funktion erhalten</li>
-            <li>Die item-Property des pluginLoaders enthält das Root-Element der Plugin-Component, in diesem Fall d2_plugin_component.pluginFrame</li>
-            <li>setPlotId ist eine Funktion, die zu pluginFrame hinzugefügt wurde.</li>
+            <li>Wie man über die QField-Schnittstelle auf einen Projekt-Layer zugreift</li>
+            <li>Wie man Features aus einem Layer über die QField-Schnittstelle abfragt</li>
+            <li>Wie man Objekte vom Map-Canvas mit einem Point-Handler auswählt</li>
+            <li>Wie man ein Signal zum Schließen des Plugins sendet</li>
         </ul>
 
-<pre><code>if (shouldHandle){
-    &lt;...&gt;
-    if (it.hasNext()){
-        const feature = it.next()
-        iface.logMessage(feature.id)
-        it.close()
-        pluginLoader.active = true
-        // Übergeben Sie die Plot-ID an die Plugin-Component
-        pluginLoader.item.plotId = feature.attribute("plot_id")
-        return true
-    }
-}</code></pre>
+        <h2>Was macht es?</h2>
+        <ul>
+            <li>Es öffnet sich, wenn der Benutzer doppelklickt auf ein Plotfeld auf dem Map-Canvas.</li>
+            <li>Es zeigt die Plot-ID des ausgewählten Features im Textrahmen an.</li>
+            <li>Ein einzelner Klick auf den Punkt führt zum üblichen Attributtabellen-Verhalten. (Auf iOS. Dies ist in der Windows-ausführbaren Datei nicht möglich.)</li>
+        </ul>
 
-        <h2>Handhabung der Plot-ID in demo2_plugin_component</h2>
-        <p>Die Funktion setPlotId setzt einfach den Text in der MessageBox. Ba Da Bing.</p>
+        <img src="img/demo2_screen.png" alt="Plugin screen">
 
-<pre><code>  Rectantgle{
-    id: pluginFrame
-
-    // Plot ID Property - von Parent gesetzt, propagiert über Bindungen
-    property string plotId: ""
-
-    Rectangle{
-        id: messageBoxFrame
-        Text{
-            id: messageBox
-
-            text: "Plot loaded: " + plotId
-        }
-    }
-  }</code></pre>
+        <h2>Einrichtung</h2>
+        <ol>
+            <li>Führen Sie QField von der Befehlszeile aus, um das Projekt direkt als lokales Projekt zu öffnen.</li>
+        </ol>
+<pre><code>"C:\Program Files\QField\usr\bin\qfield.exe %ROOT%\demo2_selection.qgs</code></pre>
 
         <div class="nav-links">
-            <a href="DEMO2_CLOSE.html">📚 Schließen des Plugins</a>
-            <a href="DEMO2_MAP_CLICK.html">📚 &lt;&lt; Demo2 Map-Klick-Logik</a>
+            <a href="demo2_map_click_DE.html">📚 Einrichtung der Auswahl von der Karte</a>
+            <a href="../demo1/demo1_intro_DE.html">📚 &lt;&lt; Demonstration 1</a>
         </div>
     </div>
 </body>
