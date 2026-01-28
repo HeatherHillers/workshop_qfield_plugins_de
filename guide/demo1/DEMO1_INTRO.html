@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demonstration 1: Plugin-Struktur und Installation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6baa75 0%, #4a8a5a 100%);
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 60px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #6baa75;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            font-weight: 700;
+            border-bottom: 3px solid #6baa75;
+            padding-bottom: 15px;
+        }
+        
+        h2 {
+            color: #4a8a5a;
+            font-size: 2em;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        p {
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        ul {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 20px;
+        }
+        
+        li {
+            padding-left: 40px;
+            position: relative;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            color: #333;
+        }
+        
+        li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #6baa75;
+            font-weight: bold;
+            font-size: 1.5em;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin: 20px 0;
+            display: block;
+        }
+        
+        .nav-links {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .nav-links a {
+            color: #6baa75;
+            text-decoration: none;
+            font-size: 1.2em;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #4a8a5a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Demonstration 1: Plugin-Struktur und Installation</h1>
+
+        <h2>Was wir lernen werden</h2>
+        <ul>
+            <li>wie man ein Projekt-Plugin bereitstellt und aktualisiert</li>
+            <li>die Struktur eines Projekt-Plugins</li>
+            <li>grundlegendes QML</li>
+        </ul>
+
+        <h2>Was macht es?</h2>
+        <p>Dies ist ein einfaches Hello World Plugin.</p>
+        <ul>
+            <li>Es wird durch Klicken auf das Kamerasymbol rechts auf dem Bildschirm geöffnet.</li>
+            <li>Es zeigt ein einfaches Rechteck mit einem grünen Titeltext an.</li>
+            <li>Es ist auf Projektebene installiert. Sie werden es nur sehen, wenn das entsprechende Projekt geöffnet ist.</li>
+        </ul>
+
+        <img src="img/demo1_screen.png" alt="Demo 1 Screenshot">
+
+        <ul>
+            <li>Es gibt auch Nachrichten an das Nachrichtenprotokoll aus, wenn es geöffnet und geschlossen wird.</li>
+        </ul>
+
+        <img src="img/demo1_log.png" alt="Demo 1 Log">
+
+        <div class="nav-links">
+            <a href="DEMO1_DEPLOY.html">📚 >> Bereitstellung des demo1_hello Projekts in QField</a>
+            <a href="../../WORKSHOP_START.md">📚 &lt;&lt; Workshop-Einführung</a>
+        </div>
+    </div>
+</body>
+</html>

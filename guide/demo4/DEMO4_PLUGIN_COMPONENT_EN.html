@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Getting from Map Click to Header Page</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6baa75 0%, #4a8a5a 100%);
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 60px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #6baa75;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            font-weight: 700;
+            border-bottom: 3px solid #6baa75;
+            padding-bottom: 15px;
+        }
+        
+        h2 {
+            color: #4a8a5a;
+            font-size: 2em;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        h3 {
+            color: #6baa75;
+            font-size: 1.5em;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        p {
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        ul {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 20px;
+        }
+        
+        li {
+            padding-left: 40px;
+            position: relative;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            color: #333;
+        }
+        
+        li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #6baa75;
+            font-weight: bold;
+            font-size: 1.5em;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #d63384;
+            font-size: 0.95em;
+        }
+        
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+        
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+        }
+        
+        .nav-links {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .nav-links a {
+            color: #6baa75;
+            text-decoration: none;
+            font-size: 1.2em;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #4a8a5a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Demonstration 4: Getting from Map Click to Header Page</h1>
+        
+        <p>Let's quickly find our place.</p>
+
+        <h2>1. The demo4_header_form.qml is the same as in Demo2. When the user clicks on the map, the plugin sets the plotId property of the plugin component, which is defined in components/d4_plugin_component.qml</h2>
+
+<pre><code>// when you click on a plot field
+// (around line 76)
+pluginLoader.active = true
+pluginLoader.item.plotId = feature.attribute("plot_id")</code></pre>
+
+        <h2>2. d4_plugin_component.qml has changed. It now has 2 loaders of its own.</h2>
+
+        <ul>
+            <li>One loader loads the d4_titlebar.qml, which we'll ignore. This contains the title text and close button. It's basically our component in Demo2, but downsized. We'll ignore this.</li>
+            <li>The second loader is the one we're interested in. It loads the d4_tabwidget. As with the titlebar, when the widget loads, the plotId is passed on to the tab widget.</li>
+        </ul>
+
+<pre><code>    // TabWidget to display search results
+    Loader {
+        id: tabWidgetLoader
+        // Define the plotId property here to propagate to loader children
+        property string plotId: pluginFrame.plotId
+        width: pluginFrame.width  // Use parent width (Column)
+        height: pluginFrame.height - titleBarLoader.height - 20 // Fill remaining Column space
+        source: "d4_tabwidget.qml"
+    }</code></pre>
+
+        <h3>Important Aside: Propagating plotId with Dynamic Bindings</h3>
+
+        <p>Within the d4_tabwidget, the plotId is dynamically bound to the parent's ID. But it can only reference its parent.</p>
+
+<pre><code>property string plotId: parent.plotId</code></pre>
+
+        <p>It cannot reference the pluginFrame by name.</p>
+
+<pre><code>// no. doesn't work.
+property string plotId: pluginFrame.plotId</code></pre>
+
+        <p>It only has a reference to its parent, which is tabWidgetLoader. So you need to bind plotId by defining it in the loader.</p>
+
+<pre><code>    // TabWidget to display search results
+    Loader {
+        id: tabWidgetLoader
+        // Define the plotId property here to propagate to loader children
+        property string plotId: pluginFrame.plotId
+        &lt;...&gt;
+        source: "d4_tabwidget.qml"
+    }</code></pre>
+
+        <p>All properties you want to pass should be linked this way.</p>
+
+        <h2>3. d4_tabwidget.qml loads the header page</h2>
+
+        <p>The tab widget defines a TabBar and a SwipeView that are synchronized with each other. The SwipeView swipes between 6 pages. The last 5 pages are strata pages. This is where species are inventoried. The 1st page of the SwipeView is the one we're interested in. It's the headerPageLoader, which is embedded in a ScrollView. The headerPageLoader loads d4_headerpage.qml. Note the propagation of plotId from the tabWidget through to d4_headerpage via dynamic binding.</p>
+
+<pre><code>    TabBar {
+        &lt;...&gt; 
+    } // tabBar
+    SwipeView {
+        id: swipeView
+        &lt;...&gt;    
+        // Header Tab Content (first item)
+        ScrollView {
+            id: headerScrollView
+            &lt;...&gt;
+            
+            Loader {
+                id: headerPageLoader
+                property string plotId: tabWidget.plotId
+                source: "d4_headerpage.qml"
+                width: headerScrollView.availableWidth
+            }
+        }
+
+        // Strata Tab Content (remaining items.)
+        Repeater {
+            id: strataRepeater
+            &lt;...&gt;
+        }       
+    }</code></pre>
+
+        <h2>4. And that brings us to d4_headerpage, which loads the form in the first page of the tabWidget</h2>
+
+        <div class="nav-links">
+            <a href="DEMO4_HEADERPAGE_EN.html">📚 The Header Page</a>
+            <a href="DEMO4_INTRO_EN.html">📚 &lt;&lt; Demonstration 4 Introduction</a>
+        </div>
+    </div>
+</body>
+</html>

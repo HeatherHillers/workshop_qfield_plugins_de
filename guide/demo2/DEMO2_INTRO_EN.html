@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demonstration 2: Feature Selection</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6baa75 0%, #4a8a5a 100%);
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 60px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #6baa75;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            font-weight: 700;
+            border-bottom: 3px solid #6baa75;
+            padding-bottom: 15px;
+        }
+        
+        h2 {
+            color: #4a8a5a;
+            font-size: 2em;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        p {
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        ul, ol {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 20px;
+        }
+        
+        li {
+            padding-left: 40px;
+            position: relative;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            color: #333;
+        }
+        
+        ul > li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #6baa75;
+            font-weight: bold;
+            font-size: 1.5em;
+        }
+        
+        ol {
+            counter-reset: item;
+        }
+        
+        ol > li:before {
+            content: counter(item) ".";
+            counter-increment: item;
+            position: absolute;
+            left: 0;
+            color: #6baa75;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin: 20px 0;
+            display: block;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #d63384;
+            font-size: 0.95em;
+        }
+        
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+        
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+        }
+        
+        .nav-links {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .nav-links a {
+            color: #6baa75;
+            text-decoration: none;
+            font-size: 1.2em;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #4a8a5a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Demonstration 2: Feature Selection</h1>
+        
+        <p>This demonstration builds on Demo 1 by adding the ability to select a feature from the map and retrieve information from that feature to use in the plugin.</p>
+
+        <h2>What We Will Learn</h2>
+        <ul>
+            <li>How to access a project layer through the QField interface</li>
+            <li>How to query features from a layer through the QField interface</li>
+            <li>How to select objects from the map canvas with a point handler</li>
+            <li>How to send a signal to close the plugin</li>
+        </ul>
+
+        <h2>What Does It Do?</h2>
+        <ul>
+            <li>It opens when the user double-clicks on a plot field on the map canvas.</li>
+            <li>It displays the plot ID of the selected feature in the text frame.</li>
+            <li>A single click on the point leads to the usual attribute table behavior. (On iOS. This is not possible in the Windows executable.)</li>
+        </ul>
+
+        <img src="img/demo2_screen.png" alt="Plugin screen">
+
+        <h2>Setup</h2>
+        <ol>
+            <li>Run QField from the command line to open the project directly as a local project.</li>
+        </ol>
+<pre><code>"C:\Program Files\QField\usr\bin\qfield.exe %ROOT%\demo2_selection.qgs</code></pre>
+
+        <div class="nav-links">
+            <a href="DEMO2_MAP_CLICK_EN.html">📚 Setting Up Selection from the Map</a>
+            <a href="../demo1/DEMO1_INTRO_EN.html">📚 &lt;&lt; Demonstration 1</a>
+        </div>
+    </div>
+</body>
+</html>

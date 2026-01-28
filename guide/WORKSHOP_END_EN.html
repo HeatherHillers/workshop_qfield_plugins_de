@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QField Plugin Workshop : FOSSGIS 2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6baa75 0%, #4a8a5a 100%);
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 60px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #6baa75;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            font-weight: 700;
+            border-bottom: 3px solid #6baa75;
+            padding-bottom: 15px;
+        }
+        
+        h2 {
+            color: #4a8a5a;
+            font-size: 2em;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        h3 {
+            color: #6baa75;
+            font-size: 1.5em;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        p {
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        ul {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 20px;
+        }
+        
+        li {
+            padding-left: 40px;
+            position: relative;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            color: #333;
+        }
+        
+        li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #6baa75;
+            font-weight: bold;
+            font-size: 1.5em;
+        }
+        
+        a {
+            color: #6baa75;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        
+        a:hover {
+            color: #4a8a5a;
+        }
+        
+        .nav-links {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .nav-links a {
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>QField Plugin Workshop : FOSSGIS 2026</h1>
+
+        <h2>Conclusion</h2>
+        <p>That's it. I'm done. We're done.</p>
+        <p>We have learned all the important aspects of the QField interface:</p>
+        <p>Participants have learned:</p>
+        <ul>
+            <li>how to deploy a simple project plugin</li>
+            <li>how to open the plugin when a feature is selected on the map</li>
+            <li>how to add a screen button to open and close the plugin</li>
+            <li>how to retrieve information from a selected feature</li>
+            <li>how to access a project layer</li>
+            <li>how to retrieve a feature from a layer</li>
+            <li>how to add, delete, and update features</li>
+        </ul>
+
+        <p>And we have learned some basic QML concepts:</p>
+        <ul>
+            <li>Code structure</li>
+            <li>Basics of styling and layout</li>
+            <li>Connecting widget behavior with declarative property bindings</li>
+            <li>Connecting widget behavior with signals and JavaScript functions</li>
+        </ul>
+
+        <h2>What to Do Next</h2>
+
+        <h3>1. Connect with the QField Community</h3>
+        <p>If you haven't already, sign up at <a href="https://community.qfield.org">https://community.qfield.org</a> and join the QField community.</p>
+        <p>Feel free to send me a message or question there @Heather_Hillers</p>
+
+        <h3>2. Stay Updated on New Plugins</h3>
+        <p>Keep an eye on the QField plugin page on GitHub for more plugin examples:</p>
+        <p><a href="https://github.com/topics/qfield-plugin">https://github.com/topics/qfield-plugin</a></p>
+
+        <h3>3. Keep Up with the Documentation</h3>
+        <p>The QField documentation for plugins is still in its early stages and is being continuously developed. Check every few months for new developments, especially in the QField API.</p>
+        <p><a href="https://docs.qfield.org/how-to/advanced-how-tos/plugins/">https://docs.qfield.org/how-to/advanced-how-tos/plugins/</a></p>
+
+        <h3>4. Use this Workshop.</h3>
+        <p>This workshop was a lot of work and I don't give workshops professionally. I don't have the resources to take it much further. So let's make the most of it. Please take this workshop, share it, copy it, modify it, translate it, record it, use it for your documentation. Whatever you want.</p>
+        <p>This material remains at:</p>
+        <p><a href="https://github.com/HeatherHillers/qfield_vegetation_monitoring">https://github.com/HeatherHillers/qfield_vegetation_monitoring</a></p>
+        <p>and</p>
+        <p><a href="https://github.com/HeatherHillers/workshop_qfield_plugins_de">https://github.com/HeatherHillers/workshop_qfield_plugins_de</a></p>
+
+        <h3>5. Share Your Plugins</h3>
+        <p>Right now there are very few examples of project-level QField plugins. I actually don't know of any besides this one. This is bad. Nobody knows how to build these things.</p>
+        <p>We need more code examples so we can learn to build more things. If you build something, share it, even if it's too specialized for anyone else to use.</p>
+        <ul>
+            <li>Put it on GitHub</li>
+            <li>Send me a link. @Heather_Hillers on the QField community page. I'd love to see it.</li>
+            <li>Post it in the Show and Tell section of the QField community page.</li>
+            <li>If it's in good working order, add it to the QField plugin examples page by following the instructions at <a href="https://github.com/topics/qfield-plugin">https://github.com/topics/qfield-plugin</a></li>
+        </ul>
+
+        <h3>6. Learn More QML</h3>
+        <p>Yes. QML is not Python.</p>
+        <p>The Qt Academy is the best place we know to learn QML. We would recommend the <a href="https://www.qt.io/academy/course-catalog#introduction-to-qml">Qt Academy Introduction to QML</a> as a good starting point.</p>
+        <p>Once you've worked through that, there are many more follow-up courses you can try.</p>
+
+        <p><strong>Good luck and Godspeed!</strong></p>
+    </div>
+</body>
+</html>

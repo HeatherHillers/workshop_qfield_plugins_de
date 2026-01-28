@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extending the Plugin Component to Use the Selected Plot</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6baa75 0%, #4a8a5a 100%);
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 60px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #6baa75;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            font-weight: 700;
+            border-bottom: 3px solid #6baa75;
+            padding-bottom: 15px;
+        }
+        
+        h2 {
+            color: #4a8a5a;
+            font-size: 2em;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        p {
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        ul {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 20px;
+        }
+        
+        li {
+            padding-left: 40px;
+            position: relative;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            color: #333;
+        }
+        
+        li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #6baa75;
+            font-weight: bold;
+            font-size: 1.5em;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #d63384;
+            font-size: 0.95em;
+        }
+        
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+        
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+        }
+        
+        .nav-links {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .nav-links a {
+            color: #6baa75;
+            text-decoration: none;
+            font-size: 1.2em;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #4a8a5a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Extending the Plugin Component to Use the Selected Plot</h1>
+        
+        <p>This part is almost pythonically simple.</p>
+
+        <h2>Sending the Plot ID to the Component</h2>
+        <p>In demo2_selection.qml, our pointHandler sent the plot ID to the plugin component by passing it to the setPlotId function.</p>
+
+        <ul>
+            <li>We obtained the plot ID value using the QgsFeature invokable attribute function</li>
+            <li>The pluginLoader's item property contains the root element of the plugin component, in this case d2_plugin_component.pluginFrame</li>
+            <li>setPlotId is a function that was added to pluginFrame.</li>
+        </ul>
+
+<pre><code>if (shouldHandle){
+    &lt;...&gt;
+    if (it.hasNext()){
+        const feature = it.next()
+        iface.logMessage(feature.id)
+        it.close()
+        pluginLoader.active = true
+        // Pass the plot ID to the plugin component
+        pluginLoader.item.plotId = feature.attribute("plot_id")
+        return true
+    }
+}</code></pre>
+
+        <h2>Handling the Plot ID in demo2_plugin_component</h2>
+        <p>The setPlotId function simply sets the text in the MessageBox. Ba Da Bing.</p>
+
+<pre><code>  Rectangle{
+    id: pluginFrame
+
+    // Plot ID Property - set by parent, propagated via bindings
+    property string plotId: ""
+
+    Rectangle{
+        id: messageBoxFrame
+        Text{
+            id: messageBox
+
+            text: "Plot loaded: " + plotId
+        }
+    }
+  }</code></pre>
+
+        <div class="nav-links">
+            <a href="DEMO2_CLOSE_EN.html">📚 Closing the Plugin</a>
+            <a href="DEMO2_MAP_CLICK_EN.html">📚 &lt;&lt; Demo2 Map Click Logic</a>
+        </div>
+    </div>
+</body>
+</html>

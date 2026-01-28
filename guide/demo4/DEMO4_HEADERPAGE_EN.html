@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Header Page</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6baa75 0%, #4a8a5a 100%);
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 60px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #6baa75;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            font-weight: 700;
+            border-bottom: 3px solid #6baa75;
+            padding-bottom: 15px;
+        }
+        
+        h2 {
+            color: #4a8a5a;
+            font-size: 2em;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        p {
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        ul {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 20px;
+        }
+        
+        li {
+            padding-left: 40px;
+            position: relative;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            color: #333;
+        }
+        
+        li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #6baa75;
+            font-weight: bold;
+            font-size: 1.5em;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #d63384;
+            font-size: 0.95em;
+        }
+        
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+        
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+        }
+        
+        .nav-links {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .nav-links a {
+            color: #6baa75;
+            text-decoration: none;
+            font-size: 1.2em;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #4a8a5a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Demonstration 4: The Header Page</h1>
+        
+        <p>The d4_headerpage.qml is pretty simple. It creates the basic layout and structure of the form in the header form, but delegates most of the work to the formController.</p>
+
+        <h2>Structure and Layout: Repeater Loads Inputs from Configuration</h2>
+
+        <p>The headerPage is a simple Rectangle that contains:</p>
+
+        <ul>
+            <li>Title text</li>
+            <li>Save button</li>
+            <li>Repeater for inputs</li>
+        </ul>
+
+        <h2>FormDataModel Holds the Form Configuration</h2>
+
+        <p>The form is divided into several sections, each containing a number of input widgets of type Decimal or Text. These sections and inputs are configured in the FormDataModel and retrieved from it, which is defined in d4_data_model.qml. We'll leave this for your review after the workshop.</p>
+
+        <h2>Why Can't QML Do a For-Loop Anyway?</h2>
+
+        <p>The Repeater is a for-loop constructor that iterates over the groupBoxes list in the data model and creates its delegate object for each groupBox, which is a FormSection defined in d4_form_section.qml. This receives the Form Controller as a property. We'll also leave d4_form_section.qml for your later review. These components in turn will iterate over the input widgets contained in their groupBox in the configuration. The important thing is that the input objects register with the Form Controller when created.</p>
+
+        <h2>Focus on the FormController</h2>
+
+        <p>The Form Controller does all the work here. We'll look at it more closely next.</p>
+        
+        <ul>
+            <li>Widget Registration: It is sent by the Repeater to each input widget, which registers with the Form Controller.</li>
+            <li>Loading Data: The onPlotChanged slot calls formController.loadPlot with the selected plotId. The FormController fetches the data from the plot_header layer and populates the registered Repeater widgets with the data.</li>
+            <li>Saving Data: The saveButton calls the save function of the formController onClicked. This retrieves the current data state from the registered widgets and saves it in the plot_header layer</li>
+            <li>hasUnsavedChanges: When data is entered in any of the registered widgets, this state property is changed to true until the save function is called.</li>
+        </ul>
+
+<pre><code>&lt;...&gt;
+Rectangle {
+    id: headerPage
+    property string plotId: parent.plotId
+    &lt;...&gt;
+    
+    // Form coordination between data and UI
+    FormController {
+        id: controller
+    }
+    
+    // Obfuscation: Property alias to make controller accessible to children
+    property var formController: controller
+    
+    // Load plot data when plotId changes (set via binding from parent)
+    onPlotIdChanged: {
+        if (plotId ) {
+            console.log("HeaderPage: Loading plot", plotId)
+            formController.loadPlot(plotId)
+        }
+    }
+    
+    // ===================================================================
+    // LAYOUT
+    // ===================================================================
+    
+    Column {
+        &lt;...&gt;
+        // Title
+        Text {
+                text: "Vegetation Monitoring - Plot: " + (plotId || "None")
+                &lt;...&gt;
+            }
+            
+        // Save button
+        Rectangle {
+            id: saveButton
+            &lt;...&gt;
+            color: formController.hasUnsavedChanges ? "#2E7D32" : "#1B5E20"
+            &lt;...&gt;
+            
+            Text {
+                text: formController.hasUnsavedChanges ? "⚠ Save Data" : "✓ Saved"
+                &lt;...&gt;
+            }
+            
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    formController.save()
+                }
+            }
+        }
+        
+        // Dynamic form sections from data model
+        Repeater {
+            model: FormDataModel.groupBoxes
+            
+            delegate: FormSection {
+                width: parent.width
+                sectionData: modelData
+                
+                // Pass controller reference for registry
+                controller: headerPage.formController
+            }
+        }
+    }  // Column
+} // Rectangle</code></pre>
+
+        <div class="nav-links">
+            <a href="DEMO4_FORM_CONTROLLER_EN.html">📚 The Form Controller</a>
+            <a href="DEMO4_PLUGIN_COMPONENT_EN.html">📚 &lt;&lt; Demonstration 4 Plugin Component</a>
+        </div>
+    </div>
+</body>
+</html>

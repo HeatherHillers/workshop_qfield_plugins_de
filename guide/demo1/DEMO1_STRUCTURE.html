@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plugin-Struktur</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6baa75 0%, #4a8a5a 100%);
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 60px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #6baa75;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            font-weight: 700;
+            border-bottom: 3px solid #6baa75;
+            padding-bottom: 15px;
+        }
+        
+        h2 {
+            color: #4a8a5a;
+            font-size: 2em;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        h3 {
+            color: #6baa75;
+            font-size: 1.5em;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        p {
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        ul {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 20px;
+        }
+        
+        li {
+            padding-left: 40px;
+            position: relative;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            color: #333;
+        }
+        
+        li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #6baa75;
+            font-weight: bold;
+            font-size: 1.5em;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin: 20px 0;
+            display: block;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #d63384;
+            font-size: 0.95em;
+        }
+        
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+        
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+        }
+        
+        .nav-links {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .nav-links a {
+            color: #6baa75;
+            text-decoration: none;
+            font-size: 1.2em;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #4a8a5a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Plugin-Struktur</h1>
+        
+        <p>Öffnen Sie ${ROOT}\qfield_vegetation_monitoring in Visual Studio Code oder Ihrer bevorzugten IDE und werfen Sie einen Blick auf das Layout:</p>
+
+        <img src="img/demo1_struct.png" alt="Demo 1 Struktur">
+
+        <ul>
+            <li>Die Haupt-QML-Datei ist demo1_hello.qml. Sie muss denselben Namen wie das Projekt haben und muss im Projektverzeichnis mit der Projektdatei gespeichert werden.</li>
+            <li>Alle anderen QML-Dateien werden im Unterverzeichnis components gespeichert.</li>
+            <li>Dieses Unterverzeichnis muss als Anhang-Verzeichnis im Projekt hinzugefügt werden.</li>
+        </ul>
+
+        <h2>Global importierte Klassen werden in qmldir definiert</h2>
+        
+        <p>Die qmldir-Datei ist im Grunde eine globale Import-Direktive.</p>
+        
+        <p>d1_plugin_theme.qml enthält ein Stildefinitionsobjekt, das Farben und Schriften enthält, die wir konsistent in unserem Plugin verwenden werden. Es ist wie eine CSS-Datei.</p>
+        
+        <p>Die qmldir-Datei definiert d1_plugin_theme.qml als Modul, das global verwendet und automatisch importiert wird. Sie definiert, dass das Root-Element dieser Datei importiert und im Code als PluginTheme-Objekt bezeichnet wird.</p>
+        
+        <p>Beachten Sie, dass d1_plugin_theme.qml keinen Verweis auf den Klassennamen PluginTheme hat. Dies wird nur in der qmldir-Datei definiert.</p>
+
+        <h3>Definition von PluginTheme in qmldir</h3>
+<pre><code>singleton PluginTheme 1.0 d1_plugin_theme.qml</code></pre>
+
+        <h3>Inhalt der PluginTheme-Datei hat keinen Verweis auf PluginTheme</h3>
+<pre><code>pragma Singleton
+import QtQuick
+
+QtObject {
+    readonly property color vanilla: "#ffecd1"
+    readonly property color green: "#6baa75"
+    readonly property color white: "#ffffff"
+}</code></pre>
+
+        <div class="nav-links">
+            <a href="DEMO1_MAIN.html">📚 >> Schauen wir uns das Hauptmodul an</a>
+            <a href="DEMO1_DEPLOY.html">📚 &lt;&lt; Plugin-Bereitstellung</a>
+        </div>
+    </div>
+</body>
+</html>

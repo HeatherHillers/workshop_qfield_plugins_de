@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo 1: Plugin Structure and Installation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6baa75 0%, #4a8a5a 100%);
+            overflow: hidden;
+        }
+        
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .slide {
+            display: none;
+            width: 90%;
+            max-width: 1200px;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 60px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        .slide.active {
+            display: block;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        h1 {
+            color: #6baa75;
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        h2 {
+            color: #4a8a5a;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+        
+        h3 {
+            color: #6baa75;
+            font-size: 1.8em;
+            margin: 25px 0 15px 0;
+        }
+        
+        p, li {
+            font-size: 1.3em;
+            line-height: 1.6;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .subtitle {
+            font-size: 1.5em;
+            color: #666;
+            font-style: italic;
+        }
+        
+        .big-emoji {
+            font-size: 4em;
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        li {
+            padding-left: 40px;
+            position: relative;
+            margin-bottom: 20px;
+        }
+        
+        li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #6baa75;
+            font-weight: bold;
+            font-size: 1.5em;
+        }
+        
+        .controls {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+        }
+        
+        button {
+            background: #6baa75;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        
+        button:hover {
+            background: #4a8a5a;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .slide-number {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            color: white;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+        
+        .highlight {
+            background: linear-gradient(120deg, #6baa7530 0%, #4a8a5a30 100%);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: 600;
+        }
+        
+        .center {
+            text-align: center;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            overflow-x: auto;
+            border-left: 5px solid #6baa75;
+            white-space: pre;
+        }
+        
+        .call-to-action {
+            background: linear-gradient(135deg, #6baa75 0%, #4a8a5a 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .call-to-action h3 {
+            color: white;
+            margin: 0 0 15px 0;
+        }
+        
+        .call-to-action p {
+            color: white;
+            margin: 0;
+            font-size: 1.4em;
+        }
+        
+        .demo-box {
+            background: linear-gradient(135deg, #6baa7515 0%, #4a8a5a15 100%);
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 5px solid #6baa75;
+            margin: 20px 0;
+        }
+        
+        .key-concept {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .bullets li {
+            font-size: 1.6em;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <div class="center">
+                <h1>Demo 1: Hello World</h1>
+                <h2>Plugin Structure and Installation</h2>
+                <img src="img/demo1_screen.png" alt="Demo 1 Screenshot" style="max-width: 80%; max-height: 60vh; margin: 30px auto; display: block; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+            </div>
+        </div>
+
+        <!-- Slide 2: What We Will Learn -->
+        <div class="slide bullets">
+            <h2>What We Will Learn</h2>
+            <ul>
+                <li>How to deploy and update a project plugin</li>
+                <li>The structure of a project plugin</li>
+                <li>Most important QML object classes</li>
+            </ul>
+        </div>
+
+        <!-- Slide 3: Installation -->
+        <div class="slide bullets">
+            <h2>Production Installation and Update</h2>
+            <ul>
+                <li>Deploy with QField Sync</li>
+                <li>Problems? Reopen project, restart QField</li>                
+            </ul>
+            <h2>Development Installation and Update</h2>
+            <ul>
+                <li>Load directly from DOS into QField for Windows (local or Cloud)</li>
+                <li>For each update, close and restart.</li>     
+            </ul>
+            <div class="code-block">
+>>> "C:\Program Files\QField\usr\bin\qfield.exe" C:\demopath\demo1_hello.qgs
+            </div>
+        </div>
+        <!-- Slide 4: Plugin Structure -->
+        <div class="slide">
+            <h2>Plugin Structure</h2>
+            <div class="code-block">
+demo1_hello/
+|
+├── demo1_hello.qml          # Main QML file
+|
+├── demo1_hello.qgs          # QGIS project
+|
+└── components/
+    |
+    ├── d1_plugin_component.qml  # Main component / Dialog
+    |
+    ├── d1_plugin_theme.qml  # Style definitions
+    |
+    └── qmldir               # Global imports
+            </div>
+        </div>
+
+        <!-- Slide 5: Plugin Structure Details -->
+        <div class="slide bullets">
+            <h2>Plugin Structure</h2>
+            <ul>
+                <li>Main QML has the same name as the project</li>
+                <li>All other files in the attachment directory "components"</li>
+            </ul>
+        </div>
+
+        <!-- Slide 6: QML Core Classes -->
+        <div class="slide">
+            <h2>Core QML Classes (Components)</h2>
+               <img src="img/demo1_obj.png" alt="Basic QML Objects" style="max-width: 80%; max-height: 60vh; margin: 30px auto; display: block; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+
+        </div>
+
+        <!-- Slide 7: QML Oddities -->
+        <div class="slide bullets">
+            <h2>QML Oddities</h2>
+            <ul>
+                <li>A PyQt developer will say "Widget" instead of "Item"</li>
+                <li>A QML developer says "Component" for "Item" and all classes</li>
+                <li>A QML developer says "Element" for all objects</li>
+                <li>But a Component is not an Item, and an Item is not a Component. And a Component isn't even a Widget. Not related!</li>
+                <li>A Loader isn't actually a Widget either. It loads components dynamically. Really belongs together with Components.</li>
+            </ul>
+        </div>
+
+        <!-- Slide 8: Item -->
+        <div class="slide">
+            <h2>1. An Item Component Builds the Root Element of Our Plugin</h2>
+            <div class="code-block">
+Item {  
+    id: plugin
+    parent: iface.mapCanvas() 
+    anchors.fill: parent
+    ...
+}
+            </div>
+            <ul style="margin-top: 30px;">
+                <li><strong>parent:</strong> Must be set to mapCanvas</li>
+                <li><strong>anchors.fill:</strong> Fills the entire screen</li>
+                <li><strong>id:</strong> Object name for references</li>
+            </ul>
+        </div>
+
+        <!-- Slide 9: Component -->
+        <div class="slide">
+            <h2>2. Component is a Utility Component That Enables Slots for Construction and Destruction</h2>
+            <div class="code-block">
+Item {
+    id: plugin
+    parent: iface.mapCanvas()
+    anchors.fill: parent
+    Loader {...}
+
+    Component.onCompleted: {
+        console.log("Plugin loaded")
+    }
+
+    Component.onDestruction: {
+        console.log("Plugin unloaded")
+    }
+}
+            </div>
+            <p style="margin-top: 30px; font-size: 1.4em;">
+                Component.onCompleted is called after the element is constructed<br>
+                Component.onDestruction is called before the element is destroyed
+            </p>
+        </div>
+
+
+        <!-- Slide 10: Loader -->
+        <div class="slide">
+            <h2>3. Loader "Constructs" and "Destructs" the Root Element of the Source Component with the "active" Property</h2>
+            <div class="code-block">
+Loader {
+    id: pluginLoader
+    active: false
+    source: Qt.resolvedUrl(
+        './components/d1_plugin_component.qml'
+    )
+}
+
+QfToolButton {
+    onClicked: {
+        pluginLoader.active = !pluginLoader.active
+    }
+}
+            </div>
+            <p style="margin-top: 30px; font-size: 1.4em;">
+                Loader loads/unloads components dynamically
+            </p>
+        </div>
+
+        <!-- Slide 11: pluginComponent -->
+        <div class="slide">
+            <h2>4. d1_plugin_component.qml Contains the Loaded Rectangle Component</h2>
+            <div class="code-block" style="margin-bottom: 20px;">
+Rectangle {
+    id: pluginFrame
+    anchors.fill: parent
+    color: PluginTheme.vanilla
+    Text {
+        text: "Demo 1 Vegetation Monitoring: Plugin Component"
+        color: PluginTheme.green
+        font.pixelSize: 20
+        horizontalAlignment: Text.AlignHCenter             
+        anchors.centerIn: parent
+    }
+    ...
+}
+            </div>
+            <p style="margin-top: 30px;">PluginTheme.green comes from the style in qmldir and d1_plugin_theme.qml</p>
+        </div>
+        <!-- Slide 11: PluginTheme -->
+        <div class="slide">
+            <h2>qmldir and PluginTheme</h2>
+            <p>Globally imported style definitions:</p>
+            <div class="code-block" style="margin-bottom: 20px;">
+// qmldir
+singleton PluginTheme 1.0 d1_plugin_theme.qml
+            </div>
+            <div class="code-block">
+// d1_plugin_theme.qml
+QtObject {
+    readonly property color vanilla: "#ffecd1"
+    readonly property color green: "#6baa75"
+}
+            </div>
+        </div>
+
+
+        <!-- Slide 11: Exercises -->
+        <div class="slide">
+            <h2>Exercises for the Next 20 Minutes</h2>
+            <div class="call-to-action">
+                <h3>Tasks:</h3>
+            </div>
+            <ul>
+                <li><strong>Exercise 1:</strong> Deploy Demo1 plugin and open in QField</li>
+                <li><strong>Exercise 2:</strong> Change the title text color (PluginTheme)</li>
+                <li><strong>Exercise 3:</strong> Change the text in the Rectangle</li>
+            </ul>
+            <div class="demo-box" style="margin-top: 30px;">
+                <p style="text-align: center; font-size: 1.3em;">
+                    📚 Detailed instructions in the Markdown material! workshop_qfield_plugins_de\de_de\docs\demo1\DEMO1_INTRO_EN.html
+                </p>
+                <p>Open in Preview (right-click on the file) to see images</p>
+            </div>
+        </div>
+        <!-- Slide 12: Lets start-->
+        <div class="slide">
+            <h2><a href="demo2_presentation_EN.html">Demo2</a></h2>
+        </div>
+    </div>
+
+    <div class="slide-number">
+        <span id="current-slide">1</span> / 12
+    </div>
+
+    <div class="controls">
+        <button id="prev">← Previous</button>
+        <button id="next">Next →</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            document.getElementById('current-slide').textContent = currentSlide + 1;
+        }
+
+        document.getElementById('prev').addEventListener('click', () => {
+            showSlide(currentSlide - 1);
+        });
+
+        document.getElementById('next').addEventListener('click', () => {
+            showSlide(currentSlide + 1);
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') showSlide(currentSlide - 1);
+            if (e.key === 'ArrowRight') showSlide(currentSlide + 1);
+            if (e.key === ' ') showSlide(currentSlide + 1);
+        });
+    </script>
+</body>
+</html>

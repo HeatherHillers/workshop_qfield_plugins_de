@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demonstration 4: Feature Editing</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6baa75 0%, #4a8a5a 100%);
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 60px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #6baa75;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            font-weight: 700;
+            border-bottom: 3px solid #6baa75;
+            padding-bottom: 15px;
+        }
+        
+        h2 {
+            color: #4a8a5a;
+            font-size: 2em;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        p {
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        ul {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 20px;
+        }
+        
+        li {
+            padding-left: 40px;
+            position: relative;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            color: #333;
+        }
+        
+        li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #6baa75;
+            font-weight: bold;
+            font-size: 1.5em;
+        }
+        
+        ul ul {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        
+        ul ul li {
+            font-size: 1.05em;
+        }
+        
+        ul ul li:before {
+            content: "•";
+            font-size: 1.3em;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin: 20px 0;
+            display: block;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #d63384;
+            font-size: 0.95em;
+        }
+        
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+        
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+        }
+        
+        .nav-links {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .nav-links a {
+            color: #6baa75;
+            text-decoration: none;
+            font-size: 1.2em;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #4a8a5a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Demonstration 4: Feature Editing</h1>
+        
+        <p>This demonstration extends the tab widget introduced in qfield_vegetation_monitoring/demo3_tabwidget. Each year, the biologists collect some basic information about the plot field, such as average vegetation height, and record it in the plot_header table. When we open our tab widget, the header page is the first tab. This demonstration sets up the header page for the tab widget. The UI in this demonstration is too complex to be covered in this workshop. We'll leave it for you to review later. We'll focus here on the good parts - the QField interface for editing features.</p>
+
+        <h2>What We Will Learn</h2>
+        <ul>
+            <li>How to add a row to a table via the QField interface</li>
+            <li>How to update a row via the QField interface</li>
+            <li>A LOT of UI stuff that we'll just skim over.</li>
+        </ul>
+
+        <h2>What Does It Do?</h2>
+        <ul>
+            <li>When the user clicks on the canvas, the plot ID is sent from the plugin component to the tab widget and to the header page of the tab widget in d5_headerpage.qml</li>
+            <li>Note: The form is long. The form has an invisible scroll area accessible via the mouse wheel on Windows or swiping on iOS.</li>
+            <li>On load, it checks whether a row already exists in the plot_header table.
+                <ul>
+                    <li>If no plot_header row exists, one is immediately added. This row has default values for all inputs.
+                        <ul>
+                            <li>0 for all numeric values</li>
+                            <li>Empty string for text fields</li>
+                            <li>A UUID for the primary key</li>
+                            <li>The current timestamp</li>
+                            <li>The plot ID as foreign key for plot.</li>
+                        </ul>
+                    </li>
+                    <li>If a plot_header row already exists, the values are loaded into the form</li>
+                </ul>
+            </li>
+            <li>This form has no auto-save by user request.</li>
+            <li>When a value is updated, the save button text changes to indicate unsaved changes.</li>
+            <li>When the user clicks the save button, changes to all values are saved and committed.</li>
+        </ul>
+ 
+        <img src="img/demo4_screen.png" alt="Plugin screen">
+
+        <h2>Setup</h2>
+        <ol style="list-style: decimal; padding-left: 40px;">
+            <li style="padding-left: 10px; list-style-position: outside;">Create a new project directory: ${ROOT}/qfield_project_demo_4</li>
+            <li style="padding-left: 10px; list-style-position: outside;">Copy the entire demo directory ${ROOT}/qfield_vegetation_plugin/demo4_header_form to ${ROOT}/qfield_project_demo_4</li>
+            <li style="padding-left: 10px; list-style-position: outside;">Open the project in QGIS if you want to see the structure of the plot_header table. This is included in the project as a private (hidden) non-geometry layer.</li>
+            <li style="padding-left: 10px; list-style-position: outside;">Run QField from the command line to open the project directly as a local project.</li>
+        </ol>
+
+<pre><code>"C:\Program Files\QField\usr\bin\qfield.exe C:\temp\qfield\demo4_header_form\demo4_header_form.qgs</code></pre>
+
+        <div class="nav-links">
+            <a href="DEMO4_PLUGIN_COMPONENT_EN.html">📚 Getting to the Header Page</a>
+            <a href="../demo2/DEMO2_INTRO_EN.html">📚 &lt;&lt; Demonstration 2</a>
+        </div>
+    </div>
+</body>
+</html>

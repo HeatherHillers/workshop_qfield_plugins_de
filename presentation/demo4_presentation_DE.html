@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo 4: Feature-Bearbeitung</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6baa75 0%, #4a8a5a 100%);
+            overflow: hidden;
+        }
+        
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .slide {
+            display: none;
+            width: 90%;
+            max-width: 1200px;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 60px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        .slide.active {
+            display: block;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        h1 {
+            color: #6baa75;
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        h2 {
+            color: #4a8a5a;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+        
+        h3 {
+            color: #6baa75;
+            font-size: 1.8em;
+            margin: 25px 0 15px 0;
+        }
+        
+        p, li {
+            font-size: 1.3em;
+            line-height: 1.6;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .subtitle {
+            font-size: 1.5em;
+            color: #666;
+            font-style: italic;
+        }
+        
+        .big-emoji {
+            font-size: 4em;
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        li {
+            padding-left: 40px;
+            position: relative;
+            margin-bottom: 20px;
+        }
+        
+        li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #6baa75;
+            font-weight: bold;
+            font-size: 1.5em;
+        }
+        
+        .controls {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+        }
+        
+        button {
+            background: #6baa75;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        
+        button:hover {
+            background: #4a8a5a;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .slide-number {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            color: white;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+        
+        .highlight {
+            background: linear-gradient(120deg, #6baa7530 0%, #4a8a5a30 100%);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: 600;
+        }
+        
+        .center {
+            text-align: center;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            overflow-x: auto;
+            border-left: 5px solid #6baa75;
+            white-space: pre;
+        }
+        
+        .call-to-action {
+            background: linear-gradient(135deg, #6baa75 0%, #4a8a5a 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .call-to-action h3 {
+            color: white;
+            margin: 0 0 15px 0;
+        }
+        
+        .call-to-action p {
+            color: white;
+            margin: 0;
+            font-size: 1.4em;
+        }
+        
+        .demo-box {
+            background: linear-gradient(135deg, #6baa7515 0%, #4a8a5a15 100%);
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 5px solid #6baa75;
+            margin: 20px 0;
+        }
+        
+        .key-concept {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .bullets li {
+            font-size: 1.6em;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <div class="center">
+                <h1>Demo 4</h1>
+                <h2>Create, Read, Update, Delete</h2>
+                <img src="img/demo4_screen.png" alt="Demo 4 Screenshot" style="max-width: 80%; max-height: 60vh; margin: 30px auto; display: block; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+
+            </div>
+        </div>
+
+        <!-- Slide 2: Was wir lernen -->
+        <div class="slide">
+            <h2>Was wir lernen werden</h2>
+            <ul>
+                <li>Wie man eine Zeile zu einer Tabelle hinzufügt</li>
+                <li>Wie man eine Zeile aktualisiert</li>
+                <li>Wie man eine Zeile löscht</li>
+            </ul>
+            <div class="call-to-action" style="margin-top: 40px;">
+                <p>Die wichtigste Demo für echte Datenerfassung!</p>
+            </div>
+        </div>
+
+        <!-- Slide 3: Plot Header -->
+        <div class="slide">
+            <h2>Was macht das Plugin?</h2>
+            <ul>
+                <li>
+                    Plot Id vom Parent-Plugin erhalten
+                </li>
+                <li>
+                    Die (nicht Geografische) Tabelle <code>plot_header</code> mit plot_id abfragen
+                </li>           
+                <li>
+                    Falls keine Zeile gefunden: Neue Vorlage-Zeile erstellen
+                </li>
+                <li>
+                    Formular mit Zeilenwerten füllen
+                </li>
+                <li>
+                    Änderungen tracken → Speichern-Button zeigt Zustand
+                </li>
+                <li>
+                    Speichern-Button → Alle Werte in plot_header committen
+                </li>
+            </ul>
+
+        </div>
+
+        <!-- Slide 4: Die Goldene Regel -->
+        <div class="slide">
+            <h2>⚠️ Achtung </h2>
+            <h3>NIEMALS die QField-API umgehen!</h3>
+            <h3>NIEMALS über den Daten-Provider zugreifen!</h3>
+            <h3>Warum?</h3>
+            <ul style="font-size: 1.2em;">
+                <li>QField Sync basiert auf QGIS Offline Editing</li>
+                <li>Direkte Änderungen werden nicht erkannt</li>
+                <li>Synchronisierung überschreibt Ihre Daten</li>
+            </ul>
+
+            <p style="margin-top: 30px; text-align: center; font-size: 1.4em;">
+                <span class="highlight">Immer</span> FeatureUtils & LayerUtils verwenden!
+            </p>
+        </div>
+
+        <!-- Slide 5: CREATE - Feature einfügen -->
+        <div class="slide">
+            <h2>CREATE: Feature einfügen</h2>
+            <div class="code-block">
+// 1. Bearbeitung starten
+layer.startEditing()
+
+// 2. Leeres Feature erstellen
+var newFeature = FeatureUtils.createFeature(layer)
+
+// 3. Attribute setzen
+newFeature.setAttribute("f_uid", StringUtils.createUuid())
+newFeature.setAttribute("plot_id", plotId)
+newFeature.setAttribute("log_date", new Date().toISOString())
+
+// 4. Feature zum Layer hinzufügen
+LayerUtils.addFeature(layer, newFeature)
+
+// 5. Änderungen committen
+layer.commitChanges()
+
+return newFeature
+            </div>
+        </div>
+
+        <!-- Slide 6: READ - Feature abrufen -->
+        <div class="slide">
+            <h2>READ: Feature abrufen</h2>
+            <div class="code-block">
+
+var expression = "plot_id = '" + plotId + "'"
+var iterator = LayerUtils.createFeatureIteratorFromExpression(layer, expression)
+
+if (iterator.hasNext()) {
+    currentFeature = iterator.next()
+    iterator.close()  // KRITISCH!
+    return currentFeature
+}
+
+iterator.close()  // Immer schließen!
+
+            </div>
+            <p style="margin-top: 20px; font-size: 1.3em; color: #c44569;">
+                <strong>IMMER</strong> Iterator schließen!
+            </p>
+        </div>
+
+        <!-- Slide 7: UPDATE - Feature aktualisieren -->
+        <div class="slide">
+            <h2>UPDATE: Feature aktualisieren</h2>
+            <div class="code-block">
+// 1. Bearbeitung starten
+layer.startEditing()
+
+// 2. Feature-ID und Fields holen
+var fid = currentFeature.id
+var fields = currentFeature.fields
+
+// 3. Für jedes Feld: Index holen und Wert ändern
+for (var fieldName in fieldValueMap) {
+    var value = fieldValueMap[fieldName]
+    var fieldIndex = fields.indexOf(fieldName)
+    
+    if (fieldIndex >= 0) {
+        layer.changeAttributeValue(fid, fieldIndex, value)
+    }
+}
+
+// 4. Änderungen committen
+layer.commitChanges()
+            </div>
+        </div>
+
+        <!-- Slide 8: DELETE - Feature löschen -->
+        <div class="slide">
+            <h2>DELETE: Feature löschen</h2>
+            <div class="code-block">// 1. Bearbeitung starten       
+// 1. Bearbeitung starten
+layer.startEditing()
+
+// 2. Feature löschen
+var success = layer.deleteFeature(featureId)
+
+if (!success) {
+    // 3a. Bei Fehler: Rollback
+    layer.rollBack()
+    return false
+}
+
+// 3b. Bei Erfolg: Commit
+var commitSuccess = layer.commitChanges()
+if (!commitSuccess) {
+    layer.rollBack()
+    return false
+}
+
+return true
+            </div>
+        </div>
+
+        <!-- Slide 9: Field Index Warnung -->
+        <div class="slide">
+            <h2>Wichtige Warnung: Field Index</h2>
+            <div class="call-to-action">
+                <h3>NIEMALS hart kodierte Indizes verwenden!</h3>
+                <p>Index in QGIS ist nicht gleich Index in QField.</p>
+            </div>
+            
+            <h3>❌ FALSCH:</h3>
+            <div class="code-block">
+value = feature.attribute(3)  
+            </div>
+
+            <h3>✅ RICHTIG:</h3>
+            <div class="code-block">
+value = feature.attribute("plot_id")  // Feldname verwenden!
+
+// Oder für Updates:
+var fieldIndex = fields.indexOf("plot_id")
+layer.changeAttributeValue(fid, fieldIndex, value)
+            </div>
+
+        </div>
+        <!-- Slide 10: Architektur -->
+        <div class="slide">
+            <h2>Model View Controller-Architektur</h2>
+            <ul>
+                <li>
+                    <h4>Model: d4_form_data_model.qml</h4>
+                    <p>Konfiguration der Form-Struktur: Beschriftung, Feldname(id), Widget Einstellungen</p>
+                </li>
+                <li>
+                    <h4>View: d4_headerpage.qml, d4_form_section.qml, d4_form_field.qml</h4>
+                    <p>Registrieren sich beim Controller</p>
+                </li>
+                <li>
+                    <h4>Controller: d4_form_controller.qml</h4>
+                    <p>Koordiniert zwischen View und Model</p>
+                </li>
+                <li>
+                    <h4>Controller: d4_data_controller.qml</h4>
+                    <p>Handhabt QField-API-Interaktionen</p>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Slide 12: FormController Pattern -->
+        <div class="slide">
+            <h2>FormController Pattern</h2>
+            <ul>
+                <li>1. Widget-Elemente registrieren sich beim Controller</li>
+                <li>2. FormController sammelt Werte von allen Widgets</li>
+                <li>3. FormController übergibt Werte an DataController</li>
+                <li>4. DataController führt QField-API-Operationen aus</li>
+            </ul>
+        </div>
+
+        <!-- Slide 13: Repeater Pattern -->
+        <div class="slide">
+            <h2>Repeater für dynamische Forms</h2>
+            <div class="code-block">
+Repeater {
+    model: FormDataModel.groupBoxes
+    
+    delegate: FormSection {
+        width: parent.width
+        sectionData: modelData
+        controller: headerPage.formController
+    }
+}
+            </div>
+            <ul style="margin-top: 30px;">
+                <li>Konfiguration in DataModel definiert</li>
+                <li>Repeater iteriert und erstellt Widget-Elemente</li>
+                <li>Widget-Elemente registrieren sich beim Erstellen</li>
+                <li>Keine For-Schleifen in QML!</li>
+            </ul>
+        </div>
+
+        <!-- Slide 14: Property Propagation -->
+        <div class="slide">
+            <h2>Property-Propagierung durch Loader</h2>
+            <div class="code-block">// Im Parent-Loader definieren
+Loader {
+    id: tabWidgetLoader
+    property string plotId: pluginFrame.plotId
+    source: "d4_tabwidget.qml"
+}
+
+// Im geladenen Component verwenden
+// d4_tabwidget.qml
+Item {
+    property string plotId: parent.plotId  // Von Loader!
+}
+            </div>
+            <p style="margin-top: 30px; font-size: 1.3em;">
+                Loader-Properties propagieren zu geladenen Components
+            </p>
+        </div>
+
+        <!-- Slide 15: Übungen -->
+        <div class="slide">
+            <h2>Übungen für die nächsten 60 Minuten</h2>
+            <div class="call-to-action">
+                <h3>Aufgaben:</h3>
+            </div>
+            <ul>
+                <li><strong>Übung 1:</strong> Demo4-Plugin bereitstellen und testen</li>
+                <li><strong>Übung 3:</strong> Feature-Erstellung mit iface.logMessage tracken</li>
+                <li><strong>Übung 4:</strong> Ein Element von den Formular entfernen</li>
+                <li><strong>Übung 5:</strong> Ein Vorlage für den Header Beschreibung einfügen</li>
+                <li><strong>Übung 6:</strong> Bau ein eigenes Plugin.</li>
+                <li><strong>Klüger als ich?</strong> Finde wie man das Plugin über der Skala, aber wichtiger über der Location Pfeil rendern kann.</li>
+                <li><strong>Klüger als ich?</strong> Finde das Anchor für das Such-Button, sodass der Rote Knopf auf jades Bildschirm richtig gesetzt ist.</li>
+
+            </ul>
+            <div class="demo-box" style="margin-top: 30px;">
+                <p style="text-align: center; font-size: 1.3em;">
+                    📚 Vollständiger Erklärung: workshop\long_version\demo4\DEMO4_Intro.html
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="slide-number">
+        <span id="current-slide">1</span> / 16
+    </div>
+
+    <div class="controls">
+        <button id="prev">← Zurück</button>
+        <button id="next">Weiter →</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            document.getElementById('current-slide').textContent = currentSlide + 1;
+        }
+
+        document.getElementById('prev').addEventListener('click', () => {
+            showSlide(currentSlide - 1);
+        });
+
+        document.getElementById('next').addEventListener('click', () => {
+            showSlide(currentSlide + 1);
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') showSlide(currentSlide - 1);
+            if (e.key === 'ArrowRight') showSlide(currentSlide + 1);
+            if (e.key === ' ') showSlide(currentSlide + 1);
+        });
+    </script>
+</body>
+</html>

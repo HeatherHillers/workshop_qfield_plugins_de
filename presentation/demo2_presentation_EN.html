@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo 2: Feature Selection</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6baa75 0%, #4a8a5a 100%);
+            overflow: hidden;
+        }
+        
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .slide {
+            display: none;
+            width: 90%;
+            max-width: 1200px;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 60px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        .slide.active {
+            display: block;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        h1 {
+            color: #6baa75;
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        h2 {
+            color: #4a8a5a;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+        
+        h3 {
+            color: #6baa75;
+            font-size: 1.8em;
+            margin: 25px 0 15px 0;
+        }
+        
+        p, li {
+            font-size: 1.3em;
+            line-height: 1.6;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .subtitle {
+            font-size: 1.5em;
+            color: #666;
+            font-style: italic;
+        }
+        
+        .big-emoji {
+            font-size: 4em;
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        li {
+            padding-left: 40px;
+            position: relative;
+            margin-bottom: 20px;
+        }
+        
+        li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #6baa75;
+            font-weight: bold;
+            font-size: 1.5em;
+        }
+        
+        /* Nested list styling */
+        ul ul {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        
+        ul ul li {
+            font-size: 1.1em;
+            padding-left: 30px;
+            margin-bottom: 10px;
+            font-weight: normal;
+        }
+        
+        ul ul li:before {
+            content: "•";
+            font-size: 1.2em;
+            left: 5px;
+            font-weight: normal;
+        }
+        
+        /* Parent list items bold */
+        ul > li {
+            font-weight: 600;
+        }
+        
+        .controls {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+        }
+        
+        button {
+            background: #6baa75;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        
+        button:hover {
+            background: #4a8a5a;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .slide-number {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            color: white;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+        
+        .highlight {
+            background: linear-gradient(120deg, #6baa7530 0%, #4a8a5a30 100%);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: 600;
+        }
+        
+        .center {
+            text-align: center;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            overflow-x: auto;
+            border-left: 5px solid #6baa75;
+            white-space: pre;
+        }
+        
+        .call-to-action {
+            background: linear-gradient(135deg, #6baa75 0%, #4a8a5a 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .call-to-action h3 {
+            color: white;
+            margin: 0 0 15px 0;
+        }
+        
+        .call-to-action p {
+            color: white;
+            margin: 0;
+            font-size: 1.4em;
+        }
+        
+        .demo-box {
+            background: linear-gradient(135deg, #6baa7515 0%, #4a8a5a15 100%);
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 5px solid #6baa75;
+            margin: 20px 0;
+        }
+        
+        .key-concept {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .bullets li {
+            font-size: 1.6em;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <div class="center">
+                <h1>Demo 2</h1>
+                <h2>Feature Selection</h2>
+                <img src="img/demo2_screen.png" alt="Demo 2 Screenshot" style="max-width: 80%; max-height: 60vh; margin: 30px auto; display: block; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+
+                <p class="subtitle">Interaction with the Map and Features</p>
+            </div>
+        </div>
+
+        <!-- Slide 2: What We Will Learn -->
+        <div class="slide">
+            <h2>What We Will Learn</h2>
+            <ul>
+                <li>How to access a project layer through the QField interface</li>
+                <li>How to query features from a layer</li>
+                <li>How to select objects from the map canvas with a point handler</li>
+            </ul>
+        </div>
+
+        <!-- Slide 3: Interface Project Layer-->
+        <div class="slide">
+            <h2>1. Layer Query via qgisProject Object</h2>
+            <div class="code-block">
+// imports qgisProject
+import org.qfield
+
+// get QgsVectorLayer by name
+let layer = qgisProject.mapLayersByName("plots")[0]
+
+            </div>
+            <ul>
+                <li>qgisProject is a real QgsProject type</li>
+                <li>C++ Class Reference marks functions with Q_INVOKABLE that are callable in Javascript (and QML)</li>
+            </ul>            
+        </div>
+        
+        <!-- Slide 4: Interface Feature Query-->
+        <div class="slide">
+            <h2>1. Feature Query via LayerUtils</h2>
+            <div class="code-block">
+//imports LayerUtils
+import org.qfield
+
+// build your expression just like in QGIS 
+let expression = "plot_id = 'plot_123'"
+
+// create feature iterator from expression
+let it = LayerUtils.createFeatureIteratorFromExpression(layer, expression)
+
+if (it.hasNext()) {
+    // Real QgsFeature 
+    const feature = it.next()
+    it.close()
+}
+it.close();
+                
+            </div>
+            <ul>
+                <li>createFeatureIteratorFromExpression returns a real QgsFeature Iterator object</li>
+                <li>it.next() returns a real QgsFeature object</li>
+                <li>Never forget to close the iterator (avoid crashes)</li>
+            </ul>            
+        </div>
+
+        <!-- Slide 5: Interface pointHandler -->
+        <div class="slide">
+            <h2>Intercepting Map Interactions with pointHandler</h2>
+            <div class="code-block">
+// imports iface
+import org.qfield
+
+Item {
+    // 1. Add the pointHandler to the plugin
+    property var handler: iface.findItemByObjectName("pointHandler")
+
+    Component.onCompleted: {
+
+        // 2. register the point handler and define its callback
+        handler.registerHandler("demo2_selection", (point, type, interactionType) => {
+            if(using_the_point){
+                // block other handlers
+                return true
+            }
+            else {
+                // not using the point, pass event to other handlers
+                return false
+            }
+        }
+    });
+    
+    // 3. Deregister the point handler on destruction (project close)
+    Component.onDestruction: {
+        handler.deregisterHandler("demo2_selection");
+    }
+} 
+        </div>
+        </div>
+        <!-- Slide 6: Interface pointHandler Details -->
+        <div class="slide">
+            <h2>Intercepting Map Interactions with pointHandler</h2>
+            <ul>
+                <li>1. Get pointHandler from iface.findItemByObjectName("pointHandler")</li>
+                <li>2. Register the pointHandler and define the callback</li>
+                <li>3. In callback, return true to consume the event, or false to pass it on</li>
+                <li>4. Deregister the pointHandler on destruction (project close)</li>
+            </ul>
+        </div>
+
+        <!-- Slide 7: Interface Point Handler: interactionType -->
+        <div class="slide">
+            <h2>Point Handler interactionType</h2>
+            <div class="code-block">
+var shouldHandle = (Qt.platform.os === "windows" && interactionType === "clicked") ||
+                    (Qt.platform.os !== "windows" && interactionType === "doubleClicked")
+
+            </div>
+            <ul>
+                <li>"clicked":   
+                    <ul><li>Windows: Works </li>
+                        <li>iOS:     Feature drawer appears over plugin </li>
+                    </ul>
+                </li> 
+                <li>"doubleClicked":
+                    <ul><li>Windows: Ignored </li>
+                        <li>iOS:     Works</li>
+                    </ul>
+                </li>
+                <li>"pressAndHold":
+                    <ul><li>Windows: Ignored </li>
+                        <li>iOS:     Object context menu blocks plugin.</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Slide 8: Interface Point Handler: point Coordinates -->
+        <div class="slide">
+            <h2>Point Handler Coordinates</h2>
+            <div class="code-block">
+let mapCanvas = iface.mapCanvas()
+
+handler.registerHandler("demo2_selection", (point, type, interactionType) => {
+
+    // 20 pixel tolerance box
+
+    let tl = mapCanvas.mapSettings.screenToCoordinate(Qt.point(point.x - 20, point.y - 20))
+    let br = mapCanvas.mapSettings.screenToCoordinate(Qt.point(point.x + 20, point.y + 20))
+
+    let topleft = tl.x + " " + tl.y
+    let topright = br.x + " " + tl.y
+    let bottomright = br.x + " " + br.y
+    let bottomleft = tl.x + " " + br.y
+    let wkt = "'POLYGON((" + topleft + ", " + topright + ", " + bottomright \
+                         + ", " + bottomleft + ", " + topleft + "))'"
+
+    let expression = "intersects(geom_from_wkt("+wkt+"), $geometry)"
+    let it = LayerUtils.createFeatureIteratorFromExpression(layer, expression)
+}
+
+
+            </div>
+        </div>
+
+        <!-- Slide 9: Passing Data -->
+        <div class="slide">
+            <h2>Passing Data to Component</h2>
+            <div class="code-block">
+Loader {
+    id: pluginLoader
+    sourceComponent: pluginComponent
+}
+pluginLoader.item.plotId = feature.attribute("plot_id")
+
+            </div>
+            <p style="margin-top: 30px;">
+                <span class="highlight">pluginLoader.item</span> = Root element of the Component
+            </p>
+        </div>
+
+        <!-- Slide 10: Property Binding -->
+        <div class="slide">
+            <h2>Property Binding in Component</h2>
+            <div class="code-block">
+// d2_plugin_component.qml
+Rectangle {
+    id: pluginFrame
+    property string plotId: ""
+    
+    Text {
+        id: messageBox
+        text: "Plot loaded: " + plotId
+        // Automatically updated!
+    }
+}
+            </div>
+            <p style="margin-top: 30px; font-size: 1.4em;">
+                Note the difference from imperative assignment: Property binding makes UI updates automatic!
+            </p>
+        </div>
+
+        <!-- Slide 11: Custom Signals -->
+        <div class="slide">
+            <h2>Custom Signals</h2>
+            <p>Closing the plugin with a button:</p>
+            <div class="code-block">
+// In Component: Define signal
+Rectangle {
+    id: pluginFrame
+    signal closed()
+    
+    Button {
+        onClicked: { closed() }
+    }
+}
+
+// In Plugin: Connect signal
+Item {
+    id: plugin
+    Loader{}
+    Connections {   
+        target: pluginLoader.item
+        function onClosed() {
+            pluginLoader.active = false
+        }
+    }
+}
+            </div>
+            <p style="margin-top: 30px; font-size: 1.4em;">
+                Too many different mechanisms for interactions? Yes, I think so too.
+            </p>
+        </div>
+
+
+        <!-- Slide 12: Exercises -->
+        <div class="slide">
+            <h2>Exercises for the Next 20 Minutes</h2>
+            <div class="call-to-action">
+                <h3>Tasks:</h3>
+            </div>
+            <ul>
+                <li><strong>Exercise 1:</strong> Deploy Demo2 plugin and test</li>
+                <li><strong>Exercise 2:</strong> Display pixel coordinates and map coordinates in text</li>
+                <li><strong>Exercise 3:</strong> I count 3 mechanisms for signal/slot interactions. How many do you know?</li>
+                <li><strong>Exercise 4:</strong> What's the difference between Property Binding and Imperative Assignment?</li>
+            </ul>
+            <div class="demo-box" style="margin-top: 30px;">
+                <p style="text-align: center; font-size: 1.3em;">
+                    📚 Detailed code examples in the Markdown material! workshop_qfield_plugins_de\de_de\docs\demo1\DEMO2_INTRO_EN.html
+                </p>
+            </div>
+        </div>
+        <!-- Slide 13: Lets start-->
+        <div class="slide">
+            <h2><a href="demo4_presentation_EN.html">Demo4</a></h2>
+        </div>
+    </div>
+
+    <div class="slide-number">
+        <span id="current-slide">1</span> / 13
+    </div>
+
+    <div class="controls">
+        <button id="prev">← Previous</button>
+        <button id="next">Next →</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            document.getElementById('current-slide').textContent = currentSlide + 1;
+        }
+
+        document.getElementById('prev').addEventListener('click', () => {
+            showSlide(currentSlide - 1);
+        });
+
+        document.getElementById('next').addEventListener('click', () => {
+            showSlide(currentSlide + 1);
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') showSlide(currentSlide - 1);
+            if (e.key === 'ArrowRight') showSlide(currentSlide + 1);
+            if (e.key === ' ') showSlide(currentSlide + 1);
+        });
+    </script>
+</body>
+</html>

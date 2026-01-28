@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Closing the Plugin: Sending Signals</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6baa75 0%, #4a8a5a 100%);
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 60px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #6baa75;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            font-weight: 700;
+            border-bottom: 3px solid #6baa75;
+            padding-bottom: 15px;
+        }
+        
+        h2 {
+            color: #4a8a5a;
+            font-size: 2em;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        p {
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #d63384;
+            font-size: 0.95em;
+        }
+        
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+        
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+        }
+        
+        .nav-links {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .nav-links a {
+            color: #6baa75;
+            text-decoration: none;
+            font-size: 1.2em;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #4a8a5a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Closing the Plugin: Sending Signals</h1>
+        
+        <p>Instead of using the button in the PluginToolbar to turn the plugin on and off, we now rely on the map click to open the plugin, and I've added an OK button to the plugin component to close it. This creates a simple example for creating and using custom signals.</p>
+
+        <h2>Setting Up the Signal from the Component in d2_plugin_component.qml</h2>
+        <p>Just as you would do in PyQt, our signal is defined within our component item</p>
+
+<pre><code>Rectangle {
+  id: pluginFrame
+  signal closed()
+}</code></pre>
+
+        <p>We then add a button to pluginFrame that emits the signal when clicked</p>
+
+<pre><code>Rectangle {
+  id: pluginFrame
+  signal closed()
+  Button {
+    id: closeButton
+    onClicked: {
+        closed()
+    }
+  }
+}</code></pre>
+
+        <h2>Connecting the Signal in the Plugin</h2>
+        <p>In demo2_select.qml, we added a Connections item to connect the signal from pluginFrame. This is the 3rd different method for handling signals and slots in QML.</p>
+
+<pre><code>Item {
+  id: plugin
+  Loader{
+    id:pluginLoader
+  }
+  Connections {
+    target: pluginLoader.item
+    function onClosed(){
+      pluginLoader.active = false
+    }
+  }
+}</code></pre>
+
+        <p>This corresponds to PyQt</p>
+
+<pre><code> pluginLoader.item.closed.connect(onClosed)
+ def onClosed(){
+    pluginLoader.active=false
+ }</code></pre>
+
+        <p>Note here that the connection between slot and function follows a mandatory naming convention, where if the signal name is closed, the slot name must be onClosed. Hey. I don't make the rules.</p>
+
+        <p>I could tell you about layouts, but I think you'll be very bored if I do. So let's skip to demonstration 4 and I'll show you how to add and update a feature.</p>
+
+        <div class="nav-links">
+            <a href="../demo4/DEMO4_INTRO_EN.html">📚 Demonstration 4: Adding and Updating Features</a>
+            <a href="DEMO2_PLOTID_EN.html">📚 &lt;&lt; Demo2 Handling the Plot ID</a>
+        </div>
+    </div>
+</body>
+</html>

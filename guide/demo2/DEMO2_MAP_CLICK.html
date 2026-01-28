@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Einrichtung der Feature-Auswahl vom Map-Canvas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6baa75 0%, #4a8a5a 100%);
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 60px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #6baa75;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            font-weight: 700;
+            border-bottom: 3px solid #6baa75;
+            padding-bottom: 15px;
+        }
+        
+        h2 {
+            color: #4a8a5a;
+            font-size: 2em;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        h3 {
+            color: #6baa75;
+            font-size: 1.5em;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        h4 {
+            color: #4a8a5a;
+            font-size: 1.3em;
+            margin-top: 25px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        
+        p {
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        ul {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 20px;
+        }
+        
+        li {
+            padding-left: 40px;
+            position: relative;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            color: #333;
+        }
+        
+        li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #6baa75;
+            font-weight: bold;
+            font-size: 1.5em;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin: 20px 0;
+            display: block;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #d63384;
+            font-size: 0.95em;
+        }
+        
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+        
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+        }
+        
+        strong {
+            color: #4a8a5a;
+            font-weight: 600;
+        }
+        
+        .nav-links {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .nav-links a {
+            color: #6baa75;
+            text-decoration: none;
+            font-size: 1.2em;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #4a8a5a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Einrichtung der Feature-Auswahl vom Map-Canvas</h1>
+        
+        <p>Um die Feature-Auswahl vom Map-Canvas einzurichten, müssen wir einen QField pointHandler registrieren, ähnlich wie ein QgsMapTool in pyQGIS. Dies geschieht in der Hauptcode-Datei demo2_selection.qml.</p>
+        
+        <p>Dabei lernen wir auch:</p>
+        <ul>
+            <li>wie man einen Layer aus einem Projekt erhält</li>
+            <li>wie man ein Feature mit einem Ausdruck erhält</li>
+            <li>wie man ein Attribut aus einem Feature erhält</li>
+        </ul>
+
+        <h2>Was machen wir?</h2>
+        <ul>
+            <li>einen Point-Handler abrufen</li>
+            <li>die geklickten Kartenkoordinaten vom Point-Handler abrufen</li>
+            <li>ein 20 Pixel-Begrenzungsrechteck um die Kartenkoordinaten zeichnen</li>
+            <li>eine räumliche Abfrage verwenden, um Features auf dem Plot-Layer zu finden, die sich innerhalb des Begrenzungsrechtecks befinden</li>
+            <li>wenn ein Feature gefunden wird, das Plugin aktivieren und die Plot-ID des Features an die Plugin-Component übergeben</li>
+        </ul>
+
+        <h2>1. Den Point-Handler von der Schnittstelle abrufen</h2>
+        <p>Abrufen und speichern Sie einen Verweis auf den pointHandler der QField-Schnittstelle als Klassen-Property.</p>
+
+<pre><code>Item{
+    id: plugin
+    property var pointHandler: iface.findItemByObjectName("pointHandler")
+
+}</code></pre>
+
+        <ul>
+            <li>iface ist Ihre QField-Schnittstelleninstanz, wie qgis.utils.iface in pyqgis. Sie wird aus org.qfield importiert.</li>
+            <li>Wir haben bereits die Verwendung von iface.logMessage und iface.addItemToPluginsToolbar gesehen</li>
+            <li>iface.findItemByObjectName ist eine QField-Schnittstellenfunktion, die jedes Objekt aus der QField-Instanz abruft, sofern es eine objectName-Property hat. (Hier beginnen Sie, durch den Quellcode zu graben.)</li>
+            <li>pointHandler ist ein QField-Schnittstellenobjekt, das die Koordinaten einer Karteninteraktion und die Art der Interaktion (Klick, Doppelklick, Halten und Drücken) ausgibt</li>
+        </ul>
+
+        <h2>2. Wenn das Plugin lädt (wenn Ihr Projekt öffnet), registrieren Sie Ihre benutzerdefinierte Callback-Funktion für den QField Point-Handler</h2>
+        <p>Die onCompleted-Funktion des Root-Items wird ausgelöst, wenn das Plugin lädt.</p>
+
+<pre><code>Item{
+    id: plugin
+    property var pointHandler: iface.findItemByObjectName("pointHandler")
+    Component.onCompleted{
+        pointHandler.registerHandler("demo2_selection", my_callback);
+    }
+}</code></pre>
+
+        <h2>3. Wenn das Plugin entladen wird (wenn Ihr Projekt schließt), deregistrieren Sie Ihre Callback-Funktion!</h2>
+        <p>Wenn Sie das nicht tun, wird Ihr Point-Handler Ihre anderen Projekte kontaminieren.</p>
+        <p>Verwenden Sie Component.onDestruction, um Verhalten beim Schließen zu definieren.</p>
+
+<pre><code>Item{
+    id: plugin
+    &lt;...&gt;
+    Component.onDestruction{
+        pointHandler.deregisterHandler("demo2_selection");
+    }
+}</code></pre>
+
+        <h2>4. Definieren Sie Ihren Callback mit einer Arrow-Funktion</h2>
+        <p>Unsere Callback-Funktion ist in JavaScript geschrieben. Anstatt eine Funktionsreferenz wie unten zu verwenden, wie es ein Python-Programmierer tun würde:</p>
+
+<pre><code>Item{
+    id: plugin
+    &lt;...&gt;
+    Component.onCompleted{
+        pointHandler.registerHandler("demo2_selection", my_callback);
+    }
+}</code></pre>
+
+        <p>ist es üblicher, eine JavaScript-Arrow-Funktions-Syntax zu sehen, wie wir sie in demo2_selection sehen werden</p>
+
+<pre><code>Item{
+
+    Component.onCompleted{
+        pointHandler.registerHandler("demo2_selection", (point, type, interactionType)=&gt;{
+            iface.logMessage("Interaction Type: " + interactionType)
+            return true
+        });
+    }
+}</code></pre>
+
+        <h3>Vergessen Sie nicht den booleschen Rückgabewert Ihres Callbacks</h3>
+        <p>Der boolesche Rückgabewert vom pointHandler-Callback teilt QField mit, ob Ihr Handler das Event verbraucht hat oder nicht:</p>
+        
+        <p><strong>return true - Event verbraucht</strong></p>
+        <p>Ihr Handler hat den Klick verarbeitet</p>
+        <ul>
+            <li>QField sollte aufhören, das Event an andere Handler weiterzugeben</li>
+            <li>Verhindert QFields Standardverhalten für diesen Klick</li>
+        </ul>
+
+        <p><strong>return false oder kein return - Event nicht verbraucht</strong></p>
+        <ul>
+            <li>Ihr Handler hat den Klick nicht verarbeitet (oder möchte ihn durchgeben)</li>
+            <li>QField gibt weiter an andere registrierte Handler</li>
+            <li>QFields Standardverhalten kann immer noch ausgeführt werden</li>
+        </ul>
+
+        <h2>5. Definieren Sie den Callback, um Kartenkoordinaten von der Benutzerinteraktion zu erhalten</h2>
+
+        <h3>Entscheiden Sie, welche Interaktion Sie wollen</h3>
+        <p><strong>"clicked"</strong>: Das Auslösen bei Einzelklick kann Konflikte verursachen, da die Feature-Drawer bei einem Einzelklick öffnet.</p>
+        <ul>
+            <li>In QField für Windows wird der Einzelklick die Feature-Drawer blockieren und durch unser Plugin ersetzen.</li>
+            <li>In QField für iOS wird, wenn Sie einen Einzelklick verwenden, die Attributtabelle über dem Plugin gerendert.</li>
+        </ul>
+
+        <p><strong>"doubleClicked"</strong>: Das Auslösen bei Doppelklick verhindert Konflikte. Wir können die Feature-Drawer bei einem Einzelklick öffnen lassen und mit einem Doppelklick in das Plugin eintreten.</p>
+        <ul>
+            <li>In QField für Windows (im Moment) registriert die Doppelklick-Interaktion nicht.</li>
+            <li>In iOS funktioniert das großartig.</li>
+        </ul>
+
+        <p><strong>"pressAndHold"</strong>: Dies wäre theoretisch auch ein schöner Modus zum Öffnen unseres Plugins, aber in der Praxis ist es eine schlechte Wahl</p>
+        <ul>
+            <li>In iOS blockiert das Kontextmenü, das sich beim Drücken öffnet, das Öffnen unseres Plugins bei dieser Interaktion.</li>
+            <li>In Windows registriert die Press-and-Hold-Interaktion nicht.</li>
+        </ul>
+
+        <p>Bedeutet das, dass der boolesche Rückgabewert nicht ganz wie angekündigt funktioniert? Vielleicht. Es gibt auch eine Priorität, die auf pointHandler-Callbacks gesetzt wird, die die Verarbeitung des booleschen Rückgabewerts aus dem Callback beeinflussen kann.</p>
+
+        <p>Um Konflikte mit QField zu vermeiden und sicherzustellen, dass unser Plugin in beiden Umgebungen funktioniert, verwenden Sie clicked, wenn wir in Windows sind, und doubleClicked, wenn wir in iOS sind.</p>
+
+        <h3>Vergessen Sie Ihr Return nicht</h3>
+        <ul>
+            <li>return true nach der Behandlung Ihres Punktes, um andere Handler wie die QField-Attributtabelle am Auslösen zu hindern.</li>
+            <li>return false, wenn Sie die Interaktion ignorieren, damit der nächste Handler sie aufnehmen kann.</li>
+        </ul>
+
+<pre><code>Item{
+    Component.onCompleted{
+        pointHandler.registerHandler("demo2_selection", (point, type, interactionType) =&gt; {
+            var shouldHandle = (Qt.platform.os === "windows" && interactionType === "clicked") ||
+                               (Qt.platform.os !== "windows" && interactionType === "doubleClicked")
+            if (shouldHandle) {
+                iface.logMessage("Platform " + Qt.platform.os)
+                iface.logMessage("Interaction " + interactionType)      
+                return true // weitere Verarbeitung des Klicks blockieren
+            }
+            return false // die Interaktion von QField aufnehmen lassen
+        });
+    }
+}</code></pre>
+
+        <h3>Die Pixelkoordinaten der Bildschirminteraktion abrufen</h3>
+<pre><code>pointHandler.registerHandler("demo2_searchbar", (point, type, interactionType) =&gt; {
+    var shouldHandle = ... 
+    if (shouldHandle){
+      iface.logMessage(point.x)
+      iface.logMessage(point.y)
+    }
+});</code></pre>
+
+        <h3>In Kartenkoordinaten umwandeln</h3>
+<pre><code>pointHandler.registerHandler("demo2_searchbar", (point, type, interactionType) =&gt; {
+    var shouldHandle = ... 
+    if (shouldHandle){
+      let coords = iface.mapCanvas().mapSettings.screenToCoordinate(Qt.point(point.x, point.y))
+      iface.logMessage(coords.x)
+      iface.logMessage(coords.y)
+    }
+});</code></pre>
+
+        <h2>6. Definieren Sie Ihren Callback, um eine räumliche Abfrage auf dem Plot-Layer mit Ihren Benutzerkoordinaten auszuführen</h2>
+        <p>Wir werden eine räumliche Abfrage auf dem Plots-Layer mit einem Begrenzungsrechteck von 20m um unsere geklickten Koordinaten ausführen. Wenn wir ein Feature in diesem Rechteck finden, werden wir das Plugin aktivieren und die Plot-ID des Features an unsere Plugin-Component übergeben.</p>
+
+        <h3>Den Plots-Layer aus dem Projekt abrufen</h3>
+        <p>Sie können eine Teilmenge der QGIS-API-Funktionen von QField und JavaScript aufrufen. Sie können herausfinden, welche Funktionen von QField aufgerufen werden können, indem Sie zur QGIS C++ Class Reference für die Klasse gehen, an der Sie interessiert sind. Funktionen, die Sie aufrufen können, sind mit Q_INVOKABLE gekennzeichnet.</p>
+
+        <img src="img/demo2_reference.png" alt="QGIS API Reference">
+
+        <p>Wir holen den Map-Layer aus der QgsProject-Instanz, die in QField als qgisProject verfügbar ist, das mit org.qgis importiert wurde.</p>
+
+<pre><code>pointHandler.registerHandler("demo2_searchbar", (point, type, interactionType) =&gt; {
+    var shouldHandle = ... 
+    if (shouldHandle){
+      let layer = qgisProject.mapLayersByName("plots")[0]
+      iface.logMessage("Got plots layer")
+    }
+});</code></pre>
+
+        <h3>Ein Feature aus dem Plots-Layer mit einem LayerUtils Feature-Iterator mit einem einfachen Ausdruck abrufen</h3>
+        <p>getFeatures ist noch keine aufrufbare QGIS-Funktion. Stattdessen können wir einen Ausdruck übergeben, um einen Feature-Iterator aus QFields LayerUtils-Klasse zu erhalten, die aus org.qfield importiert wird.</p>
+        
+        <p>Wir werden unseren Plots-Layer nach dem Feature mit plot_id = 'b.1' abfragen.</p>
+        
+        <p>Wir werden dieses Feature abrufen und seine Plot-ID ausgeben. (Noch nicht unsere Koordinaten verwenden.)</p>
+
+<pre><code>pointHandler.registerHandler("demo2_searchbar", (point, type, interactionType) =&gt; {
+    var shouldHandle = ... 
+    if (shouldHandle){
+      var layer = qgisProject.mapLayersByName("plots")[0]
+      var expression = "plot_id = 'b.1'";
+
+      let it = LayerUtils.createFeatureIteratorFromExpression(layer, expression)
+      
+      if (it.hasNext()){
+        feature = it.next()
+        plot_id = feature.attribute("plot_id")
+        iface.logMessage("found the feature of the plots layer: " + plot_id)
+      }
+      it.close(); // NIEMALS vergessen, Ihren Iterator zu schließen
+      return true
+    }
+    return false
+
+});</code></pre>
+
+        <h4>WICHTIG: Vergessen Sie niemals, einen Feature-Iterator zu schließen. Wenn Sie Ihren Feature-Iterator nicht schließen, führt dies zu einem vollständigen Herunterfahren von QField, nach etwa dem 4. Mal, dass Sie den Feature-Iterator aufrufen.</h4>
+
+        <h3>Tauschen Sie nun den einfachen Ausdruck mit einer räumlichen Abfrage aus</h3>
+        <p>Wir werden ein Begrenzungsrechteck von 20m um unsere Interaktionskoordinaten erstellen. Wir werden die Begrenzungsrechteck-Koordinaten verwenden, um eine Schnittmengen-Abfrage an LayerUtils zu übergeben, anstelle unserer einfachen Abfrage.</p>
+
+<pre><code>      if (shouldHandle) {
+        // Erstelle ein Paar von Punkten, die einen Pufferbereich darstellen, in dem Features gesucht werden sollen. 
+        let tl = mapCanvas.mapSettings.screenToCoordinate(Qt.point(point.x - 20, point.y - 20))
+        let br = mapCanvas.mapSettings.screenToCoordinate(Qt.point(point.x + 20, point.y + 20))
+
+        let expression = "intersects(geom_from_wkt('POLYGON(("+tl.x+" "+tl.y+", "+br.x+" "+tl.y+", "+br.x+" "+br.y+", "+tl.x+" "+br.y+", "+tl.x+" "+tl.y+"))'), $geometry)"
+        let it = LayerUtils.createFeatureIteratorFromExpression(qgisProject.mapLayersByName("plots")[0], expression)
+        if (it.hasNext()) {
+          const feature = it.next()
+          console.log(feature.id + " " + feature.attribute("plot_id"))
+        }
+        it.close();
+      }
+      return false</code></pre>
+
+        <h3>Schließlich, wenn Sie das Feature finden, schalten Sie das Plugin ein und übergeben Sie die Plot-ID</h3>
+        <p>Die Loader-Klasse hat die Property "item", die das Item enthält, das von seiner Source-Component geladen wurde.</p>
+        
+        <p>In unserer Plugin-Component haben wir eine Funktion setPlotId definiert, die eine Plot-ID erhält und sie verwendet, um die Suchleiste und Textbox des Plugins zu füllen.</p>
+        
+        <p><strong>Denken Sie daran, den Iterator zu schließen, unabhängig davon, ob das Feature gefunden wird oder nicht!</strong></p>
+        
+        <p><strong>Denken Sie daran, den booleschen Wert für den pointHandler zurückzugeben.</strong></p>
+
+<pre><code>    pointHandler.registerHandler("demo2_selection", (point, type, interactionType) =&gt; {
+      // ...
+      if (shouldHandle) {
+        // ...
+        if (it.hasNext()) {
+          // Holen Sie Ihr Feature
+          const feature = it.next()
+
+          // Schließen Sie Ihren Iterator
+          it.close()  
+          
+          // Schalten Sie das Plugin ein, genau wie die Kamera-Schaltfläche
+          pluginLoader.active = true
+          
+          // Übergeben Sie die Plot-ID an die Plugin-Component
+          pluginLoader.item.plotId = feature.attribute("plot_id")
+          
+          // Blockieren Sie das Interaktionssignal
+          return true
+        }
+        // Schließen Sie den Iterator, wenn Sie kein Feature finden
+        it.close();
+      }
+      // Geben Sie die Interaktion weiter
+      return false
+    });</code></pre>
+
+        <h2>Die gesamte demo2_selection.qml</h2>
+<pre><code> // imports
+
+Item {
+  id: plugin
+  parent: iface.mapCanvas() 
+  anchors.fill: parent 
+  
+  // Map Selection: 1. Halten Sie einen Verweis auf das Map-Canvas
+  property var mapCanvas: iface.mapCanvas() 
+  
+  // Map Selection: 2. Fügen Sie den pointHandler zum Plugin hinzu
+  property var pointHandler: iface.findItemByObjectName("pointHandler")
+
+  Loader {
+    id: pluginLoader
+    // ...
+  }  
+
+
+  Component.onCompleted: {
+ 
+    // Map Selection: 3. Registrieren Sie den Point-Handler und definieren Sie seinen Callback
+    pointHandler.registerHandler("demo2_searchbar", (point, type, interactionType) =&gt; {
+
+      // Entscheiden Sie über die Interaktion  
+      var shouldHandle = (Qt.platform.os === "windows" && interactionType === "clicked") ||
+                         (Qt.platform.os !== "windows" && interactionType === "doubleClicked")
+      if (shouldHandle) {
+
+        // Erstellen Sie ein Paar von Punkten, die einen 20m-Pufferbereich darstellen, in dem Features gesucht werden sollen. 
+        let tl = mapCanvas.mapSettings.screenToCoordinate(Qt.point(point.x - 20, point.y - 20))
+        let br = mapCanvas.mapSettings.screenToCoordinate(Qt.point(point.x + 20, point.y + 20))
+
+        // Führen Sie eine räumliche Abfrage aus
+        let expression = "intersects(geom_from_wkt('POLYGON(("+tl.x+" "+tl.y+", "+br.x+" "+tl.y+", "+br.x+" "+br.y+", "+tl.x+" "+br.y+", "+tl.x+" "+tl.y+"))'), $geometry)"
+        let it = LayerUtils.createFeatureIteratorFromExpression(qgisProject.mapLayersByName("plots")[0], expression)
+        if (it.hasNext()) {
+          // Sie haben ein Feature, spielen Sie damit! :)
+          const feature = it.next()
+          console.log(feature.id)
+          it.close()
+          pluginLoader.active = true
+          // Übergeben Sie die Plot-ID an die Plugin-Component
+          pluginLoader.item.plotId = feature.attribute("plot_id")
+          return true
+        }
+        it.close();
+      }
+      return false
+    });
+  }
+
+  // Map Selection: 4. Deregistrieren Sie den Point-Handler bei Destruktion (sollte beim Projektschluss sein)
+  Component.onDestruction: {
+    pointHandler.deregisterHandler("demo2_searchbar");
+  }
+}</code></pre>
+
+        <p>Das war viel. Schauen wir uns an, wie diese Plot-ID zur MessageBox gelangt. Dieser Teil ist ziemlich einfach.</p>
+
+        <div class="nav-links">
+            <a href="DEMO2_PLOTID.html">📚 Handhabung der Plot-ID in der Plugin-Component</a>
+            <a href="DEMO2_INTRO.html">📚 &lt;&lt; Demo2 Einführung</a>
+        </div>
+    </div>
+</body>
+</html>

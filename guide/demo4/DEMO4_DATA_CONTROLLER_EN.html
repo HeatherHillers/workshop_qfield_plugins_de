@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Controller</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6baa75 0%, #4a8a5a 100%);
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 60px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #6baa75;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            font-weight: 700;
+            border-bottom: 3px solid #6baa75;
+            padding-bottom: 15px;
+        }
+        
+        h2 {
+            color: #4a8a5a;
+            font-size: 2em;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        p {
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        ul, ol {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 20px;
+        }
+        
+        li {
+            padding-left: 40px;
+            position: relative;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            color: #333;
+        }
+        
+        ul > li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #6baa75;
+            font-weight: bold;
+            font-size: 1.5em;
+        }
+        
+        ol {
+            counter-reset: item;
+        }
+        
+        ol > li:before {
+            content: counter(item) ".";
+            counter-increment: item;
+            position: absolute;
+            left: 0;
+            color: #6baa75;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #d63384;
+            font-size: 0.95em;
+        }
+        
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+        
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+        }
+        
+        strong {
+            color: #4a8a5a;
+            font-weight: 600;
+        }
+        
+        .nav-links {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .nav-links a {
+            color: #6baa75;
+            text-decoration: none;
+            font-size: 1.2em;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #4a8a5a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Demonstration 4: Data Controller</h1>
+        
+        <p>Here we learn all the important parts of the QField interface:</p>
+
+        <ul>
+            <li>Getting a feature (again)</li>
+            <li>Getting a feature attribute (again)</li>
+            <li>Inserting a feature</li>
+            <li>Updating a feature</li>
+            <li>Deleting a feature (bonus section)</li>
+        </ul>
+
+        <h2>The Most Important Thing:</h2>
+
+        <p>Don't try to bypass the QField API by directly accessing the data providers. Remember that data synchronization relies on QGIS Offline Editing. If you try to edit your data directly, the changes won't be detected when you synchronize the project and will be overwritten. Rely on the QField API to ensure synchronization works well and all QField signals are handled correctly.</p>
+
+        <h2>The QField API</h2>
+
+        <p>FeatureUtils and LayerUtils, along with iface, are the main components of the QField API. These are imported from org.qfield.</p>
+
+        <h2>Getting a Feature</h2>
+
+        <p>We've already covered this in the point handler, but it's included here to provide a complete reference.</p>
+
+        <ol>
+            <li style="padding-left: 10px; list-style-position: outside;">Get a QgsFeature iterator from LayerUtils with a QGIS-style expression string.</li>
+            <li style="padding-left: 10px; list-style-position: outside;">Remember to close your iterator.</li>
+        </ol>
+
+<pre><code>QtObject {
+    id: dataController
+    
+    property var layer: qgisProject.mapLayersByName("plot_header")[0]
+    property var currentFeature: null
+    
+    function loadHeaderForPlot(plotId) {
+        &lt;...&gt;
+        // Query for existing feature
+        var expression = "plot_id = '" + plotId + "'"
+        var iterator = LayerUtils.createFeatureIteratorFromExpression(layer, expression)
+        
+        if (iterator.hasNext()) {
+            // Feature exists - load it
+            currentFeature = iterator.next()
+            iterator.close()  // CRITICAL: Always close iterators
+        } else {
+            iterator.close()  // CRITICAL: Always close iterators
+            
+            // Feature doesn't exist - create it
+            currentFeature = createNewFeature(plotId)
+        }
+        
+        featureLoaded(currentFeature)
+        return currentFeature
+    }</code></pre>
+
+        <h2>Inserting a Feature</h2>
+
+        <p>Here we use a mix of QGIS and QField functions. If there's a QField utility to do something, we'll prefer it over directly using QGIS functions.</p>
+
+        <ol>
+            <li style="padding-left: 10px; list-style-position: outside;">Signal the start of editing, as in QGIS.
+                <ul>
+                    <li>layer.startEditing() is called before all insertions, updates, or deletions.</li>
+                </ul>
+            </li>
+            <li style="padding-left: 10px; list-style-position: outside;">Create a new empty feature.
+                <ul>
+                    <li>FeatureUtils.createFeature(QgsVectorLayer) creates an empty QgsFeature with the appropriate attribute structure for the layer. <strong>This does not edit the layer. It only creates a separate feature object that hasn't been added to the layer yet</strong></li>
+                </ul>
+            </li>
+            <li style="padding-left: 10px; list-style-position: outside;">Set a feature attribute
+                <ul>
+                    <li>Use the QgsFeature.setAttribute function to set feature values.</li>
+                </ul>
+                <p style="margin-top: 10px;">Here we set the automatic values that are hidden from the form: a UID and timestamp for the new feature, as well as the plot ID. <strong>This does not edit the layer. Only the feature.</strong></p>
+            </li>
+            <li style="padding-left: 10px; list-style-position: outside;">Insert a feature
+                <ul>
+                    <li>Use QField's LayerUtils.addFeature to add a feature to the layer.</li>
+                </ul>
+            </li>
+            <li style="padding-left: 10px; list-style-position: outside;">As in QGIS, commit your changes to the layer.
+                <ul>
+                    <li>layer.commitChanges() is called to save all insertions, updates, or deletions since startEditing().</li>
+                </ul>
+            </li>
+        </ol>
+
+<pre><code>    function createNewFeature(plotId) {
+        console.log("Creating new feature for plot:", plotId)
+        
+        layer.startEditing()
+        
+        var newFeature = FeatureUtils.createFeature(layer)
+        newFeature.setAttribute("f_uid", StringUtils.createUuid().replace(/[\{\}]/g, ""))
+        newFeature.setAttribute("plot_id", plotId)
+        newFeature.setAttribute("log_date", new Date().toISOString())
+        
+        LayerUtils.addFeature(layer, newFeature)
+        layer.commitChanges()
+        
+        // Retrieve again to get valid feature ID after commit
+        var iterator = LayerUtils.createFeatureIteratorFromExpression(
+            layer, 
+            "plot_id = '" + plotId + "'"
+        )
+        var committedFeature = iterator.next()
+        iterator.close()  // CRITICAL: Always close iterators
+        
+        console.log("Created feature with ID:", committedFeature.id)
+        return committedFeature
+    }</code></pre>
+
+        <h2>Getting a Feature Attribute</h2>
+
+        <p>We covered this in our discussion of the point handler, but we'll include it here for completeness.</p>
+
+        <p>Use QgsFeature.attribute(fieldName) to retrieve a value. Never use a hard-coded index value to retrieve a value with QgsFeature.attribute(index). Index values are not consistent between QGIS project and QField project. Hilarity will ensue.</p>
+
+<pre><code>    function getFieldValue(fieldName) {
+        &lt;...&gt;
+        return currentFeature.attribute(fieldName)
+    }</code></pre>
+
+        <h2>Updating an Existing Feature with New Attribute Values</h2>
+
+        <p>The plot_header feature is retrieved or created and committed when the header tab is opened, so when the user clicks save, it always updates an existing feature.</p>
+
+        <ol>
+            <li style="padding-left: 10px; list-style-position: outside;">Get your QgsFeature
+                <ul>
+                    <li>Our header feature is already stored in the currentFeature property.</li>
+                </ul>
+            </li>
+            <li style="padding-left: 10px; list-style-position: outside;">Signal the editing action as in QGIS
+                <ul>
+                    <li>QgsVectorLayer.startEditing() is called</li>
+                </ul>
+            </li>
+            <li style="padding-left: 10px; list-style-position: outside;">Get the feature ID
+                <ul>
+                    <li>The QgsFeature.id property gives you the feature ID.</li>
+                </ul>
+            </li>
+            <li style="padding-left: 10px; list-style-position: outside;">Get the field list
+                <ul>
+                    <li>The QgsFeature.fields property gives you the QgsFields object.</li>
+                </ul>
+            </li>
+            <li style="padding-left: 10px; list-style-position: outside;">Get the QField index of the field you want to change
+                <ul>
+                    <li>QgsFields.indexOf(fieldName) gives you the real QField (not QGIS) attribute field index.</li>
+                </ul>
+            </li>
+            <li style="padding-left: 10px; list-style-position: outside;">Change the attribute value directly in the layer
+                <ul>
+                    <li>QgsVectorLayer.changeAttributeValue(fid, attribute_index, new_value) updates the layer for the given feature ID and attribute index.</li>
+                </ul>
+            </li>
+            <li style="padding-left: 10px; list-style-position: outside;">Commit your changes.
+                <ul>
+                    <li>Use QgsVectorLayer.commitChanges() to save the changes to the layer</li>
+                </ul>
+            </li>
+        </ol>
+
+<pre><code>    function saveFieldValues(fieldValueMap) {
+        &lt;...&gt;
+        layer.startEditing()
+        
+        var fid = currentFeature.id
+        var fields = currentFeature.fields
+        
+        // Update timestamp
+        var logDateIndex = fields.indexOf("log_date")
+        layer.changeAttributeValue(fid, logDateIndex, new Date().toISOString())
+        
+        // Update all field values from the map
+        for (var fieldName in fieldValueMap) {
+            var value = fieldValueMap[fieldName]
+            var fieldIndex = fields.indexOf(fieldName)
+            
+            if (fieldIndex >= 0) {
+                layer.changeAttributeValue(fid, fieldIndex, value)
+                console.log("Saved field:", fieldName, "=", value)
+            } else {
+                console.log("Warning: Field not found:", fieldName)
+            }
+        }
+        
+        layer.commitChanges()
+        featureSaved()
+        
+        console.log("Successfully saved feature")
+        return true
+    }</code></pre>
+
+        <h2>Deleting a Feature</h2>
+
+        <p>In Demonstration 4, we don't actually delete features. How are plot_headers deleted when a feature is deleted? They're not. My practical use case is a small team of biologists, and at the end of the season I'll just clean up all orphans in my database.</p>
+
+        <p>In Demonstration 5, we can delete species entries in the strata pages. But I have a feeling we might be losing steam in this workshop now. I know I am while writing this. So instead of dragging you through the strata page UI in Demo5 just to show you a simple delete function, let's just append it here.</p>
+
+        <ol>
+            <li style="padding-left: 10px; list-style-position: outside;">Signal the start of editing
+                <ul>
+                    <li>QgsVectorLayer.startEditing is called before deletion</li>
+                </ul>
+            </li>
+            <li style="padding-left: 10px; list-style-position: outside;">Get the feature ID
+                <ul>
+                    <li>QgsFeature.id gives you the feature ID. We already have it as a function parameter.</li>
+                </ul>
+            </li>
+            <li style="padding-left: 10px; list-style-position: outside;">Delete the feature
+                <ul>
+                    <li>QgsVectorLayer.deleteFeature(id) is called to delete the feature.</li>
+                </ul>
+            </li>
+            <li style="padding-left: 10px; list-style-position: outside;">Roll back a failed edit
+                <ul>
+                    <li>QgsVectorLayer.rollBack() is called to cancel edits to the layer.</li>
+                </ul>
+            </li>
+            <li style="padding-left: 10px; list-style-position: outside;">Save edits
+                <ul>
+                    <li>QgsVectorLayer.commitChanges() is called to save edits to the layer.</li>
+                </ul>
+            </li>
+        </ol>
+
+<pre><code>// Delete function from demo5_strata_pages\components\d5_strata_data_controller.qml
+
+    /**
+     * Delete a species entry by feature ID
+     */
+    function deleteEntry(featureId) {
+        if (!speciesLayer) {
+            error("Species layer not available")
+            return false
+        }
+        
+        speciesLayer.startEditing()
+        
+        var success = speciesLayer.deleteFeature(featureId)
+        if (!success) {
+            error("Failed to delete feature")
+            speciesLayer.rollBack()
+            return false
+        }
+        
+        var commitSuccess = speciesLayer.commitChanges()
+        if (!commitSuccess) {
+            error("Failed to commit deletion")
+            speciesLayer.rollBack()
+            return false
+        }
+        
+        console.log("Deleted entry with ID:", featureId)
+        entryDeleted(featureId)
+        return true
+    }</code></pre>
+
+        <div class="nav-links">
+            <a href="../../de_de/WORKSHOP_END.html">📚 The End</a>
+            <a href="DEMO4_FORM_CONTROLLER_EN.html">📚 &lt;&lt; Demonstration 4 Form Controller</a>
+        </div>
+    </div>
+</body>
+</html>

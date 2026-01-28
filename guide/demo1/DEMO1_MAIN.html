@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>demo1_hello.qml</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6baa75 0%, #4a8a5a 100%);
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 60px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #6baa75;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            font-weight: 700;
+            border-bottom: 3px solid #6baa75;
+            padding-bottom: 15px;
+        }
+        
+        h2 {
+            color: #4a8a5a;
+            font-size: 2em;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        h3 {
+            color: #6baa75;
+            font-size: 1.5em;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        h4 {
+            color: #4a8a5a;
+            font-size: 1.3em;
+            margin-top: 25px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        
+        p {
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        ul {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 20px;
+        }
+        
+        li {
+            padding-left: 40px;
+            position: relative;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            color: #333;
+        }
+        
+        li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #6baa75;
+            font-weight: bold;
+            font-size: 1.5em;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin: 20px 0;
+            display: block;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #d63384;
+            font-size: 0.95em;
+        }
+        
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+        
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+        }
+        
+        strong {
+            color: #4a8a5a;
+            font-weight: 600;
+        }
+        
+        .nav-links {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .nav-links a {
+            color: #6baa75;
+            text-decoration: none;
+            font-size: 1.2em;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #4a8a5a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>demo1_hello.qml</h1>
+        
+        <p>Dies ist die Haupt-QML-Datei, die den Plugin-Code und seine Toolbar-Schaltflächen lädt und entlädt.</p>
+
+<pre><code>// &lt;!--Imports...--&gt;
+
+import org.qfield 
+import Theme  
+
+
+
+Item {  
+  id: plugin
+  parent: iface.mapCanvas() 
+  anchors.fill: parent 
+  Loader {
+    id: pluginLoader
+    active: false
+    anchors.fill: parent
+    source: Qt.resolvedUrl('./components/d1_plugin_component.qml')
+  }  
+  QfToolButton {
+    id: pluginButton
+    bgcolor: Theme.darkGray
+    iconSource: Theme.getThemeVectorIcon('ic_camera_photo_black_24dp')
+    iconColor: Theme.mainColor
+    round: true
+
+    onClicked: {
+      iface.logMessage("Loading d1_plugin_component.qml")
+      pluginLoader.active = !(pluginLoader.active)
+    }
+  }
+
+  Component.onCompleted: {
+    iface.addItemToPluginsToolbar(
+      pluginButton
+    )
+  }
+}</code></pre>
+
+        <h2>Klassen in unserer Demo</h2>
+        <img src="img/demo1_obj.png" alt="Demo 1 Objekte">
+
+        <h3>Item (plugin):</h3>
+        <ul>
+            <li>Item ist unser Root-Element. Alles im Plugin muss innerhalb dieses Objekts definiert werden.</li>
+            <li>Item ist eine Basiselternklasse, die QtWidget entspricht. Alle anderen Widgets erben davon.</li>
+        </ul>
+
+        <h4>Properties</h4>
+        <ul>
+            <li><strong>id</strong>: Dies ist der Objektname ("plugin"). Diese Property ist für alle QML-Objekte verfügbar. Seltsamerweise ist sie jedoch optional und wird oft für Items weggelassen, auf die nicht programmatisch verwiesen wird (wie Labels)</li>
+            <li><strong>parent</strong>: Genau wie in PyQt ist dies ein Verweis auf das Eltern-Widget. Es ist nur notwendig, parent im Root-Item zu definieren. Für alles innerhalb des Items ist parent implizit durch die verschachtelte Struktur definiert. Es ist absolut notwendig, den parent auf dem Rootelemnt Item als Map-Canvas zu definieren, denn sonst hätte es keinen Parent und keinen Platz in QFields Benutzeroberfläche und würde nicht gerendert werden.</li>
+            <li><strong>anchors</strong>: Dies ist ein sehr CSS-ähnlicher Mechanismus, der die Geometriegrenzen des Widgets relativ zu anderen Items definiert. Normalerweise wird die Geometrie in Bezug auf den Parent definiert.
+                <ul>
+                    <li><strong>anchors.fill:</strong> parent sagt dem Widget, dass es sich ausdehnen soll, um das gesamte Eltern-Widget zu bedecken. Also sagt uns der Plugin-Item-Anchor, dass dieses Widget das gesamte Map-Canvas bedecken wird - also den gesamten Bildschirm.</li>
+                    <li><strong>Warnung:</strong> Achten Sie besonders auf Ihre Anchors. Wenn Sie sie falsch konfigurieren, könnte Ihre Komponente verschwinden oder auf unerwartete Weise gerendert werden, und es kann schwer zu debuggen sein.</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h4>Mitglieder des Plugin-Items:</h4>
+        <ul>
+            <li><strong>Loader</strong>: Der Loader lädt und entlädt das eigentliche Plugin-Objekt.</li>
+            <li><strong>QfToolButton</strong>: Dies ist die Schaltfläche, die geklickt wird, um das Plugin zu öffnen und zu schließen.</li>
+        </ul>
+
+        <h4>Component.onCompleted</h4>
+        <p>Dies ist die Signal-Slot-Konstruktion, die das Hinzufügen des pluginButton zur QField-Toolbar auslöst, wenn das Plugin-Item erstellt wurde.</p>
+        
+        <p>Wenn man sich Component.onCompleted innerhalb von Item ansieht und auch berücksichtigt, dass der Loader eine Component lädt, könnte man dazu verleitet werden zu denken, dass Component die Elternklasse von Item ist, und dieses Signal geerbt wird.</p>
+        
+        <p>Das ist <strong>nicht</strong> der Fall. Component und Item haben nichts miteinander zu tun.</p>
+        
+        <ul>
+            <li>Component ist ein "attached property mechanism". Was bedeutet das? Ich denke mir das als eine Klasse, die andere Objekte verpackt und Signale bereitstellt, wenn sie konstruiert und destruiert werden.</li>
+            <li>Component hat 2 Signale:
+                <ul>
+                    <li>onCompleted (das Objekt wurde fertig geladen)</li>
+                    <li>onDestruction (wie close auf einem QtWidget)</li>
+                </ul>
+            </li>
+            <li>In unserem Item wird die Component verwendet, um eine Signal/Slot-Verbindung zu erstellen, die ausgeführt wird, wenn die Item-Konstruktion abgeschlossen ist.</li>
+        </ul>
+
+        <h3>Loader (pluginLoader):</h3>
+        <p>Ein Loader ist ein Item, das dynamisch andere Items lädt und entlädt. Loader konstruieren und destruieren ihre Components, wenn ihr "active"-Property-Wert umgeschaltet wird, was Runtime-Trigger für Konstruktion und Destruktion ermöglicht. Dies macht es möglich, das Laden des Plugins mit einer Schaltfläche auszulösen.</p>
+
+        <h4>Warum wir hier einen Loader brauchen:</h4>
+        <p>Unser Plugin wird Dinge tun wie Layer im Projekt lesen. Wir wollen nicht, dass dies passiert, bis das Projekt geladen ist. Tatsächlich wollen wir, dass unser Plugin-Code wartet, bis der Benutzer danach fragt, indem er auf die Tool-Schaltfläche des Plugins klickt oder später ein Objekt auf der Karte auswählt.</p>
+        
+        <p>Wenn wir unseren Plugin-Code direkt in unser Root-Item ohne den Loader legen würden, würden wir versuchen, Layer zu lesen, die noch nicht existieren, und viel Verarbeitung durchführen, die möglicherweise nicht benötigt wird.</p>
+
+        <h4>Properties</h4>
+        <ul>
+            <li><strong>id und anchors</strong>: weil es ein Item-Widget ist</li>
+            <li><strong>nicht parent</strong>: weil parent implizit aus der Verschachtelung definiert ist. Das plugin-Item ist sein Parent. Nur das Root-Item muss seinen Parent definieren.</li>
+            <li><strong>active</strong>: die boolesche Property, die bestimmt, ob der Code des Loaders konstruiert ist oder nicht. Der QfToolButton wird den Code laden und entladen, indem er Änderungen am Wert dieser Property auslöst.</li>
+            <li><strong>source</strong>: der Pfad zur QML-Datei, die die zu ladenden Items enthält. Die Source wird als Source-Component bezeichnet, obwohl, wenn Sie in die QML-Datei schauen, Sie Items sehen werden, nicht Components. Das liegt daran, dass der Loader intern ein Component-Objekt erstellt, dessen Aufgabe es ist, die Items in der von source referenzierten QML-Datei zu laden.</li>
+        </ul>
+
+        <h3>QfToolButton (pluginButton)</h3>
+        <p>Das ist einfach. QfToolButton ist ein Tool-Button-Widget, das wir mit dem Loader verbunden haben. Wir könnten den QToolButton verwenden, aber wir verwenden hier den QfToolButton von QField, damit er QFields Design beibehält. Für den Rest des Plugins bevorzuge ich tendenziell die Qt-Objekte.</p>
+        
+        <p>Ich kann QfToolButton oder jedes andere QField-Widget verwenden, weil ich sie aus org.qfield importiert habe.</p>
+        
+        <p>Dieses Item ist nicht im Loader, weil es das Item ist, das den Loader steuert.</p>
+
+        <h4>Properties</h4>
+        <ul>
+            <li><strong>round</strong>: Eine Property von QfToolButton. Macht die Schaltfläche zu einem Kreis.</li>
+            <li><strong>iconSource</strong>: Eine Property von QfToolButton. Aus purer Faulheit habe ich eines der vordefinierten Symbole im QField Theme-Modul verwendet. Wir werfen diese Schaltfläche sowieso in der nächsten Demo weg.</li>
+            <li><strong>iconColor und bgcolor</strong>: Ich habe definierte Farben aus dem importierten Theme-Modul übernommen, was eine gute Idee ist, wenn Sie möchten, dass Ihre Farben zu QFields Farben passen.</li>
+            <li><strong>onClicked</strong>: Ist ein Signal-Handler, der JavaScript enthält. Wenn die Schaltfläche geklickt wird, gibt sie eine Nachricht an das Log aus (das das QField-Log ist, das der Benutzer sieht) und schaltet die boolesche active-Property des pluginLoaders um, was entweder eine Konstruktion oder Destruktion der Plugin-Component (Sammlung von Items in der Component-QML-Datei) auslöst</li>
+        </ul>
+        
+        <p><strong>Denken Sie daran, es ist nicht Component.onClicked. Alles außer onCompletion und onDestruction sind Mitglieder des Item-Components und haben nichts mit Component zu tun.</strong></p>
+
+        <div class="nav-links">
+            <a href="DEMO1_COMPONENT.html">📚 >> Schauen wir uns die Plugin-Component an</a>
+            <a href="DEMO1_STRUCTURE.html">📚 &lt;&lt; Plugin-Struktur</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deploying the demo1_hello Project in QField</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6baa75 0%, #4a8a5a 100%);
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 60px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #6baa75;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            font-weight: 700;
+            border-bottom: 3px solid #6baa75;
+            padding-bottom: 15px;
+        }
+        
+        h2 {
+            color: #4a8a5a;
+            font-size: 2em;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        p {
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        ol {
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+        
+        ol li {
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 20px;
+            padding-left: 10px;
+        }
+        
+        ul {
+            list-style: none;
+            padding-left: 0;
+            margin: 15px 0;
+        }
+        
+        ul li {
+            padding-left: 40px;
+            position: relative;
+            margin-bottom: 12px;
+            font-size: 1.05em;
+            color: #333;
+        }
+        
+        ul li:before {
+            content: "→";
+            position: absolute;
+            left: 10px;
+            color: #6baa75;
+            font-weight: bold;
+            font-size: 1.3em;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin: 20px 0;
+            display: block;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #d63384;
+            font-size: 0.95em;
+        }
+        
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+        
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+        }
+        
+        .nav-links {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .nav-links a {
+            color: #6baa75;
+            text-decoration: none;
+            font-size: 1.2em;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #4a8a5a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Deploying the demo1_hello Project in QField</h1>
+
+        <ol>
+            <li>Copy <strong>${ROOT}\qfield_vegetation_monitoring\demo1_hello</strong> to
+                <strong>${ROOT}\projects\demo1_hello</strong></li>
+            <li>Open the project in QGIS.
+                <ul>
+                    <li>You should see only a single layer (plots) with a few points in it. This is the selection layer for the plugin.</li>
+                </ul>
+            </li>
+            <li>Upload the project to QFieldCloud using the QField Sync plugin.
+                <ul>
+                    <li>Create a new project
+                        <img src="img/demo1_qfcp.png" alt="QField Cloud new project">
+                    </li>
+                    <li>Create a new empty project
+                        <img src="img/demo1_qfcnep.png" alt="New empty project">
+                    </li>
+                    <li>Give it a name and keep the local project directory as your development directory under ${ROOT}
+                        <img src="img/demo1_pd.png" alt="Project directory">
+                    </li>
+                    <li>Upload files.
+                        <img src="img/demo1_upl.png" alt="Upload">
+                    </li>
+                </ul>
+            </li>
+            <li>Load the project in QField for Windows
+                <ul>
+                    <li>The camera icon on the right is used to open and close the plugin. Go ahead. Open and close it.</li>
+                    <li>Check these log messages and make sure you see our nice debug messages and not any errors.
+                        <img src="img/demo1_proj.png" alt="Project in QField">
+                    </li>
+                </ul>
+            </li>
+            <li>Done. You have deployed.</li>
+        </ol>
+
+        <h2>Updating the Project</h2>
+        <p>When you update the plugin, your users use the Synchronize button to get updates, just like with the project.</p>
+
+        <ol>
+            <li>Open the plugin by clicking on the camera and note the title text. We will update the project by changing the text.
+                <img src="img/demo1_screen.png" alt="Demo 1 Screenshot">
+            </li>
+            <li>Open <strong>${ROOT}\projects\demo1_hello\components\d1_plugin_component.qml</strong> in your editor.</li>
+            <li>Find the text you see on the screen. It should be around line 26.
+<pre><code>Text {
+    text: "Vegetation Monitoring: Plugin Component"
+    color: PluginTheme.green
+    font.pixelSize: 20
+    horizontalAlignment: Text.AlignHCenter             
+    anchors.centerIn: parent
+}</code></pre>
+            </li>
+            <li>Change this text to something else.</li>
+            <li>In QGIS, use the Sync button in the QField Sync plugin to synchronize the project.
+                <img src="img/demo1_sync.png" alt="Synchronize">
+            </li>
+            <li>QField Sync should detect the change and upload the new version of the file.
+                <img src="img/demo1_upd.png" alt="Update">
+            </li>
+            <li>Go to QField and use the Synchronize button to update the project and its plugin.
+                <ul>
+                    <li>If you don't see your change immediately, it may be necessary to restart QField.</li>
+                </ul>
+            </li>
+        </ol>
+
+        <h2>Deploying and Updating the demo1_hello Project in Development</h2>
+        <p>If you try to use this protocol in your development process, you will completely lose your mind. Until you have a deliverable plugin, set it up as a local QField project. I'm too embarrassed to say how long I dragged myself through the synchronization process before I got smart.</p>
+
+        <ol>
+            <li>Get your path to your desktop QField. Mine is C:\Program Files\QField\usr\bin\qfield.exe, but yours may be different.</li>
+            <li>QField is developing rapidly. Keep your QField updated from the releases page: https://github.com/opengisch/qfield/releases</li>
+            <li>Run QField from the command line to get output on console.log and console.error messages. Call it with the path to your project. No QField Sync packaging is necessary.
+<pre><code>"C:\Program Files\QField\usr\bin\qfield.exe" %ROOT%\projects\demo1_hello\demo1_hello.qgs</code></pre>
+            </li>
+            <li>When you update your code, just close QField and run the command again.</li>
+        </ol>
+
+        <div class="nav-links">
+            <a href="DEMO1_STRUCTURE_EN.html">📚 >> Let's look at the plugin structure</a>
+            <a href="DEMO1_INTRO_EN.html">📚 &lt;&lt; Demo1 Introduction</a>
+        </div>
+    </div>
+</body>
+</html>

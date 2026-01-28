@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vom Map-Klick zur Header-Seite gelangen</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6baa75 0%, #4a8a5a 100%);
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 60px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #6baa75;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            font-weight: 700;
+            border-bottom: 3px solid #6baa75;
+            padding-bottom: 15px;
+        }
+        
+        h2 {
+            color: #4a8a5a;
+            font-size: 2em;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        h3 {
+            color: #6baa75;
+            font-size: 1.5em;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        p {
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        ul {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 20px;
+        }
+        
+        li {
+            padding-left: 40px;
+            position: relative;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            color: #333;
+        }
+        
+        li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #6baa75;
+            font-weight: bold;
+            font-size: 1.5em;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #d63384;
+            font-size: 0.95em;
+        }
+        
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+        
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+        }
+        
+        .nav-links {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .nav-links a {
+            color: #6baa75;
+            text-decoration: none;
+            font-size: 1.2em;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #4a8a5a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Demonstration 4: Vom Map-Klick zur Header-Seite gelangen</h1>
+        
+        <p>Lassen Sie uns unseren Platz schnell finden.</p>
+
+        <h2>1. Die demo4_header_form.qml ist dieselbe wie in Demo2. Wenn der Benutzer auf die Karte klickt, setzt das Plugin die plotId-Property der Plugin-Component, die in components/d4_plugin_component.qml definiert ist</h2>
+
+<pre><code>// wenn Sie auf ein Plotfeld klicken
+// (um Zeile 76)
+pluginLoader.active = true
+pluginLoader.item.plotId = feature.attribute("plot_id")</code></pre>
+
+        <h2>2. d4_plugin_component.qml hat sich geändert. Es hat jetzt 2 eigene Loader.</h2>
+
+        <ul>
+            <li>Ein Loader lädt die d4_titlebar.qml, die wir ignorieren werden. Diese enthält den Titeltext und die Schließen-Schaltfläche. Es ist im Grunde unsere Component in Demo2, aber verkleinert. Wir werden das ignorieren.</li>
+            <li>Der zweite Loader ist der, der uns interessiert. Er lädt das d4_tabwidget. Wie bei der Titlebar wird beim Laden des Widgets die plotId an das Tabwidget weitergegeben.</li>
+        </ul>
+
+<pre><code>    // TabWidget zur Anzeige der Suchergebnisse
+    Loader {
+        id: tabWidgetLoader
+        // Definieren Sie die plotId-Property hier, um zu den Loader-Kindern zu propagieren
+        property string plotId: pluginFrame.plotId
+        width: pluginFrame.width  // Verwenden Sie die Breite des Parents (Column)
+        height: pluginFrame.height - titleBarLoader.height - 20 // Füllen Sie den verbleibenden Column-Raum
+        source: "d4_tabwidget.qml"
+    }</code></pre>
+
+        <h3>Wichtiger Exkurs: Propagierung von plotId mit dynamischen Bindungen</h3>
+
+        <p>Innerhalb des d4_tabwidget ist die plotId dynamisch an die ID des Parents gebunden. Sie kann aber nur auf ihren Parent verweisen.</p>
+
+<pre><code>property string plotId: parent.plotId</code></pre>
+
+        <p>Sie kann nicht den pluginFrame nach Namen referenzieren.</p>
+
+<pre><code>// nein. funktioniert nicht.
+property string plotId: pluginFrame.plotId</code></pre>
+
+        <p>Sie hat nur einen Verweis auf ihren Parent, der tabWidgetLoader ist. Also müssen Sie plotId binden, indem Sie es im Loader definieren.</p>
+
+<pre><code>    // TabWidget zur Anzeige der Suchergebnisse
+    Loader {
+        id: tabWidgetLoader
+        // Definieren Sie die plotId-Property hier, um zu den Loader-Kindern zu propagieren
+        property string plotId: pluginFrame.plotId
+        &lt;...&gt;
+        source: "d4_tabwidget.qml"
+    }</code></pre>
+
+        <p>Alle Properties, die Sie übergeben möchten, sollten auf diese Weise verknüpft werden.</p>
+
+        <h2>3. d4_tabwidget.qml lädt die Header-Seite</h2>
+
+        <p>Das Tab-Widget definiert eine TabBar und eine SwipeView, die miteinander synchronisiert sind. Die SwipeView wischt zwischen 6 Seiten. Die letzten 5 Seiten sind Strata-Seiten. Hier werden die Arten inventarisiert. Die 1. Seite der SwipeView ist die, die uns interessiert. Es ist der headerPageLoader, der in eine ScrollView eingebettet ist. Der headerPageLoader lädt d4_headerpage.qml. Beachten Sie die Propagierung von plotId vom tabWidget durch zum d4_headerpage über dynamische Bindung.</p>
+
+<pre><code>    TabBar {
+        &lt;...&gt; 
+    } // tabBar
+    SwipeView {
+        id: swipeView
+        &lt;...&gt;    
+        // Header Tab Content (erstes Item)
+        ScrollView {
+            id: headerScrollView
+            &lt;...&gt;
+            
+            Loader {
+                id: headerPageLoader
+                property string plotId: tabWidget.plotId
+                source: "d4_headerpage.qml"
+                width: headerScrollView.availableWidth
+            }
+        }
+
+        // Strata Tab Content (verbleibende Items.)
+        Repeater {
+            id: strataRepeater
+            &lt;...&gt;
+        }       
+    }</code></pre>
+
+        <h2>4. Und das bringt uns zur d4_headerpage, die das Formular in der ersten Seite des tabWidget lädt</h2>
+
+        <div class="nav-links">
+            <a href="DEMO4_HEADERPAGE.html">📚 Die Header-Seite</a>
+            <a href="DEMO4_INTRO.html">📚 &lt;&lt; Demonstration 4 Einführung</a>
+        </div>
+    </div>
+</body>
+</html>

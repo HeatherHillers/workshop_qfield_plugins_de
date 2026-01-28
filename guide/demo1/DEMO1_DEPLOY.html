@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bereitstellung des demo1_hello Projekts in QField</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6baa75 0%, #4a8a5a 100%);
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 60px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #6baa75;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            font-weight: 700;
+            border-bottom: 3px solid #6baa75;
+            padding-bottom: 15px;
+        }
+        
+        h2 {
+            color: #4a8a5a;
+            font-size: 2em;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        p {
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        ol {
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+        
+        ol li {
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 20px;
+            padding-left: 10px;
+        }
+        
+        ul {
+            list-style: none;
+            padding-left: 0;
+            margin: 15px 0;
+        }
+        
+        ul li {
+            padding-left: 40px;
+            position: relative;
+            margin-bottom: 12px;
+            font-size: 1.05em;
+            color: #333;
+        }
+        
+        ul li:before {
+            content: "→";
+            position: absolute;
+            left: 10px;
+            color: #6baa75;
+            font-weight: bold;
+            font-size: 1.3em;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin: 20px 0;
+            display: block;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #d63384;
+            font-size: 0.95em;
+        }
+        
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+        
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+        }
+        
+        .nav-links {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .nav-links a {
+            color: #6baa75;
+            text-decoration: none;
+            font-size: 1.2em;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #4a8a5a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Bereitstellung des demo1_hello Projekts in QField</h1>
+
+        <ol>
+            <li>Kopieren Sie <strong>${ROOT}\qfield_vegetation_monitoring\demo1_hello</strong> nach
+                <strong>${ROOT}\projects\demo1_hello</strong></li>
+            <li>Öffnen Sie das Projekt in QGIS.
+                <ul>
+                    <li>Sie sollten nur einen einzelnen Layer (plots) mit ein paar Punkten darin sehen. Dies ist der Auswahl-Layer für das Plugin.</li>
+                </ul>
+            </li>
+            <li>Laden Sie das Projekt mit dem QField Sync Plugin auf QFieldCloud hoch.
+                <ul>
+                    <li>Erstellen Sie ein neues Projekt
+                        <img src="img/demo1_qfcp.png" alt="QField Cloud neues Projekt">
+                    </li>
+                    <li>Erstellen Sie ein neues leeres Projekt
+                        <img src="img/demo1_qfcnep.png" alt="Neues leeres Projekt">
+                    </li>
+                    <li>Geben Sie ihm einen Namen und belassen Sie das lokale Projektverzeichnis als Ihr Entwicklungsverzeichnis unter ${ROOT}
+                        <img src="img/demo1_pd.png" alt="Projektverzeichnis">
+                    </li>
+                    <li>Laden Sie Dateien hoch.
+                        <img src="img/demo1_upl.png" alt="Upload">
+                    </li>
+                </ul>
+            </li>
+            <li>Laden Sie das Projekt in QField für Windows
+                <ul>
+                    <li>Das Kamerasymbol rechts wird verwendet, um das Plugin zu öffnen und zu schließen. Los geht's. Öffnen und Schließen Sie es.</li>
+                    <li>Überprüfen Sie diese Log-Nachrichten und stellen Sie sicher, dass Sie unsere schönen Debug-Nachrichten sehen und nicht irgendwelche Fehler.
+                        <img src="img/demo1_proj.png" alt="Projekt in QField">
+                    </li>
+                </ul>
+            </li>
+            <li>Fertig. Sie haben bereitgestellt.</li>
+        </ol>
+
+        <h2>Aktualisierung des Projekts</h2>
+        <p>Wenn Sie das Plugin aktualisieren, verwenden Ihre Benutzer die Schaltfläche Synchronisieren, um Updates zu erhalten, genau wie beim Projekt.</p>
+
+        <ol>
+            <li>Öffnen Sie das Plugin, indem Sie auf die Kamera klicken, und beachten Sie den Titeltext. Wir werden das Projekt aktualisieren, indem wir den Text ändern.
+                <img src="img/demo1_screen.png" alt="Demo 1 Screenshot">
+            </li>
+            <li>Öffnen Sie <strong>${ROOT}\projects\demo1_hello\components\d1_plugin_component.qml</strong> in Ihrem Editor.</li>
+            <li>Finden Sie den Text, den Sie auf dem Bildschirm sehen. Er sollte um Zeile 26 herum sein.
+<pre><code>Text {
+    text: "Vegetation Monitoring: Plugin Component"
+    color: PluginTheme.green
+    font.pixelSize: 20
+    horizontalAlignment: Text.AlignHCenter             
+    anchors.centerIn: parent
+}</code></pre>
+            </li>
+            <li>Ändern Sie diesen Text in etwas anderes.</li>
+            <li>Verwenden Sie in QGIS im QField Sync Plugin die Schaltfläche Sync, um das Projekt zu synchronisieren.
+                <img src="img/demo1_sync.png" alt="Synchronisieren">
+            </li>
+            <li>QField Sync sollte die Änderung erkennen und die neue Version der Datei hochladen.
+                <img src="img/demo1_upd.png" alt="Update">
+            </li>
+            <li>Gehen Sie zu QField und verwenden Sie die Schaltfläche Synchronisieren, um das Projekt und sein Plugin zu aktualisieren.
+                <ul>
+                    <li>Wenn Sie Ihre Änderung nicht sofort sehen, kann es notwendig sein, QField neu zu starten.</li>
+                </ul>
+            </li>
+        </ol>
+
+        <h2>Bereitstellung und Aktualisierung des demo1_hello Projekts in der Entwicklung</h2>
+        <p>Wenn Sie versuchen, dieses Protokoll in Ihrem Entwicklungsprozess zu verwenden, werden Sie völlig den Verstand verlieren. Bis Sie ein auslieferbares Plugin haben, richten Sie es als lokales QField-Projekt ein. Ich bin zu beschämt zu sagen, wie lange ich mich durch den Synchronisierungsprozess geschleppt habe, bevor ich klug wurde.</p>
+
+        <ol>
+            <li>Holen Sie sich Ihren Pfad zu Ihrem Desktop-QField. Meiner ist C:\Program Files\QField\usr\bin\qfield.exe, aber Ihrer kann anders sein.</li>
+            <li>QField entwickelt sich schnell. Halten Sie Ihr QField von der Releases-Seite aktualisiert: https://github.com/opengisch/qfield/releases</li>
+            <li>Führen Sie QField von der Befehlszeile aus, um Ausgaben auf console.log und console.error-Nachrichten zu erhalten. Rufen Sie es mit dem Pfad zu Ihrem Projekt auf. Keine QField Sync-Verpackung ist notwendig.
+<pre><code>"C:\Program Files\QField\usr\bin\qfield.exe" %ROOT%\projects\demo1_hello\demo1_hello.qgs</code></pre>
+            </li>
+            <li>Wenn Sie Ihren Code aktualisieren, schließen Sie einfach QField und führen Sie den Befehl erneut aus.</li>
+        </ol>
+
+        <div class="nav-links">
+            <a href="DEMO1_STRUCTURE.html">📚 >> Schauen wir uns die Plugin-Struktur an</a>
+            <a href="DEMO1_INTRO.html">📚 &lt;&lt; Demo1 Einführung</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Controller</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6baa75 0%, #4a8a5a 100%);
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 60px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #6baa75;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            font-weight: 700;
+            border-bottom: 3px solid #6baa75;
+            padding-bottom: 15px;
+        }
+        
+        h2 {
+            color: #4a8a5a;
+            font-size: 2em;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        p {
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        ul {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 20px;
+        }
+        
+        li {
+            padding-left: 40px;
+            position: relative;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            color: #333;
+        }
+        
+        li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #6baa75;
+            font-weight: bold;
+            font-size: 1.5em;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #d63384;
+            font-size: 0.95em;
+        }
+        
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+        
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+        }
+        
+        .nav-links {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .nav-links a {
+            color: #6baa75;
+            text-decoration: none;
+            font-size: 1.2em;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #4a8a5a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Demonstration 4: Form Controller</h1>
+        
+        <p>Der Form Controller erledigt die ganze Arbeit der Verwaltung des Formulars, aber wir werden uns hier auf die 2 Funktionen zum Speichern und Laden des Plots konzentrieren, weil diese uns zur Schnittstelle mit QField führen.</p>
+
+        <h2>dataController behandelt Interaktionen mit dem Projekt-Layer</h2>
+
+        <p>Die Header-Seite schreibt ihre Formulardaten in den Nicht-Geo-privat-Layer plot_header im QGIS-Projekt. d4_data_controller wird als DataController importiert und der dataController-Property zugewiesen. Dies ist die Klasse, die wir als Nächstes untersuchen werden, um schließlich die Mechanismen zum Einfügen, Aktualisieren und Löschen von Features zu enthüllen.</p>
+
+        <h2>Die widgets-Property enthält Verweise auf die UI-Elemente</h2>
+
+        <p>Alle Widgets im Header-Formular verwenden die Registrierungsfunktionen im Controller, um sich zum widgets-Array-Property hinzuzufügen, wo sie von den Speicher- und Ladefunktionen aufgerufen werden können. Dies geschieht, wenn ein Widget von der Header-Seite erstellt wird.</p>
+
+        <h2>Load und Save</h2>
+
+        <ul>
+            <li>Die Load-Funktion ruft die plot_header-Zeile vom Data Controller ab und sendet sie an die Funktionen, die das Formular füllen.</li>
+            <li>Die Save-Funktion ruft die Widget-Werte als Dictionary ab und übergibt sie an den Data Controller zum Speichern im plot_header-Layer.</li>
+        </ul>
+
+        <p>Ba da Bing.</p>
+
+<pre><code>&lt;...&gt;
+
+// Form Controller: Brücke zwischen Datenlayer und UI-Widgets
+// Handhabt Widget-Wert-Synchronisation ohne QField-API-Details
+QtObject {
+    id: formController
+    
+    // Datenlayer - QField/QGIS API-Interaktionen
+    property var dataController: DataController {
+        id: dataControllerInstance
+    }
+    
+    &lt;...&gt;
+    
+    // Widget-Registry - bildet Feld-IDs auf Widget-Accessors ab
+    property var widgets: ({})
+    
+    &lt;...&gt;
+
+    function save() {
+        &lt;...&gt;  
+
+        var fieldValues = collectFormValues()
+        var success = dataController.saveFieldValues(fieldValues)
+
+        &lt;...&gt;
+    }
+    
+    /**
+     * Feature für einen Plot laden und Formular füllen
+     */
+    function loadPlot(plotId) {
+        &lt;...&gt;
+        
+        var feature = dataController.loadHeaderForPlot(plotId)
+        if (feature) {
+            populateFormFromFeature(feature)
+        }
+    }
+    
+    // Alle Formularwerte sammeln und eine Feld-Wert-Map zurückgeben
+    function collectFormValues() {...}
+    
+    function populateFormFromFeature(feature) {...}
+
+    function registerWidget(fieldId, widgetAccessor) { ... }
+    
+    function allWidgetsRegistered() {...}
+    
+    function getWidgetValue(fieldId) {...}
+    
+    function setWidgetValue(fieldId, value) {...}
+    
+    function clearAllWidgets() {...}
+    
+    function markChanged() {...}
+}</code></pre>
+
+        <div class="nav-links">
+            <a href="DEMO4_DATA_CONTROLLER.html">📚 Der Data Controller und die QField-Schnittstelle</a>
+            <a href="DEMO4_HEADERPAGE.html">📚 &lt;&lt; Demonstration 4 Header-Seite</a>
+        </div>
+    </div>
+</body>
+</html>

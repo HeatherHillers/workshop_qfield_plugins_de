@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>d1_plugin_component.qml</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6baa75 0%, #4a8a5a 100%);
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 60px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #6baa75;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            font-weight: 700;
+            border-bottom: 3px solid #6baa75;
+            padding-bottom: 15px;
+        }
+        
+        h2 {
+            color: #4a8a5a;
+            font-size: 2em;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        h3 {
+            color: #6baa75;
+            font-size: 1.5em;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        p {
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        ul {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 20px;
+        }
+        
+        li {
+            padding-left: 40px;
+            position: relative;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            color: #333;
+        }
+        
+        li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #6baa75;
+            font-weight: bold;
+            font-size: 1.5em;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin: 20px 0;
+            display: block;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #d63384;
+            font-size: 0.95em;
+        }
+        
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+        
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+        }
+        
+        .nav-links {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .nav-links a {
+            color: #6baa75;
+            text-decoration: none;
+            font-size: 1.2em;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #4a8a5a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>d1_plugin_component.qml</h1>
+        
+        <p>Das war viel Theorie, ich weiß. Aber ich denke, wir haben jetzt genug von der QML-Struktur behandelt, dass der Rest viel schneller gehen wird.</p>
+        
+        <p>Schauen wir uns den Plugin-Code an, der vom pluginLoader geladen wird.</p>
+        
+        <p>Er ist ziemlich einfach. Nur ein einfacher Bildschirm mit einem Label, der sich auf den Bildschirm ausdehnt.</p>
+
+<pre><code>&lt; ... Imports ...&gt;
+
+Rectangle {
+    id: pluginFrame
+    anchors.fill: parent
+    color: PluginTheme.vanilla
+    Text {
+        text: "Demo 1 Vegetation Monitoring: Plugin Component"
+        color: PluginTheme.green
+        font.pixelSize: 20
+        horizontalAlignment: Text.AlignHCenter             
+        anchors.centerIn: parent
+    }
+    Component.onCompleted: {
+        iface.logMessage("d1_plugin_component.qml loaded")
+    }
+}</code></pre>
+
+        <p>Hier haben Sie kein Item, sondern ein Rectangle, das ein Item ist, genau wie ein QtFrame ein QtWidget ist.</p>
+
+        <img src="img/d1_comp_obj.png" alt="Demo 1 Component Objekte">
+
+        <h2>Eine QML-Textbox</h2>
+        <p>Unser einfacher Bildschirm mit einem Label ist nur eine Textbox. Es gibt keine TextBox in QML. Wir brauchen 2 Objekte: Rectangle und Text.</p>
+
+        <h3>Text vs QfText</h3>
+        <p>Wie bei QfToolButton hätte ich auch hier die Option, einen QfText zu verwenden. Aber ich habe mich entschieden, die einfachen Qt-Items über die Hauptcode-Datei hinaus zu verwenden. Warum?</p>
+        
+        <ul>
+            <li>Die QField-Items sind gut, wenn Sie möchten, dass Ihr Plugin wie eine QField-Komponente aussieht, als wäre es ein integrierter Teil von QField.</li>
+            <li>Aber ich muss mein Plugin visuell unterscheiden. Also gehe ich meinen eigenen Weg.</li>
+            <li>Außerdem, wenn ich bei den Qt-Items bleibe, muss ich nur über die Qt-Items lernen.</li>
+        </ul>
+
+        <h2>Verwendung von PluginTheme</h2>
+        <p>Wir haben in <a href="DEMO1_STRUCTURE.html">Plugin-Struktur</a> die Definition von PluginTheme als Konfigurationsobjekt besprochen, das unsere Farbpalette enthält. In d1_plugin_component sehen Sie, dass die Farbe des Rectangle auf PluginTheme.vanilla gesetzt ist und die Farbe des Text auf PluginTheme.green. Ganz einfach.</p>
+
+        <div class="nav-links">
+            <a href="../demo2/DEMO2_INTRO.html">📚 >> Demo2: Feature-Auswahl!</a>
+            <a href="DEMO1_MAIN.html">📚 &lt;&lt; Hauptmodul</a>
+        </div>
+    </div>
+</body>
+</html>

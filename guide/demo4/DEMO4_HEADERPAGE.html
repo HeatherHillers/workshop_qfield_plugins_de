@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Die Header-Seite</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6baa75 0%, #4a8a5a 100%);
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 60px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #6baa75;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            font-weight: 700;
+            border-bottom: 3px solid #6baa75;
+            padding-bottom: 15px;
+        }
+        
+        h2 {
+            color: #4a8a5a;
+            font-size: 2em;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        p {
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        ul {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 20px;
+        }
+        
+        li {
+            padding-left: 40px;
+            position: relative;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            color: #333;
+        }
+        
+        li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #6baa75;
+            font-weight: bold;
+            font-size: 1.5em;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #d63384;
+            font-size: 0.95em;
+        }
+        
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+        
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+        }
+        
+        .nav-links {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .nav-links a {
+            color: #6baa75;
+            text-decoration: none;
+            font-size: 1.2em;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #4a8a5a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Demonstration 4: Die Header-Seite</h1>
+        
+        <p>Die d4_headerpage.qml ist ziemlich einfach. Sie erstellt das grundlegende Layout und die Struktur des Formulars im Header-Formular, delegiert aber die meiste Arbeit an den formController.</p>
+
+        <h2>Struktur und Layout: Repeater lädt Inputs aus Konfiguration</h2>
+
+        <p>Die headerPage ist ein einfaches Rectangle, das enthält:</p>
+
+        <ul>
+            <li>Titeltext</li>
+            <li>Speichern-Schaltfläche</li>
+            <li>Repeater für Eingaben</li>
+        </ul>
+
+        <h2>FormDataModel hält die Formularkonfiguration</h2>
+
+        <p>Das Formular ist in mehrere Abschnitte unterteilt, die jeweils eine Anzahl von Eingabe-Widgets vom Typ Dezimal oder Text enthalten. Diese Abschnitte und Eingaben sind im FormDataModel konfiguriert und werden aus diesem abgerufen, das in d4_data_model.qml definiert ist. Wir werden dies für Ihre Durchsicht nach dem Workshop belassen.</p>
+
+        <h2>Warum kann QML sowieso keine For-Schleife machen?</h2>
+
+        <p>Der Repeater ist ein For-Schleifen-Konstruktor, der über die groupBoxes-Liste im Datenmodell iteriert und für jede groupBox sein delegate-Objekt erstellt, das eine FormSection ist, die in d4_form_section.qml definiert ist. Diese erhält als Property den Form Controller. Wir werden auch d4_form_section.qml für Ihre spätere Durchsicht belassen. Diese Komponenten werden wiederum über die Eingabe-Widgets iterieren, die in ihrer groupBox in der Konfiguration enthalten sind. Das Wichtige ist, dass sich die Eingabe-Objekte beim Erstellen beim Form Controller registrieren.</p>
+
+        <h2>Fokus auf den FormController</h2>
+
+        <p>Der Form Controller erledigt hier die ganze Arbeit. Wir werden uns ihn als Nächstes genauer ansehen.</p>
+        
+        <ul>
+            <li>Registrierung von Widgets: Er wird vom Repeater an jedes Eingabe-Widget gesendet, das sich beim Form Controller registriert.</li>
+            <li>Laden von Daten: Der onPlotChanged-Slot ruft formController.loadPlot mit der ausgewählten plotId auf. Der FormController holt die Daten aus dem plot_header-Layer und füllt die registrierten Repeater-Widgets mit den Daten.</li>
+            <li>Speichern von Daten: Die saveButton ruft die save-Funktion des formControllers onClicked auf. Dies ruft den aktuellen Datenzustand aus den registrierten Widgets ab und speichert ihn im plot_header-Layer</li>
+            <li>hasUnsavedChanges: Wenn Daten in einem der registrierten Widgets eingegeben werden, wird diese State-Property auf true geändert, bis die save-Funktion aufgerufen wird.</li>
+        </ul>
+
+<pre><code>&lt;...&gt;
+Rectangle {
+    id: headerPage
+    property string plotId: parent.plotId
+    &lt;...&gt;
+    
+    // Formularkoordination zwischen Daten und UI
+    FormController {
+        id: controller
+    }
+    
+    // Verschleierung: Property-Alias, um Controller Kindern zugänglich zu machen
+    property var formController: controller
+    
+    // Plot-Daten laden, wenn sich plotId ändert (über Bindung vom Parent gesetzt)
+    onPlotIdChanged: {
+        if (plotId ) {
+            console.log("HeaderPage: Loading plot", plotId)
+            formController.loadPlot(plotId)
+        }
+    }
+    
+    // ===================================================================
+    // LAYOUT
+    // ===================================================================
+    
+    Column {
+        &lt;...&gt;
+        // Titel
+        Text {
+                text: "Vegetation Monitoring - Plot: " + (plotId || "None")
+                &lt;...&gt;
+            }
+            
+        // Speichern-Schaltfläche
+        Rectangle {
+            id: saveButton
+            &lt;...&gt;
+            color: formController.hasUnsavedChanges ? "#2E7D32" : "#1B5E20"
+            &lt;...&gt;
+            
+            Text {
+                text: formController.hasUnsavedChanges ? "⚠ Daten speichern" : "✓ Gespeichert"
+                &lt;...&gt;
+            }
+            
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    formController.save()
+                }
+            }
+        }
+        
+        // Dynamische Formularabschnitte aus Datenmodell
+        Repeater {
+            model: FormDataModel.groupBoxes
+            
+            delegate: FormSection {
+                width: parent.width
+                sectionData: modelData
+                
+                // Controller-Referenz für Registry übergeben
+                controller: headerPage.formController
+            }
+        }
+    }  // Column
+} // Rectangle</code></pre>
+
+        <div class="nav-links">
+            <a href="DEMO4_FORM_CONTROLLER.html">📚 Der Form Controller</a>
+            <a href="DEMO4_PLUGIN_COMPONENT.html">📚 &lt;&lt; Demonstration 4 Plugin Component</a>
+        </div>
+    </div>
+</body>
+</html>
