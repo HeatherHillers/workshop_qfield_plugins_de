@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QField Plugin Workshop - Language Selection</title>
+    <title>QField Plugin Workshop</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
@@ -20,40 +20,80 @@
             padding: 3rem;
             border-radius: 10px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            max-width: 800px;
         }
         h1 {
             color: #333;
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
         }
-        .language-buttons {
+        .subtitle {
+            color: #666;
+            margin-bottom: 3rem;
+            font-size: 1.1rem;
+        }
+        .section {
+            margin-bottom: 2.5rem;
+        }
+        .section h2 {
+            color: #667eea;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+        .button-group {
             display: flex;
-            gap: 2rem;
+            gap: 1.5rem;
             justify-content: center;
+            flex-wrap: wrap;
         }
-        .lang-btn {
-            padding: 1.5rem 3rem;
-            font-size: 1.2rem;
+        .btn {
+            padding: 1.2rem 2.5rem;
+            font-size: 1.1rem;
             text-decoration: none;
             color: white;
-            background: #667eea;
             border-radius: 5px;
             transition: transform 0.2s, box-shadow 0.2s;
+            min-width: 150px;
         }
-        .lang-btn:hover {
+        .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
         }
-        .lang-btn.de {
+        .btn-en {
+            background: #667eea;
+        }
+        .btn-de {
             background: #764ba2;
+        }
+        .btn-presentation {
+            background: #f093fb;
+        }
+        .btn-presentation.en {
+            background: linear-gradient(135deg, #667eea 0%, #f093fb 100%);
+        }
+        .btn-presentation.de {
+            background: linear-gradient(135deg, #764ba2 0%, #f093fb 100%);
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>QField Plugin Workshop</h1>
-        <div class="language-buttons">
-            <a href="en/" class="lang-btn">English</a>
-            <a href="de/" class="lang-btn de">Deutsch</a>
+        <p class="subtitle">Choose your language and format</p>
+        
+        <div class="section">
+            <h2>📖 Self-Study Guides</h2>
+            <div class="button-group">
+                <a href="guide/workshop_start_EN.html" class="btn btn-en">English Guide</a>
+                <a href="guide/workshop_start_de.html" class="btn btn-de">Deutscher Leitfaden</a>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>🎤 Presentation Slides</h2>
+            <div class="button-group">
+                <a href="presentation/begin_presentation_EN.html" class="btn btn-presentation en">English Slides</a>
+                <a href="presentation/begin_presentation_DE.html" class="btn btn-presentation de">Deutsche Folien</a>
+            </div>
         </div>
     </div>
 </body>
