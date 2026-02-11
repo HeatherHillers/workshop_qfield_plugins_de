@@ -346,17 +346,19 @@ Item {
         <div class="slide">
             <h2>3. Loader "Constructs" and "Destructs" the Root Element of the Source Component with the "active" Property</h2>
             <div class="code-block">
-Loader {
-    id: pluginLoader
-    active: false
-    source: Qt.resolvedUrl(
-        './components/d1_plugin_component.qml'
-    )
-}
+Item {
+    Loader {
+        id: pluginLoader
+        active: false
+        source: Qt.resolvedUrl(
+            './components/d1_plugin_component.qml'
+        )
+    }
 
-QfToolButton {
-    onClicked: {
-        pluginLoader.active = !pluginLoader.active
+    QfToolButton {
+        onClicked: {
+            pluginLoader.active = !pluginLoader.active
+        }
     }
 }
             </div>
