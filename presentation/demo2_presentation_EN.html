@@ -320,7 +320,7 @@ Item {
 
         // 2. register the point handler and define its callback
         handler.registerHandler("demo2_selection", (point, type, interactionType) => {
-            if(using_the_point){
+            if(point === "the right point"){
                 // block other handlers
                 return true
             }
