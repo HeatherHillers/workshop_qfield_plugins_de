@@ -327,11 +327,11 @@ Item {
     Loader {...}
 
     Component.onCompleted: {
-        console.log("Plugin geladen")
+        iface.logMessage("Plugin geladen")
     }
 
     Component.onDestruction: {
-        console.log("Plugin entladen")
+        iface.logMessage("Plugin entladen")
     }
 }
             </div>
