@@ -410,7 +410,7 @@ handler.registerHandler("demo2_selection", (point, type, interactionType) => {
             <div class="code-block">
 Loader {
     id: pluginLoader
-    sourceComponent: pluginComponent
+    source: Qt.resolvedUrl('./components/d2_plugin_component.qml')
 }
 pluginLoader.item.plotId = feature.attribute("plot_id")
 
