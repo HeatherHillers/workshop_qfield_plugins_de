@@ -281,8 +281,23 @@ demo1_hello/
         <!-- Slide 6: QML ist nicht ganz Qt -->
         <div class="slide">
             <h2>Kern QML Klassen (Components)</h2>
-               <img src="img/demo1_obj.png" alt="Basic QML Objects" style="max-width: 80%; max-height: 60vh; margin: 30px auto; display: block; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
-
+        <div class="code-block">
+QObject
+|___ QtObject
+|    |___  <span style="color: blue; font-weight: bold;">Item</span> (Base for Visual Types, like QtWidget)
+|    |    |___ <span style="color: blue; font-weight: bold;">Rectangle</span>
+|    |    |___ <span style="color: blue; font-weight: bold;">Text</span>
+|    |    |___ Image
+|    |    |___ MouseArea
+|    |    |___ <span style="color: blue; font-weight: bold;">Loader</span> 
+|    |    |___ Controls
+|    |    |    |___ Button
+|    |    |    |___ AbstractButton
+|    |    |    |    |___ QToolButton
+|    |    |    |    |    |___ <span style="color: blue; font-weight: bold;">QfToolButton</span>
+|    |___  <span style="color: blue; font-weight: bold;">Component</span> (Container/Utility Class. Not related to Item!)
+|    |___  Connections
+|    |___  Other non visual types and utilities</div>
         </div>
 
         <!-- Slide 7: Plugin-Struktur Details -->

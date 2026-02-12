@@ -196,7 +196,23 @@ Item {
 }</code></pre>
 
         <h2>Classes in Our Demo</h2>
-        <img src="img/demo1_obj.png" alt="Demo 1 Objects">
+        <pre><code>
+QObject
+|___ QtObject
+|    |___  <span style="color: blue; font-weight: bold;">Item</span> (Base for Visual Types, like QtWidget)
+|    |    |___ <span style="color: blue; font-weight: bold;">Rectangle</span>
+|    |    |___ <span style="color: blue; font-weight: bold;">Text</span>
+|    |    |___ Image
+|    |    |___ MouseArea
+|    |    |___ <span style="color: blue; font-weight: bold;">Loader</span> 
+|    |    |___ Controls
+|    |    |    |___ Button
+|    |    |    |___ AbstractButton
+|    |    |    |    |___ QToolButton
+|    |    |    |    |    |___ <span style="color: blue; font-weight: bold;">QfToolButton</span>
+|    |___  <span style="color: blue; font-weight: bold;">Component</span> (Container/Utility Class. Not related to Item!)
+|    |___  Connections
+|    |___  Other non visual types and utilities</code></pre>
 
         <h3>Item (plugin):</h3>
         <ul>
