@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QField Plugin Workshop : FOSSGIS 2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6baa75 0%, #4a8a5a 100%);
+            overflow: hidden;
+        }
+        
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .slide {
+            display: none;
+            width: 90%;
+            max-width: 1200px;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 60px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        .slide.active {
+            display: block;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        h1 {
+            color: #6baa75;
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        h2 {
+            color: #4a8a5a;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+        
+        h3 {
+            color: #6baa75;
+            font-size: 1.4em;
+            margin: 15px 0 8px 0;
+        }
+        
+        p, li {
+            font-size: 1.1em;
+            line-height: 1.4;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            font-size: 1.5em;
+            color: #666;
+            font-style: italic;
+        }
+        
+        .big-emoji {
+            font-size: 4em;
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        li {
+            padding-left: 40px;
+            position: relative;
+            margin-bottom: 20px;
+        }
+        
+        li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #6baa75;
+            font-weight: bold;
+            font-size: 1.5em;
+        }
+        
+        .controls {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+        }
+        
+        button {
+            background: #6baa75;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        
+        button:hover {
+            background: #4a8a5a;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .slide-number {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            color: white;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+        
+        .highlight {
+            background: linear-gradient(120deg, #6baa7530 0%, #4a8a5a30 100%);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: 600;
+        }
+        
+        .center {
+            text-align: center;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            overflow-x: auto;
+            border-left: 5px solid #6baa75;
+            white-space: pre;
+        }
+        
+        .call-to-action {
+            background: linear-gradient(135deg, #6baa75 0%, #4a8a5a 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .call-to-action h3 {
+            color: white;
+            margin: 0 0 15px 0;
+        }
+        
+        .call-to-action p {
+            color: white;
+            margin: 0;
+            font-size: 1.4em;
+        }
+        
+        .demo-box {
+            background: linear-gradient(135deg, #6baa7515 0%, #4a8a5a15 100%);
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 5px solid #6baa75;
+            margin: 20px 0;
+        }
+        
+        .key-concept {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .bullets li {
+            font-size: 1.6em;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+        
+
+    <div class="slide-container">
+        <!-- Slide 1: Links-->
+        <div class="slide active">
+
+        <h3>1. Connect with the QField Community</h3>
+        <p><a href="https://community.qfield.org">https://community.qfield.org</a> </p>
+        <p>My Handle: @Heather_Hillers</p>
+
+        <h3>2. Stay Up to Date with New Plugins</h3>
+        <p><a href="https://github.com/topics/qfield-plugin">https://github.com/topics/qfield-plugin</a></p>
+
+        <h3>3. Keep Up with the Documentation</h3>
+        <p><a href="https://docs.qfield.org/how-to/advanced-how-tos/plugins/">https://docs.qfield.org/how-to/advanced-how-tos/plugins/</a></p>
+
+        <h3>4. Share Code and Workshop</h3>
+        <p><a href="https://github.com/HeatherHillers/qfield_vegetation_monitoring">https://github.com/HeatherHillers/qfield_vegetation_monitoring</a></p>
+        <p><a href="https://github.com/HeatherHillers/workshop_qfield_plugins_de">https://github.com/HeatherHillers/workshop_qfield_plugins_de</a></p>
+
+        <h3>5. Share Your Plugins</h3>
+        <ul>
+            <li>Put it on GitHub</li>
+            <li>Post it in the Show and Tell section of the QField Community site.</li>
+            <li>Publish at: <a href="https://github.com/topics/qfield-plugin">https://github.com/topics/qfield-plugin</a></li>
+        </ul>
+
+        <h3>6. Learn More QML</h3>
+
+        <p><a href="https://www.qt.io/academy/course-catalog#introduction-to-qml">https://www.qt.io/academy/course-catalog#introduction-to-qml</a> </p>
+
+        </div>
+    </div>
+</body>
+</html>
