@@ -316,31 +316,35 @@ Item {
             </ul>
         </div>
 
-        <!-- Slide 9: Component -->
+        <!-- Slide 9: Component Lifecycle -->
         <div class="slide">
-            <h2>2. Component is a Utility Component That Enables Slots for Construction and Destruction</h2>
+            <h2>2. Component Provides Lifecycle Hooks</h2>
+            <p style="font-size: 1.4em; margin-bottom: 20px;">Component.onCompleted and Component.onDestruction can be attached to any QML object</p>
             <div class="code-block">
 Item {
     id: plugin
     parent: iface.mapCanvas()
     anchors.fill: parent
+    
     Loader {...}
 
     Component.onCompleted: {
+        // Called AFTER Item is fully constructed
         iface.logMessage("Plugin loaded")
     }
 
     Component.onDestruction: {
+        // Called BEFORE Item is destroyed
         iface.logMessage("Plugin unloaded")
     }
 }
             </div>
-            <p style="margin-top: 30px; font-size: 1.4em;">
-                Component.onCompleted is called after the element is constructed<br>
-                Component.onDestruction is called before the element is destroyed
-            </p>
+            <div class="key-concept" style="margin-top: 30px;">
+                <p style="font-size: 1.3em; margin: 0;">
+                    <strong>Use Case:</strong> Register/deregister handlers, initialize data, clean up resources
+                </p>
+            </div>
         </div>
-
 
         <!-- Slide 10: Loader -->
         <div class="slide">
@@ -367,7 +371,33 @@ Item {
             </p>
         </div>
 
-        <!-- Slide 11: pluginComponent -->
+        <!-- Slide 12: Component as Template -->
+        <div class="slide">
+            <h2>Component Also Defines Reusable Templates</h2>
+            <p style="font-size: 1.4em; margin-bottom: 20px;">Component can wrap Item definitions for reuse with Loader</p>
+            <div class="code-block" style="margin-bottom: 15px;">
+// Explicit Component definition (we don't use this)
+Component {
+    id: myTemplate
+    Rectangle { text: "Reusable content" }
+}
+
+Loader { sourceComponent: myTemplate }
+            </div>
+            <div class="code-block">
+// Loading from file (what we use)
+// QML file = implicit Component
+Loader { source: "d1_plugin_component.qml" }
+            </div>
+            <div class="demo-box" style="margin-top: 25px;">
+                <p style="font-size: 1.3em;">
+                    3strong>Why the confusion?</strong> QML developers call all reusable QML definitions "components," 
+                    but Component is also a specific class. When loading from files, Components exist invisibly behind the scenes.
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide 12: pluginComponent -->
         <div class="slide">
             <h2>4. d1_plugin_component.qml Contains the Loaded Rectangle Component</h2>
             <div class="code-block" style="margin-bottom: 20px;">
@@ -405,7 +435,7 @@ QtObject {
         </div>
 
 
-        <!-- Slide 11: Exercises -->
+        <!-- Slide 14: Exercises -->
         <div class="slide">
             <h2>Exercises for the Next 20 Minutes</h2>
             <div class="call-to-action">
@@ -423,14 +453,14 @@ QtObject {
                 </p>
             </div>
         </div>
-        <!-- Slide 12: Lets start-->
+        <!-- Slide 15: Lets start-->
         <div class="slide">
             <h2><a href="demo2_presentation_EN.html">Demo2</a></h2>
         </div>
     </div>
 
     <div class="slide-number">
-        <span id="current-slide">1</span> / 13
+        <span id="current-slide">1</span> / 15
     </div>
 
     <div class="controls">

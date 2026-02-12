@@ -316,31 +316,35 @@ Item {
             </ul>
         </div>
 
-        <!-- Slide 9: Component -->
+        <!-- Slide 9: Component Lifecycle -->
         <div class="slide">
-            <h2>2. Component ist ein Utility Component das ermöglicht Slots für Konstruktion und Destruktion </h2>
+            <h2>2. Component bietet Lifecycle-Hooks</h2>
+            <p style="font-size: 1.4em; margin-bottom: 20px;">Component.onCompleted und Component.onDestruction können an jedes QML-Objekt angehängt werden</p>
             <div class="code-block">
 Item {
     id: plugin
     parent: iface.mapCanvas()
     anchors.fill: parent
+    
     Loader {...}
 
     Component.onCompleted: {
+        // Wird NACH vollständiger Konstruktion aufgerufen
         iface.logMessage("Plugin geladen")
     }
 
     Component.onDestruction: {
+        // Wird VOR Zerstörung aufgerufen
         iface.logMessage("Plugin entladen")
     }
 }
             </div>
-            <p style="margin-top: 30px; font-size: 1.4em;">
-                Component.onCompleted wird aufgerufen nachdem das Element konstruiert ist<br>
-                Component.onDestruction wird aufgerufen bevor das Element zerstört wird
-            </p>
+            <div class="key-concept" style="margin-top: 30px;">
+                <p style="font-size: 1.3em; margin: 0;">
+                    <strong>Verwendung:</strong> Handler registrieren/deregistrieren, Daten initialisieren, Ressourcen aufräumen
+                </p>
+            </div>
         </div>
-
 
         <!-- Slide 10: Loader -->
         <div class="slide">
@@ -367,7 +371,33 @@ Item {
             </p>
         </div>
 
-        <!-- Slide 11: pluginComponent -->
+        <!-- Slide 11: Component als Vorlage -->
+        <div class="slide">
+            <h2>Component definiert auch wiederverwendbare Vorlagen</h2>
+            <p style="font-size: 1.4em; margin-bottom: 20px;">Component kann Item-Definitionen für die Wiederverwendung mit Loader umschließen</p>
+            <div class="code-block" style="margin-bottom: 15px;">
+// Explizite Component-Definition (verwenden wir nicht)
+Component {
+    id: myTemplate
+    Rectangle { text: "Wiederverwendbarer Inhalt" }
+}
+
+Loader { sourceComponent: myTemplate }
+            </div>
+            <div class="code-block">
+// Laden aus Datei (was wir verwenden)
+// QML-Datei = implizite Component
+Loader { source: "d1_plugin_component.qml" }
+            </div>
+            <div class="demo-box" style="margin-top: 25px;">
+                <p style="font-size: 1.3em;">
+                    <strong>Warum die Verwirrung?</strong> QML-Entwickler nennen alle wiederverwendbaren QML-Definitionen "Components," 
+                    aber Component ist auch eine spezifische Klasse. Beim Laden aus Dateien existieren Components unsichtbar im Hintergrund.
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide 12: pluginComponent -->
         <div class="slide">
             <h2>4. d1_plugin_component.qml enthaltet das geladene Rectangle Component</h2>
             <div class="code-block" style="margin-bottom: 20px;">
@@ -387,7 +417,7 @@ Rectangle {
             </div>
             <p style="margin-top: 30px;">PluginTheme.green kommt von der Stil in qmldir und d1_plugin_theme.qml</p>
         </div>
-        <!-- Slide 11: PluginTheme -->
+        <!-- Slide 13: PluginTheme -->
         <div class="slide">
             <h2>qmldir und PluginTheme</h2>
             <p>Global importierte Stildefinitionen:</p>
@@ -405,7 +435,7 @@ QtObject {
         </div>
 
 
-        <!-- Slide 11: Übungen -->
+        <!-- Slide 14: Übungen -->
         <div class="slide">
             <h2>Übungen für die nächsten 20- 30 Minuten</h2>
             <div class="call-to-action">
@@ -423,14 +453,14 @@ QtObject {
                 </p>
             </div>
         </div>
-        <!-- Slide 13: Lets start-->
+        <!-- Slide 15: Los geht's-->
         <div class="slide">
             <h2><a href="demo2_presentation_DE.html">Demo2</a></h2>
         </div>
     </div>
 
     <div class="slide-number">
-        <span id="current-slide">1</span> / 13
+        <span id="current-slide">1</span> / 15
     </div>
 
     <div class="controls">
