@@ -167,14 +167,14 @@
 
         <h2>Was machen wir?</h2>
         <ul>
-            <li>einen Point-Handler abrufen</li>
-            <li>die geklickten Kartenkoordinaten vom Point-Handler abrufen</li>
+            <li>einen pointHandler abrufen</li>
+            <li>die geklickten Kartenkoordinaten vom pointHandler abrufen</li>
             <li>ein 20 Pixel-Begrenzungsrechteck um die Kartenkoordinaten zeichnen</li>
             <li>eine räumliche Abfrage verwenden, um Features auf dem Plot-Layer zu finden, die sich innerhalb des Begrenzungsrechtecks befinden</li>
             <li>wenn ein Feature gefunden wird, das Plugin aktivieren und die Plot-ID des Features an die Plugin-Component übergeben</li>
         </ul>
 
-        <h2>1. Den Point-Handler von der Schnittstelle abrufen</h2>
+        <h2>1. Den pointHandler von der Schnittstelle abrufen</h2>
         <p>Abrufen und speichern Sie einen Verweis auf den pointHandler der QField-Schnittstelle als Klassen-Property.</p>
 
 <pre><code>Item{
@@ -190,7 +190,7 @@
             <li>pointHandler ist ein QField-Schnittstellenobjekt, das die Koordinaten einer Karteninteraktion und die Art der Interaktion (Klick, Doppelklick, Halten und Drücken) ausgibt</li>
         </ul>
 
-        <h2>2. Wenn das Plugin lädt (wenn Ihr Projekt öffnet), registrieren Sie Ihre benutzerdefinierte Callback-Funktion für den QField Point-Handler</h2>
+        <h2>2. Wenn das Plugin lädt (wenn Ihr Projekt öffnet), registrieren Sie Ihre benutzerdefinierte Callback-Funktion für den QField pointHandler</h2>
         <p>Die onCompleted-Funktion des Root-Items wird ausgelöst, wenn das Plugin lädt.</p>
 
 <pre><code>Item{
@@ -202,7 +202,7 @@
 }</code></pre>
 
         <h2>3. Wenn das Plugin entladen wird (wenn Ihr Projekt schließt), deregistrieren Sie Ihre Callback-Funktion!</h2>
-        <p>Wenn Sie das nicht tun, wird Ihr Point-Handler Ihre anderen Projekte kontaminieren.</p>
+        <p>Wenn Sie das nicht tun, wird Ihr pointHandler Ihre anderen Projekte kontaminieren.</p>
         <p>Verwenden Sie Component.onDestruction, um Verhalten beim Schließen zu definieren.</p>
 
 <pre><code>Item{
@@ -441,7 +441,7 @@ Item {
 
   Component.onCompleted: {
  
-    // Map Selection: 3. Registrieren Sie den Point-Handler und definieren Sie seinen Callback
+    // Map Selection: 3. Registrieren Sie den pointHandler und definieren Sie seinen Callback
     pointHandler.registerHandler("demo2_searchbar", (point, type, interactionType) =&gt; {
 
       // Entscheiden Sie über die Interaktion  
@@ -472,7 +472,7 @@ Item {
     });
   }
 
-  // Map Selection: 4. Deregistrieren Sie den Point-Handler bei Destruktion (sollte beim Projektschluss sein)
+  // Map Selection: 4. Deregistrieren Sie den pointHandler bei Destruktion (sollte beim Projektschluss sein)
   Component.onDestruction: {
     pointHandler.deregisterHandler("demo2_searchbar");
   }
