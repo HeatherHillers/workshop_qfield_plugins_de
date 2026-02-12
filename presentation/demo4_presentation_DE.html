@@ -337,15 +337,12 @@ layer.startEditing()
 // 2. Feature-ID und Fields holen
 var fid = currentFeature.id
 var fields = currentFeature.fields
-
-// 3. Für jedes Feld: Index holen und Wert ändern
-for (var fieldName in fieldValueMap) {
-    var value = fieldValueMap[fieldName]
-    var fieldIndex = fields.indexOf(fieldName)
+var fieldName = 'plot_id'
+var value = 'new_plot_id_value'
+var fieldIndex = fields.indexOf(fieldName)
     
-    if (fieldIndex >= 0) {
-        layer.changeAttributeValue(fid, fieldIndex, value)
-    }
+if (fieldIndex >= 0) {
+    layer.changeAttributeValue(fid, fieldIndex, value)
 }
 
 // 4. Änderungen committen
