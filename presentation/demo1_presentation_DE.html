@@ -300,21 +300,9 @@ QObject
 |    |___  Other non visual types and utilities</div>
         </div>
 
-        <!-- Slide 7: Plugin-Struktur Details -->
-        <div class="slide bullets">
-            <h2>QML Dummheiten</h2>
-            <ul>
-                <li>Ein PyQt Entwickler wird "Widget" zu "Item" sagen</li>
-                <li>Ein Qml Entwickler sagt "Component" zu "Item" und alle Klassen</li>
-                <li>Ein Qml Entwickler sagt "Element" zu alle Objekte</li>
-                <li>Aber ein Component ist nicht ein Item, und ein Item ist nicht ein Component.  Und ein Component ist nicht mal ein Widget. Nicht Verwandt!</li>
-                <li>Ein Loader ist eigentlich auch nicht ein Widget.  Es lädt Komponenten dynamisch.  Gehört eigentlich mit Componenten zusammen.</li>
-            </ul>
-        </div>
-
-        <!-- Slide 8: Item -->
+        <!-- Slide 7: Item -->
         <div class="slide">
-            <h2>1. Ein Item-Component baut der Wurzel Element unseres Plugins</h2>
+            <h2>1. Ein Item ist der Wurzel Object unseres Plugins</h2>
             <div class="code-block">
 Item {  
     id: plugin
@@ -329,9 +317,14 @@ Item {
                 <li><strong>anchors.fill:</strong> Füllt den gesamten Bildschirm</li>
                 <li><strong>id:</strong> Objektname für Referenzen</li>
             </ul>
+            <div class="key-concept" style="margin-top: 30px;">
+                <p style="font-size: 1.3em; margin: 0;">
+                    Jeder QML Dokument hat ein einzelne Wurzel-Objekt.
+                </p>
+            </div>
         </div>
 
-        <!-- Slide 9: Component Lifecycle -->
+        <!-- Slide 8: Component Lifecycle -->
         <div class="slide">
             <h2>2. Component bietet Lifecycle-Hooks</h2>
             <p style="font-size: 1.4em; margin-bottom: 20px;">Component.onCompleted und Component.onDestruction können an jedes QML-Objekt angehängt werden</p>
@@ -361,9 +354,9 @@ Item {
             </div>
         </div>
 
-        <!-- Slide 10: Loader -->
+        <!-- Slide 9: Loader -->
         <div class="slide">
-            <h2>3. Loader "constructs" und "destructs" der Wurzel Element des Source-Components mit den "active" Property</h2>
+            <h2>3. Loader "constructs" und "destructs" der Wurzel Objekt des Source-Components mit den "active" Property</h2>
             <div class="code-block">
 Item {
     Loader {
@@ -386,7 +379,7 @@ Item {
             </p>
         </div>
 
-        <!-- Slide 11: Component als Vorlage -->
+        <!-- Slide 10: Component als Vorlage -->
         <div class="slide">
             <h2>Component definiert auch wiederverwendbare Vorlagen</h2>
             <p style="font-size: 1.4em; margin-bottom: 20px;">Component kann Item-Definitionen für die Wiederverwendung mit Loader umschließen</p>
@@ -412,7 +405,7 @@ Loader { source: "d1_plugin_component.qml" }
             </div>
         </div>
 
-        <!-- Slide 12: pluginComponent -->
+        <!-- Slide 11: pluginComponent -->
         <div class="slide">
             <h2>4. d1_plugin_component.qml enthaltet das geladene Rectangle Component</h2>
             <div class="code-block" style="margin-bottom: 20px;">
@@ -432,7 +425,7 @@ Rectangle {
             </div>
             <p style="margin-top: 30px;">PluginTheme.green kommt von der Stil in qmldir und d1_plugin_theme.qml</p>
         </div>
-        <!-- Slide 13: PluginTheme -->
+        <!-- Slide 12: PluginTheme -->
         <div class="slide">
             <h2>qmldir und PluginTheme</h2>
             <p>Global importierte Stildefinitionen:</p>
@@ -450,7 +443,7 @@ QtObject {
         </div>
 
 
-        <!-- Slide 14: Übungen -->
+        <!-- Slide 13: Übungen -->
         <div class="slide">
             <h2>Übungen für die nächsten 20- 30 Minuten</h2>
             <div class="call-to-action">
@@ -468,14 +461,14 @@ QtObject {
                 </p>
             </div>
         </div>
-        <!-- Slide 15: Los geht's-->
+        <!-- Slide 14: Los geht's-->
         <div class="slide">
             <h2><a href="demo2_presentation_DE.html">Demo2</a></h2>
         </div>
     </div>
 
     <div class="slide-number">
-        <span id="current-slide">1</span> / 15
+        <span id="current-slide">1</span> / 14
     </div>
 
     <div class="controls">

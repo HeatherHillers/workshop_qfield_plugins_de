@@ -300,21 +300,10 @@ QObject
 |    |___  Other non visual types and utilities</div>
         </div>
 
-        <!-- Slide 7: QML Oddities -->
-        <div class="slide bullets">
-            <h2>QML Oddities</h2>
-            <ul>
-                <li>A PyQt developer will say "Widget" instead of "Item"</li>
-                <li>A QML developer says "Component" for "Item" and all classes</li>
-                <li>A QML developer says "Element" for all objects</li>
-                <li>But a Component is not an Item, and an Item is not a Component. And a Component isn't even a Widget. Not related!</li>
-                <li>A Loader isn't actually a Widget either. It loads components dynamically. Really belongs together with Components.</li>
-            </ul>
-        </div>
 
-        <!-- Slide 8: Item -->
+        <!-- Slide 7: Item -->
         <div class="slide">
-            <h2>1. An Item Component Builds the Root Element of Our Plugin</h2>
+            <h2>1. An Item is the Root Object of Our Plugin</h2>
             <div class="code-block">
 Item {  
     id: plugin
@@ -329,9 +318,14 @@ Item {
                 <li><strong>anchors.fill:</strong> Fills the entire screen</li>
                 <li><strong>id:</strong> Object name for references</li>
             </ul>
+            <div class="key-concept" style="margin-top: 30px;">
+                <p style="font-size: 1.3em; margin: 0;">
+                    Every QML Document has a single root Object.
+                </p>
+            </div>
         </div>
 
-        <!-- Slide 9: Component Lifecycle -->
+        <!-- Slide 8: Component Lifecycle -->
         <div class="slide">
             <h2>2. Component Provides Lifecycle Hooks</h2>
             <p style="font-size: 1.4em; margin-bottom: 20px;">Component.onCompleted and Component.onDestruction can be attached to any QML object</p>
@@ -361,9 +355,9 @@ Item {
             </div>
         </div>
 
-        <!-- Slide 10: Loader -->
+        <!-- Slide 9: Loader -->
         <div class="slide">
-            <h2>3. Loader "Constructs" and "Destructs" the Root Element of the Source Component with the "active" Property</h2>
+            <h2>3. Loader "Constructs" and "Destructs" the Root Object of the Source Component with the "active" Property</h2>
             <div class="code-block">
 Item {
     Loader {
@@ -386,7 +380,7 @@ Item {
             </p>
         </div>
 
-        <!-- Slide 12: Component as Template -->
+        <!-- Slide 10: Component as Template -->
         <div class="slide">
             <h2>Component Also Defines Reusable Templates</h2>
             <p style="font-size: 1.4em; margin-bottom: 20px;">Component can wrap Item definitions for reuse with Loader</p>
@@ -412,7 +406,7 @@ Loader { source: "d1_plugin_component.qml" }
             </div>
         </div>
 
-        <!-- Slide 12: pluginComponent -->
+        <!-- Slide 11: pluginComponent -->
         <div class="slide">
             <h2>4. d1_plugin_component.qml Contains the Loaded Rectangle Component</h2>
             <div class="code-block" style="margin-bottom: 20px;">
@@ -432,7 +426,7 @@ Rectangle {
             </div>
             <p style="margin-top: 30px;">PluginTheme.green comes from the style in qmldir and d1_plugin_theme.qml</p>
         </div>
-        <!-- Slide 11: PluginTheme -->
+        <!-- Slide 12: PluginTheme -->
         <div class="slide">
             <h2>qmldir and PluginTheme</h2>
             <p>Globally imported style definitions:</p>
@@ -450,7 +444,7 @@ QtObject {
         </div>
 
 
-        <!-- Slide 14: Exercises -->
+        <!-- Slide 13: Exercises -->
         <div class="slide">
             <h2>Exercises for the Next 20 Minutes</h2>
             <div class="call-to-action">
@@ -468,14 +462,14 @@ QtObject {
                 </p>
             </div>
         </div>
-        <!-- Slide 15: Lets start-->
+        <!-- Slide 14: Lets start-->
         <div class="slide">
             <h2><a href="demo2_presentation_EN.html">Demo2</a></h2>
         </div>
     </div>
 
     <div class="slide-number">
-        <span id="current-slide">1</span> / 15
+        <span id="current-slide">1</span> / 14
     </div>
 
     <div class="controls">
