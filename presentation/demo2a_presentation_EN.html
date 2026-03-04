@@ -233,11 +233,11 @@
                 <li>How to delete a row</li>
             </ul>
             <div class="call-to-action" style="margin-top: 40px;">
-                <p>The most important demo for real data collection!</p>
+                <p>The most important demo for custom forms</p>
             </div>
         </div>
 
-        <!-- Slide 3: Plot Header -->
+        <!-- Slide 3: What does the plugin do? -->
         <div class="slide">
             <h2>What Does the Plugin Do?</h2>
             <ul>
@@ -245,29 +245,92 @@
                     Get plot ID from parent plugin
                 </li>
                 <li>
-                    Query the (non-geographic) table <code>plot_header</code> with plot_id
-                </li>           
+                    Populate the menu with rows for the plot from the table <code>entries</code> 
+                </li>  
                 <li>
-                    If no row found: Create new template row
+                    New Entry Button: Creates a new, empty entry
                 </li>
                 <li>
-                    Fill form with row values
+                    Menu Selection and New Entry Button: Loads entry values into the form
                 </li>
                 <li>
-                    Track changes → Save button shows state
-                </li>
-                <li>
-                    Save button → Commit all values to plot_header
+                    Save Entry Button: Updates entry from the form
                 </li>
             </ul>
-
         </div>
 
-        <!-- Slide 4: The Golden Rule -->
+        <!-- Slide 4: Architecture -->
+        <div class="slide">
+            <h2>Model View Controller Architecture</h2>
+            <ul>
+                <li>
+                    <h4>Model: d2a_data_model.qml</h4>
+                    <p>Configuration of form structure: labels, field names </p>
+                </li>
+                <li>
+                    <h4>View: d2a_plugin_component.qml</h4>
+                    <p>Widget layout and style: Creates objects based on the model</p>
+                </li>
+                <li>
+                    <h4>Controller: d2a_form_controller.qml</h4>
+                    <p>Coordinates between view and model</p>
+                    <p>Save/New/Select -> queries and edits QgsVectorLayer</p>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Slide 5: Controller Pattern -->
+        <div class="slide">
+            <h2>Controller Pattern</h2>
+            <ul>
+                <li>View's Input Objects pass updates to the Controller</li>
+                <li>Controller holds values for the View</li>
+                <li>Controller passes and retrieves values to/from QField/QGIS API</li>
+            </ul>
+        </div>
+
+        <!-- Slide 6: Repeater Pattern -->
+        <div class="slide">
+            <h2>Model-View Binding using Repeater</h2>
+            <p>The Repeater element in QML allows you to dynamically create multiple instances of a component based on a model. This is useful for creating forms where the number of sections or fields can vary.</p>
+            <div class="code-block">
+                component FormField: Rectangle{
+                    id: formField
+                    property var fieldData
+                    RowLayout {
+                        id: fieldRow
+                        Text {
+                            text: fieldData.label
+                        }
+                        TextField {
+                            id: input
+                            text: controller.fieldValues[fieldData.name]
+                            onTextChanged: {
+                                controller.updateField(fieldData.name, text)
+                            }
+                        }
+                    }
+                }
+
+                Repeater {
+                    model: fieldModel             
+                    delegate: FormField {
+                        fieldData: modelData
+                    }
+                }
+
+            </div>
+            <ul style="margin-top: 30px;">
+                <li>Configuration defined in DataModel</li>
+                <li>Repeater iterates and creates input objects dynamically</li>
+            </ul>
+        </div>
+
+        <!-- Slide 7: The Golden Rule -->
         <div class="slide">
             <h2>⚠️ Warning </h2>
-            <h3>NEVER bypass the QField API!</h3>
-            <h3>NEVER access through the data provider!</h3>
+            <h3>Never bypass the QField API</h3>
+            <h3>Never access through the data provider</h3>
             <h3>Why?</h3>
             <ul style="font-size: 1.2em;">
                 <li>QField Sync is based on QGIS Offline Editing</li>
@@ -276,11 +339,11 @@
             </ul>
 
             <p style="margin-top: 30px; text-align: center; font-size: 1.4em;">
-                <span class="highlight">Always</span> use FeatureUtils & LayerUtils!
+                <span class="highlight">Always</span> use FeatureUtils & LayerUtils
             </p>
         </div>
 
-        <!-- Slide 5: CREATE - Insert feature -->
+        <!-- Slide 8: CREATE - Insert feature -->
         <div class="slide">
             <h2>CREATE: Insert Feature</h2>
             <div class="code-block">
@@ -298,14 +361,16 @@ newFeature.setAttribute("log_date", new Date().toISOString())
 // 4. Add feature to layer
 LayerUtils.addFeature(layer, newFeature)
 
-// 5. Commit changes
-layer.commitChanges()
-
-return newFeature
+// 5. Änderungen commit
+try{
+    layer.commitChanges()
+} catch (e) {
+    layer.rollBack()
+}
             </div>
         </div>
 
-        <!-- Slide 6: READ - Get feature -->
+        <!-- Slide 9: READ - Get feature -->
         <div class="slide">
             <h2>READ: Get Feature</h2>
             <div class="code-block">
@@ -315,19 +380,19 @@ var iterator = LayerUtils.createFeatureIteratorFromExpression(layer, expression)
 
 if (iterator.hasNext()) {
     currentFeature = iterator.next()
-    iterator.close()  // CRITICAL!
+    iterator.close()  // Always close as soon as you are done with the iterator
     return currentFeature
 }
 
-iterator.close()  // Always close!
+iterator.close()  // Always close
 
             </div>
             <p style="margin-top: 20px; font-size: 1.3em; color: #c44569;">
-                <strong>ALWAYS</strong> close iterator!
+                <strong>ALWAYS</strong> close iterator
             </p>
         </div>
 
-        <!-- Slide 7: UPDATE - Update feature -->
+        <!-- Slide 10: UPDATE - Update feature -->
         <div class="slide">
             <h2>UPDATE: Update Feature</h2>
             <div class="code-block">
@@ -343,17 +408,20 @@ var value = 'new_plot_id_value'
 
 // 3. Get field index and change value
 var fieldIndex = fields.indexOf(fieldName)
-    
 if (fieldIndex >= 0) {
     layer.changeAttributeValue(fid, fieldIndex, value)
 }
 
 // 4. Commit changes
-layer.commitChanges()
+try{
+    layer.commitChanges()
+} catch (e) {
+    layer.rollBack()
+}
             </div>
         </div>
 
-        <!-- Slide 8: DELETE - Delete feature -->
+        <!-- Slide 11: DELETE - Delete feature -->
         <div class="slide">
             <h2>DELETE: Delete Feature</h2>
             <div class="code-block">// 1. Start editing       
@@ -361,6 +429,7 @@ layer.commitChanges()
 layer.startEditing()
 
 // 2. Delete feature
+var featureId = feature.id
 var success = layer.deleteFeature(featureId)
 
 if (!success) {
@@ -373,18 +442,16 @@ if (!success) {
 var commitSuccess = layer.commitChanges()
 if (!commitSuccess) {
     layer.rollBack()
-    return false
 }
 
-return true
             </div>
         </div>
 
-        <!-- Slide 9: Field Index Warning -->
+        <!-- Slide 12: Field Index Warning -->
         <div class="slide">
             <h2>Important Warning: Field Index</h2>
             <div class="call-to-action">
-                <h3>NEVER use hard-coded indices!</h3>
+                <h3>Never use hard-coded indices</h3>
                 <p>Index in QGIS is not the same as index in QField.</p>
             </div>
             
@@ -395,92 +462,15 @@ value = feature.attribute(3)
 
             <h3>✅ CORRECT:</h3>
             <div class="code-block">
-value = feature.attribute("plot_id")  // Use field name!
+value = feature.attribute("plot_id")  
 
 // Or for updates:
 var fieldIndex = fields.indexOf("plot_id")
 layer.changeAttributeValue(fid, fieldIndex, value)
             </div>
-
-        </div>
-        <!-- Slide 10: Architecture -->
-        <div class="slide">
-            <h2>Model View Controller Architecture</h2>
-            <ul>
-                <li>
-                    <h4>Model: d4_form_data_model.qml</h4>
-                    <p>Configuration of form structure: labels, field names (id), widget settings</p>
-                </li>
-                <li>
-                    <h4>View: d4_headerpage.qml, d4_form_section.qml, d4_form_field.qml</h4>
-                    <p>Register with the controller</p>
-                </li>
-                <li>
-                    <h4>Controller: d4_form_controller.qml</h4>
-                    <p>Coordinates between view and model</p>
-                </li>
-                <li>
-                    <h4>Controller: d4_data_controller.qml</h4>
-                    <p>Handles QField API interactions</p>
-                </li>
-            </ul>
         </div>
 
-        <!-- Slide 12: FormController Pattern -->
-        <div class="slide">
-            <h2>FormController Pattern</h2>
-            <ul>
-                <li>1. Widget elements register with the controller</li>
-                <li>2. FormController collects values from all widgets</li>
-                <li>3. FormController passes values to DataController</li>
-                <li>4. DataController executes QField API operations</li>
-            </ul>
-        </div>
-
-        <!-- Slide 13: Repeater Pattern -->
-        <div class="slide">
-            <h2>Repeater for Dynamic Forms</h2>
-            <div class="code-block">
-Repeater {
-    model: FormDataModel.groupBoxes
-    
-    delegate: FormSection {
-        width: parent.width
-        sectionData: modelData
-        controller: headerPage.formController
-    }
-}
-            </div>
-            <ul style="margin-top: 30px;">
-                <li>Configuration defined in DataModel</li>
-                <li>Repeater iterates and creates widget elements</li>
-                <li>Widget elements register on creation</li>
-                <li>No for-loops in QML!</li>
-            </ul>
-        </div>
-
-        <!-- Slide 14: Property Propagation -->
-        <div class="slide">
-            <h2>Property Propagation through Loader</h2>
-            <div class="code-block">// Define in parent Loader
-Loader {
-    id: tabWidgetLoader
-    property string plotId: pluginFrame.plotId
-    source: "d4_tabwidget.qml"
-}
-
-// Use in loaded component
-// d4_tabwidget.qml
-Item {
-    property string plotId: parent.plotId  // From Loader!
-}
-            </div>
-            <p style="margin-top: 30px; font-size: 1.3em;">
-                Loader properties propagate to loaded components
-            </p>
-        </div>
-
-        <!-- Slide 15: Exercises -->
+        <!-- Slide 13: Exercises -->
         <div class="slide">
             <h2>Exercises for the Next 60 Minutes</h2>
             <div class="call-to-action">
@@ -488,10 +478,10 @@ Item {
             </div>
             <ul>
                 <li><strong>Exercise 1:</strong> Deploy and test the Demo2a plugin</li>
-                <li><strong>Exercise 3:</strong> Track feature creation with iface.logMessage</li>
-                <li><strong>Exercise 4:</strong> Remove an element from the form</li>
-                <li><strong>Exercise 5:</strong> Insert a template for the header description</li>
-                <li><strong>Exercise 6:</strong> Build your own plugin.</li>
+                <li><strong>Exercise 2:</strong> Add an element to the form using the Model</li>
+                <li><strong>Exercise 3:</strong> Remove an element from the Form</li>
+                <li><strong>Exercise 4:</strong> Insert a Default value for the header description, using the Model and View</li>
+                <li><strong>Exercise 5:</strong> Build your own plugin.</li>
             </ul>
             <div class="demo-box" style="margin-top: 30px;">
                 <p style="text-align: center; font-size: 1.3em;">

@@ -233,11 +233,11 @@
                 <li>Wie man eine Zeile löscht</li>
             </ul>
             <div class="call-to-action" style="margin-top: 40px;">
-                <p>Die wichtigste Demo für echte Datenerfassung!</p>
+                <p>Die wichtigste Demo für Formulare</p>
             </div>
         </div>
 
-        <!-- Slide 3: Plot Header -->
+        <!-- Slide 3: Was macht das Plugin? -->
         <div class="slide">
             <h2>Was macht das Plugin?</h2>
             <ul>
@@ -245,29 +245,92 @@
                     Plot Id vom Parent-Plugin erhalten
                 </li>
                 <li>
-                    Die (nicht Geografische) Tabelle <code>plot_header</code> mit plot_id abfragen
-                </li>           
+                    Menü mit Eintragsreihen für Plot aus der Tabelle <code>entries</code> füllen
+                </li>       
                 <li>
-                    Falls keine Zeile gefunden: Neue Vorlage-Zeile erstellen
+                    New Entry Knopf: Neue, leere Eintrag erstellen
                 </li>
                 <li>
-                    Formular mit Zeilenwerten füllen
+                    Menü Auswahl und New Entry Knopf: Eintragswerte ins Formular laden
                 </li>
                 <li>
-                    Änderungen tracken → Speichern-Button zeigt Zustand
-                </li>
-                <li>
-                    Speichern-Button → Alle Werte in plot_header committen
+                    Save Entry Knopf: Eintrag von der Formular aktaulisieren
                 </li>
             </ul>
-
         </div>
 
-        <!-- Slide 4: Die Goldene Regel -->
+        <!-- Slide 4: Architektur -->
+        <div class="slide">
+            <h2>Model View Controller-Architektur</h2>
+            <ul>
+                <li>
+                    <h4>Model: d2a_data_model.qml</h4>
+                    <p>Konfiguration der Form-Struktur: Beschriftung, Feldname </p>
+                </li>
+                <li>
+                    <h4>View: d2a_plugin_component.qml</h4>
+                    <p>Widget Layout und Stil: Erstellt Objekte anhand des Models</p>
+                </li>
+                <li>
+                    <h4>Controller: d2a_form_controller.qml</h4>
+                    <p>Koordiniert zwischen View und Model</p>
+                    <p>Save/New/Auswahl -> Abfrage und Bearbeitung von QgsVectorLayer</p>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Slide 5: Controller Pattern -->
+        <div class="slide">
+            <h2>Controller Pattern</h2>
+            <ul>
+                <li>View Eintrag-Objekte übergeben Aktualisierungen an Controller</li>
+                <li>Controller hält Werte für das View</li>
+                <li>Controller übergibt und empfängt Werte von der QField/QGIS API</li>
+            </ul>
+        </div>
+
+        <!-- Slide 6: Repeater Pattern -->
+        <div class="slide">
+            <h2>View : Model Interaktion mit Repeater</h2>
+            <p> Anstatt jedes Widget manuell zu erstellen, verwenden wir einen Repeater, um die Form-Struktur dynamisch zu generieren</p>
+            <div class="code-block">
+                component FormField: Rectangle{
+                    id: formField
+                    property var fieldData
+                    RowLayout {
+                        id: fieldRow
+                        Text {
+                            text: fieldData.label
+                        }
+                        TextField {
+                            id: input
+                            text: controller.fieldValues[fieldData.name]
+                            onTextChanged: {
+                                controller.updateField(fieldData.name, text)
+                            }
+                        }
+                    }
+                }
+
+                Repeater {
+                    model: fieldModel             
+                    delegate: FormField {
+                        fieldData: modelData
+                    }
+                }
+
+            </div>
+            <ul style="margin-top: 30px;">
+                <li>Konfiguration in DataModel definiert</li>
+                <li>Repeater iteriert und erstellt Eingabe-Objekte dynamisch</li>
+            </ul>
+        </div>
+
+        <!-- Slide 7: Die Goldene Regel -->
         <div class="slide">
             <h2>⚠️ Achtung </h2>
-            <h3>NIEMALS die QField-API umgehen!</h3>
-            <h3>NIEMALS über den Daten-Provider zugreifen!</h3>
+            <h3>Niemals die QField-API umgehen</h3>
+            <h3>Niemals über den Daten-Provider zugreifen</h3>
             <h3>Warum?</h3>
             <ul style="font-size: 1.2em;">
                 <li>QField Sync basiert auf QGIS Offline Editing</li>
@@ -276,11 +339,11 @@
             </ul>
 
             <p style="margin-top: 30px; text-align: center; font-size: 1.4em;">
-                <span class="highlight">Immer</span> FeatureUtils & LayerUtils verwenden!
+                <span class="highlight">Immer</span> FeatureUtils & LayerUtils verwenden
             </p>
         </div>
 
-        <!-- Slide 5: CREATE - Feature einfügen -->
+        <!-- Slide 8: CREATE - Feature einfügen -->
         <div class="slide">
             <h2>CREATE: Feature einfügen</h2>
             <div class="code-block">
@@ -298,14 +361,16 @@ newFeature.setAttribute("log_date", new Date().toISOString())
 // 4. Feature zum Layer hinzufügen
 LayerUtils.addFeature(layer, newFeature)
 
-// 5. Änderungen committen
-layer.commitChanges()
-
-return newFeature
+// 5. Änderungen commit
+try{
+    layer.commitChanges()
+} catch (e) {
+    layer.rollBack()
+}
             </div>
         </div>
 
-        <!-- Slide 6: READ - Feature abrufen -->
+        <!-- Slide 9: READ - Feature abrufen -->
         <div class="slide">
             <h2>READ: Feature abrufen</h2>
             <div class="code-block">
@@ -315,19 +380,19 @@ var iterator = LayerUtils.createFeatureIteratorFromExpression(layer, expression)
 
 if (iterator.hasNext()) {
     currentFeature = iterator.next()
-    iterator.close()  // KRITISCH!
+    iterator.close()  // Immer schließen, sobald Sie fertig sind mit dem Iterator
     return currentFeature
 }
 
-iterator.close()  // Immer schließen!
+iterator.close()  // Immer schließen
 
             </div>
             <p style="margin-top: 20px; font-size: 1.3em; color: #c44569;">
-                <strong>IMMER</strong> Iterator schließen!
+                <strong>IMMER</strong> Iterator schließen
             </p>
         </div>
 
-        <!-- Slide 7: UPDATE - Feature aktualisieren -->
+        <!-- Slide 10: UPDATE - Feature aktualisieren -->
         <div class="slide">
             <h2>UPDATE: Feature aktualisieren</h2>
             <div class="code-block">
@@ -335,22 +400,27 @@ iterator.close()  // Immer schließen!
 layer.startEditing()
 
 // 2. Feature-ID und Fields holen
-var fid = currentFeature.id
-var fields = currentFeature.fields
-var fieldName = 'plot_id'
-var value = 'new_plot_id_value'
+var fid = feature.id
+var fields = feature.fields
+
+var fieldName = 'field_name_to_update'
+var value = 'new_value'
+
 var fieldIndex = fields.indexOf(fieldName)
-    
 if (fieldIndex >= 0) {
     layer.changeAttributeValue(fid, fieldIndex, value)
 }
 
-// 4. Änderungen committen
-layer.commitChanges()
+// 4. Änderungen commit
+try{
+    layer.commitChanges()
+} catch (e) {
+    layer.rollBack()
+}
             </div>
         </div>
 
-        <!-- Slide 8: DELETE - Feature löschen -->
+        <!-- Slide 11: DELETE - Feature löschen -->
         <div class="slide">
             <h2>DELETE: Feature löschen</h2>
             <div class="code-block">// 1. Bearbeitung starten       
@@ -358,6 +428,7 @@ layer.commitChanges()
 layer.startEditing()
 
 // 2. Feature löschen
+var featureId = feature.id
 var success = layer.deleteFeature(featureId)
 
 if (!success) {
@@ -370,18 +441,15 @@ if (!success) {
 var commitSuccess = layer.commitChanges()
 if (!commitSuccess) {
     layer.rollBack()
-    return false
 }
-
-return true
             </div>
         </div>
 
-        <!-- Slide 9: Field Index Warnung -->
+        <!-- Slide 12: Field Index Warnung -->
         <div class="slide">
-            <h2>Wichtige Warnung: Field Index</h2>
+            <h2>Wicht1ige Warnung: Field Index</h2>
             <div class="call-to-action">
-                <h3>NIEMALS hart kodierte Indizes verwenden!</h3>
+                <h3>Niemals hart kodierte Indizes verwenden</h3>
                 <p>Index in QGIS ist nicht gleich Index in QField.</p>
             </div>
             
@@ -392,92 +460,15 @@ value = feature.attribute(3)
 
             <h3>✅ RICHTIG:</h3>
             <div class="code-block">
-value = feature.attribute("plot_id")  // Feldname verwenden!
+value = feature.attribute("plot_id")  
 
 // Oder für Updates:
 var fieldIndex = fields.indexOf("plot_id")
 layer.changeAttributeValue(fid, fieldIndex, value)
             </div>
-
-        </div>
-        <!-- Slide 10: Architektur -->
-        <div class="slide">
-            <h2>Model View Controller-Architektur</h2>
-            <ul>
-                <li>
-                    <h4>Model: d4_form_data_model.qml</h4>
-                    <p>Konfiguration der Form-Struktur: Beschriftung, Feldname(id), Widget Einstellungen</p>
-                </li>
-                <li>
-                    <h4>View: d4_headerpage.qml, d4_form_section.qml, d4_form_field.qml</h4>
-                    <p>Registrieren sich beim Controller</p>
-                </li>
-                <li>
-                    <h4>Controller: d4_form_controller.qml</h4>
-                    <p>Koordiniert zwischen View und Model</p>
-                </li>
-                <li>
-                    <h4>Controller: d4_data_controller.qml</h4>
-                    <p>Handhabt QField-API-Interaktionen</p>
-                </li>
-            </ul>
         </div>
 
-        <!-- Slide 12: FormController Pattern -->
-        <div class="slide">
-            <h2>FormController Pattern</h2>
-            <ul>
-                <li>1. Widget-Elemente registrieren sich beim Controller</li>
-                <li>2. FormController sammelt Werte von allen Widgets</li>
-                <li>3. FormController übergibt Werte an DataController</li>
-                <li>4. DataController führt QField-API-Operationen aus</li>
-            </ul>
-        </div>
-
-        <!-- Slide 13: Repeater Pattern -->
-        <div class="slide">
-            <h2>Repeater für dynamische Forms</h2>
-            <div class="code-block">
-Repeater {
-    model: FormDataModel.groupBoxes
-    
-    delegate: FormSection {
-        width: parent.width
-        sectionData: modelData
-        controller: headerPage.formController
-    }
-}
-            </div>
-            <ul style="margin-top: 30px;">
-                <li>Konfiguration in DataModel definiert</li>
-                <li>Repeater iteriert und erstellt Widget-Elemente</li>
-                <li>Widget-Elemente registrieren sich beim Erstellen</li>
-                <li>Keine For-Schleifen in QML!</li>
-            </ul>
-        </div>
-
-        <!-- Slide 14: Property Propagation -->
-        <div class="slide">
-            <h2>Property-Propagierung durch Loader</h2>
-            <div class="code-block">// Im Parent-Loader definieren
-Loader {
-    id: tabWidgetLoader
-    property string plotId: pluginFrame.plotId
-    source: "d4_tabwidget.qml"
-}
-
-// Im geladenen Component verwenden
-// d4_tabwidget.qml
-Item {
-    property string plotId: parent.plotId  // Von Loader!
-}
-            </div>
-            <p style="margin-top: 30px; font-size: 1.3em;">
-                Loader-Properties propagieren zu geladenen Components
-            </p>
-        </div>
-
-        <!-- Slide 15: Übungen -->
+        <!-- Slide 13: Übungen -->
         <div class="slide">
             <h2>Übungen für die nächsten 60 Minuten</h2>
             <div class="call-to-action">
@@ -485,13 +476,10 @@ Item {
             </div>
             <ul>
                 <li><strong>Übung 1:</strong> Demo2a-Plugin bereitstellen und testen</li>
-                <li><strong>Übung 3:</strong> Feature-Erstellung mit iface.logMessage tracken</li>
-                <li><strong>Übung 4:</strong> Ein Element von den Formular entfernen</li>
-                <li><strong>Übung 5:</strong> Ein Vorlage für den Header Beschreibung einfügen</li>
-                <li><strong>Übung 6:</strong> Bau ein eigenes Plugin.</li>
-                <li><strong>Klüger als ich?</strong> Finde wie man das Plugin über der Skala, aber wichtiger über der Location Pfeil rendern kann.</li>
-                <li><strong>Klüger als ich?</strong> Finde das Anchor für das Such-Button, sodass der Rote Knopf auf jades Bildschirm richtig gesetzt ist.</li>
-
+                <li><strong>Übung 2:</strong> Ein Element zum Formular hinzufügen, indem du das Model aktualisierst</li>
+                <li><strong>Übung 3:</strong> Ein Element von den Formular entfernen</li>
+                <li><strong>Übung 4:</strong> Ein Vorlage für den Header Beschreibung einfügen, using the Model and View</li>
+                <li><strong>Übung 5:</strong> Bau ein eigenes Plugin.</li>
             </ul>
             <div class="demo-box" style="margin-top: 30px;">
                 <p style="text-align: center; font-size: 1.3em;">
@@ -505,7 +493,7 @@ Item {
     </div>
 
     <div class="slide-number">
-        <span id="current-slide">1</span> / 16
+        <span id="current-slide">1</span> / 13
     </div>
 
     <div class="controls">
