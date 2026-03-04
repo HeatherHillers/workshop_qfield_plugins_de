@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Demo 4: Feature Editing</title>
+    <title>Demo 4: Feature-Bearbeitung</title>
     <style>
         * {
             margin: 0;
@@ -217,97 +217,97 @@
         <!-- Slide 1: Title -->
         <div class="slide active">
             <div class="center">
-                <h1>Demo 4</h1>
+                <h1>Demo 2a</h1>
                 <h2>Create, Read, Update, Delete</h2>
-                <img src="img/demo4_screen.png" alt="Demo 4 Screenshot" style="width: 700px; height: auto; margin: 30px auto; display: block; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+                <img src="img/demo2a_screen.png" alt="Demo 2a Screenshot" style="width: 700px; height: auto; margin: 30px auto; display: block; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
 
             </div>
         </div>
 
-        <!-- Slide 2: What we'll learn -->
+        <!-- Slide 2: Was wir lernen -->
         <div class="slide">
-            <h2>What We Will Learn</h2>
+            <h2>Was wir lernen werden</h2>
             <ul>
-                <li>How to add a row to a table</li>
-                <li>How to update a row</li>
-                <li>How to delete a row</li>
+                <li>Wie man eine Zeile zu einer Tabelle hinzufügt</li>
+                <li>Wie man eine Zeile aktualisiert</li>
+                <li>Wie man eine Zeile löscht</li>
             </ul>
             <div class="call-to-action" style="margin-top: 40px;">
-                <p>The most important demo for real data collection!</p>
+                <p>Die wichtigste Demo für echte Datenerfassung!</p>
             </div>
         </div>
 
         <!-- Slide 3: Plot Header -->
         <div class="slide">
-            <h2>What Does the Plugin Do?</h2>
+            <h2>Was macht das Plugin?</h2>
             <ul>
                 <li>
-                    Get plot ID from parent plugin
+                    Plot Id vom Parent-Plugin erhalten
                 </li>
                 <li>
-                    Query the (non-geographic) table <code>plot_header</code> with plot_id
+                    Die (nicht Geografische) Tabelle <code>plot_header</code> mit plot_id abfragen
                 </li>           
                 <li>
-                    If no row found: Create new template row
+                    Falls keine Zeile gefunden: Neue Vorlage-Zeile erstellen
                 </li>
                 <li>
-                    Fill form with row values
+                    Formular mit Zeilenwerten füllen
                 </li>
                 <li>
-                    Track changes → Save button shows state
+                    Änderungen tracken → Speichern-Button zeigt Zustand
                 </li>
                 <li>
-                    Save button → Commit all values to plot_header
+                    Speichern-Button → Alle Werte in plot_header committen
                 </li>
             </ul>
 
         </div>
 
-        <!-- Slide 4: The Golden Rule -->
+        <!-- Slide 4: Die Goldene Regel -->
         <div class="slide">
-            <h2>⚠️ Warning </h2>
-            <h3>NEVER bypass the QField API!</h3>
-            <h3>NEVER access through the data provider!</h3>
-            <h3>Why?</h3>
+            <h2>⚠️ Achtung </h2>
+            <h3>NIEMALS die QField-API umgehen!</h3>
+            <h3>NIEMALS über den Daten-Provider zugreifen!</h3>
+            <h3>Warum?</h3>
             <ul style="font-size: 1.2em;">
-                <li>QField Sync is based on QGIS Offline Editing</li>
-                <li>Direct changes are not detected</li>
-                <li>Synchronization will overwrite your data</li>
+                <li>QField Sync basiert auf QGIS Offline Editing</li>
+                <li>Direkte Änderungen werden nicht erkannt</li>
+                <li>Synchronisierung überschreibt Ihre Daten</li>
             </ul>
 
             <p style="margin-top: 30px; text-align: center; font-size: 1.4em;">
-                <span class="highlight">Always</span> use FeatureUtils & LayerUtils!
+                <span class="highlight">Immer</span> FeatureUtils & LayerUtils verwenden!
             </p>
         </div>
 
-        <!-- Slide 5: CREATE - Insert feature -->
+        <!-- Slide 5: CREATE - Feature einfügen -->
         <div class="slide">
-            <h2>CREATE: Insert Feature</h2>
+            <h2>CREATE: Feature einfügen</h2>
             <div class="code-block">
-// 1. Start editing
+// 1. Bearbeitung starten
 layer.startEditing()
 
-// 2. Create empty feature
+// 2. Leeres Feature erstellen
 var newFeature = FeatureUtils.createFeature(layer)
 
-// 3. Set attributes
+// 3. Attribute setzen
 newFeature.setAttribute("f_uid", StringUtils.createUuid())
 newFeature.setAttribute("plot_id", plotId)
 newFeature.setAttribute("log_date", new Date().toISOString())
 
-// 4. Add feature to layer
+// 4. Feature zum Layer hinzufügen
 LayerUtils.addFeature(layer, newFeature)
 
-// 5. Commit changes
+// 5. Änderungen committen
 layer.commitChanges()
 
 return newFeature
             </div>
         </div>
 
-        <!-- Slide 6: READ - Get feature -->
+        <!-- Slide 6: READ - Feature abrufen -->
         <div class="slide">
-            <h2>READ: Get Feature</h2>
+            <h2>READ: Feature abrufen</h2>
             <div class="code-block">
 
 var expression = "plot_id = '" + plotId + "'"
@@ -315,61 +315,58 @@ var iterator = LayerUtils.createFeatureIteratorFromExpression(layer, expression)
 
 if (iterator.hasNext()) {
     currentFeature = iterator.next()
-    iterator.close()  // CRITICAL!
+    iterator.close()  // KRITISCH!
     return currentFeature
 }
 
-iterator.close()  // Always close!
+iterator.close()  // Immer schließen!
 
             </div>
             <p style="margin-top: 20px; font-size: 1.3em; color: #c44569;">
-                <strong>ALWAYS</strong> close iterator!
+                <strong>IMMER</strong> Iterator schließen!
             </p>
         </div>
 
-        <!-- Slide 7: UPDATE - Update feature -->
+        <!-- Slide 7: UPDATE - Feature aktualisieren -->
         <div class="slide">
-            <h2>UPDATE: Update Feature</h2>
+            <h2>UPDATE: Feature aktualisieren</h2>
             <div class="code-block">
-// 1. Start editing
+// 1. Bearbeitung starten
 layer.startEditing()
 
-// 2. get the feature id and the fields from your feature
+// 2. Feature-ID und Fields holen
 var fid = currentFeature.id
 var fields = currentFeature.fields
-
 var fieldName = 'plot_id'
 var value = 'new_plot_id_value'
-
-// 3. Get field index and change value
 var fieldIndex = fields.indexOf(fieldName)
     
 if (fieldIndex >= 0) {
     layer.changeAttributeValue(fid, fieldIndex, value)
 }
 
-// 4. Commit changes
+// 4. Änderungen committen
 layer.commitChanges()
             </div>
         </div>
 
-        <!-- Slide 8: DELETE - Delete feature -->
+        <!-- Slide 8: DELETE - Feature löschen -->
         <div class="slide">
-            <h2>DELETE: Delete Feature</h2>
-            <div class="code-block">// 1. Start editing       
-// 1. Start editing
+            <h2>DELETE: Feature löschen</h2>
+            <div class="code-block">// 1. Bearbeitung starten       
+// 1. Bearbeitung starten
 layer.startEditing()
 
-// 2. Delete feature
+// 2. Feature löschen
 var success = layer.deleteFeature(featureId)
 
 if (!success) {
-    // 3a. On error: Rollback
+    // 3a. Bei Fehler: Rollback
     layer.rollBack()
     return false
 }
 
-// 3b. On success: Commit
+// 3b. Bei Erfolg: Commit
 var commitSuccess = layer.commitChanges()
 if (!commitSuccess) {
     layer.rollBack()
@@ -380,48 +377,48 @@ return true
             </div>
         </div>
 
-        <!-- Slide 9: Field Index Warning -->
+        <!-- Slide 9: Field Index Warnung -->
         <div class="slide">
-            <h2>Important Warning: Field Index</h2>
+            <h2>Wichtige Warnung: Field Index</h2>
             <div class="call-to-action">
-                <h3>NEVER use hard-coded indices!</h3>
-                <p>Index in QGIS is not the same as index in QField.</p>
+                <h3>NIEMALS hart kodierte Indizes verwenden!</h3>
+                <p>Index in QGIS ist nicht gleich Index in QField.</p>
             </div>
             
-            <h3>❌ WRONG:</h3>
+            <h3>❌ FALSCH:</h3>
             <div class="code-block">
 value = feature.attribute(3)  
             </div>
 
-            <h3>✅ CORRECT:</h3>
+            <h3>✅ RICHTIG:</h3>
             <div class="code-block">
-value = feature.attribute("plot_id")  // Use field name!
+value = feature.attribute("plot_id")  // Feldname verwenden!
 
-// Or for updates:
+// Oder für Updates:
 var fieldIndex = fields.indexOf("plot_id")
 layer.changeAttributeValue(fid, fieldIndex, value)
             </div>
 
         </div>
-        <!-- Slide 10: Architecture -->
+        <!-- Slide 10: Architektur -->
         <div class="slide">
-            <h2>Model View Controller Architecture</h2>
+            <h2>Model View Controller-Architektur</h2>
             <ul>
                 <li>
                     <h4>Model: d4_form_data_model.qml</h4>
-                    <p>Configuration of form structure: labels, field names (id), widget settings</p>
+                    <p>Konfiguration der Form-Struktur: Beschriftung, Feldname(id), Widget Einstellungen</p>
                 </li>
                 <li>
                     <h4>View: d4_headerpage.qml, d4_form_section.qml, d4_form_field.qml</h4>
-                    <p>Register with the controller</p>
+                    <p>Registrieren sich beim Controller</p>
                 </li>
                 <li>
                     <h4>Controller: d4_form_controller.qml</h4>
-                    <p>Coordinates between view and model</p>
+                    <p>Koordiniert zwischen View und Model</p>
                 </li>
                 <li>
                     <h4>Controller: d4_data_controller.qml</h4>
-                    <p>Handles QField API interactions</p>
+                    <p>Handhabt QField-API-Interaktionen</p>
                 </li>
             </ul>
         </div>
@@ -430,16 +427,16 @@ layer.changeAttributeValue(fid, fieldIndex, value)
         <div class="slide">
             <h2>FormController Pattern</h2>
             <ul>
-                <li>1. Widget elements register with the controller</li>
-                <li>2. FormController collects values from all widgets</li>
-                <li>3. FormController passes values to DataController</li>
-                <li>4. DataController executes QField API operations</li>
+                <li>1. Widget-Elemente registrieren sich beim Controller</li>
+                <li>2. FormController sammelt Werte von allen Widgets</li>
+                <li>3. FormController übergibt Werte an DataController</li>
+                <li>4. DataController führt QField-API-Operationen aus</li>
             </ul>
         </div>
 
         <!-- Slide 13: Repeater Pattern -->
         <div class="slide">
-            <h2>Repeater for Dynamic Forms</h2>
+            <h2>Repeater für dynamische Forms</h2>
             <div class="code-block">
 Repeater {
     model: FormDataModel.groupBoxes
@@ -452,53 +449,56 @@ Repeater {
 }
             </div>
             <ul style="margin-top: 30px;">
-                <li>Configuration defined in DataModel</li>
-                <li>Repeater iterates and creates widget elements</li>
-                <li>Widget elements register on creation</li>
-                <li>No for-loops in QML!</li>
+                <li>Konfiguration in DataModel definiert</li>
+                <li>Repeater iteriert und erstellt Widget-Elemente</li>
+                <li>Widget-Elemente registrieren sich beim Erstellen</li>
+                <li>Keine For-Schleifen in QML!</li>
             </ul>
         </div>
 
         <!-- Slide 14: Property Propagation -->
         <div class="slide">
-            <h2>Property Propagation through Loader</h2>
-            <div class="code-block">// Define in parent Loader
+            <h2>Property-Propagierung durch Loader</h2>
+            <div class="code-block">// Im Parent-Loader definieren
 Loader {
     id: tabWidgetLoader
     property string plotId: pluginFrame.plotId
     source: "d4_tabwidget.qml"
 }
 
-// Use in loaded component
+// Im geladenen Component verwenden
 // d4_tabwidget.qml
 Item {
-    property string plotId: parent.plotId  // From Loader!
+    property string plotId: parent.plotId  // Von Loader!
 }
             </div>
             <p style="margin-top: 30px; font-size: 1.3em;">
-                Loader properties propagate to loaded components
+                Loader-Properties propagieren zu geladenen Components
             </p>
         </div>
 
-        <!-- Slide 15: Exercises -->
+        <!-- Slide 15: Übungen -->
         <div class="slide">
-            <h2>Exercises for the Next 60 Minutes</h2>
+            <h2>Übungen für die nächsten 60 Minuten</h2>
             <div class="call-to-action">
-                <h3>Tasks:</h3>
+                <h3>Aufgaben:</h3>
             </div>
             <ul>
-                <li><strong>Exercise 1:</strong> Deploy and test the Demo4 plugin</li>
-                <li><strong>Exercise 3:</strong> Track feature creation with iface.logMessage</li>
-                <li><strong>Exercise 4:</strong> Remove an element from the form</li>
-                <li><strong>Exercise 5:</strong> Insert a template for the header description</li>
-                <li><strong>Exercise 6:</strong> Build your own plugin.</li>
+                <li><strong>Übung 1:</strong> Demo2a-Plugin bereitstellen und testen</li>
+                <li><strong>Übung 3:</strong> Feature-Erstellung mit iface.logMessage tracken</li>
+                <li><strong>Übung 4:</strong> Ein Element von den Formular entfernen</li>
+                <li><strong>Übung 5:</strong> Ein Vorlage für den Header Beschreibung einfügen</li>
+                <li><strong>Übung 6:</strong> Bau ein eigenes Plugin.</li>
+                <li><strong>Klüger als ich?</strong> Finde wie man das Plugin über der Skala, aber wichtiger über der Location Pfeil rendern kann.</li>
+                <li><strong>Klüger als ich?</strong> Finde das Anchor für das Such-Button, sodass der Rote Knopf auf jades Bildschirm richtig gesetzt ist.</li>
+
             </ul>
             <div class="demo-box" style="margin-top: 30px;">
                 <p style="text-align: center; font-size: 1.3em;">
-                    Detailed Instructions: 
-                    <a href="https://heatherhillers.github.io/workshop_qfield_plugins_de/guide/demo4/demo4_intro_EN.html" class="button">https://heatherhillers.github.io/workshop_qfield_plugins_de/guide/demo4/demo4_intro_EN.html</a>                
+                    Detaillierte Anleitungen: 
+                    <a href="https://heatherhillers.github.io/workshop_qfield_plugins_de/guide/demo2a/demo2a_intro_DE.html" class="button">https://heatherhillers.github.io/workshop_qfield_plugins_de/guide/demo2a/demo2a_intro_DE.html</a>                
                 </p>
-                <button onclick="window.location.href='end_presentation_EN.html'">Resources →</button>
+                <button onclick="window.location.href='end_presentation_DE.html'">Ressourcen →</button>
             </div>
         </div>
 
@@ -509,8 +509,8 @@ Item {
     </div>
 
     <div class="controls">
-        <button id="prev">← Previous</button>
-        <button id="next">Next →</button>
+        <button id="prev">← Zurück</button>
+        <button id="next">Weiter →</button>
     </div>
 
     <script>

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Getting from Map Click to Header Page</title>
+    <title>Vom Map-Klick zur Header-Seite gelangen</title>
     <style>
         * {
             margin: 0;
@@ -132,61 +132,61 @@
 </head>
 <body>
     <div class="container">
-        <h1>Demonstration 4: Getting from Map Click to Header Page</h1>
+        <h1>Demonstration 2a: Vom Map-Klick zur Header-Seite gelangen</h1>
         
-        <p>Let's quickly find our place.</p>
+        <p>Lassen Sie uns unseren Platz schnell finden.</p>
 
-        <h2>1. The demo4_header_form.qml is the same as in Demo2. When the user clicks on the map, the plugin sets the plotId property of the plugin component, which is defined in components/d4_plugin_component.qml</h2>
+        <h2>1. Die demo2a_header_form.qml ist dieselbe wie in Demo2. Wenn der Benutzer auf die Karte klickt, setzt das Plugin die plotId-Property der Plugin-Component, die in components/d4_plugin_component.qml definiert ist</h2>
 
-<pre><code>// when you click on a plot field
-// (around line 76)
+<pre><code>// wenn Sie auf ein Plotfeld klicken
+// (um Zeile 76)
 pluginLoader.active = true
 pluginLoader.item.plotId = feature.attribute("plot_id")</code></pre>
 
-        <h2>2. d4_plugin_component.qml has changed. It now has 2 loaders of its own.</h2>
+        <h2>2. d4_plugin_component.qml hat sich geändert. Es hat jetzt 2 eigene Loader.</h2>
 
         <ul>
-            <li>One loader loads the d4_titlebar.qml, which we'll ignore. This contains the title text and close button. It's basically our component in Demo2, but downsized. We'll ignore this.</li>
-            <li>The second loader is the one we're interested in. It loads the d4_tabwidget. As with the titlebar, when the widget loads, the plotId is passed on to the tab widget.</li>
+            <li>Ein Loader lädt die d4_titlebar.qml, die wir ignorieren werden. Diese enthält den Titeltext und die Schließen-Schaltfläche. Es ist im Grunde unsere Component in Demo2, aber verkleinert. Wir werden das ignorieren.</li>
+            <li>Der zweite Loader ist der, der uns interessiert. Er lädt das d4_tabwidget. Wie bei der Titlebar wird beim Laden des Widgets die plotId an das Tabwidget weitergegeben.</li>
         </ul>
 
-<pre><code>    // TabWidget to display search results
+<pre><code>    // TabWidget zur Anzeige der Suchergebnisse
     Loader {
         id: tabWidgetLoader
-        // Define the plotId property here to propagate to loader children
+        // Definieren Sie die plotId-Property hier, um zu den Loader-Kindern zu propagieren
         property string plotId: pluginFrame.plotId
-        width: pluginFrame.width  // Use parent width (Column)
-        height: pluginFrame.height - titleBarLoader.height - 20 // Fill remaining Column space
+        width: pluginFrame.width  // Verwenden Sie die Breite des Parents (Column)
+        height: pluginFrame.height - titleBarLoader.height - 20 // Füllen Sie den verbleibenden Column-Raum
         source: "d4_tabwidget.qml"
     }</code></pre>
 
-        <h3>Important Aside: Propagating plotId with Dynamic Bindings</h3>
+        <h3>Wichtiger Exkurs: Propagierung von plotId mit dynamischen Bindungen</h3>
 
-        <p>Within the d4_tabwidget, the plotId is dynamically bound to the parent's ID. But it can only reference its parent.</p>
+        <p>Innerhalb des d4_tabwidget ist die plotId dynamisch an die ID des Parents gebunden. Sie kann aber nur auf ihren Parent verweisen.</p>
 
 <pre><code>property string plotId: parent.plotId</code></pre>
 
-        <p>It cannot reference the pluginFrame by name.</p>
+        <p>Sie kann nicht den pluginFrame nach Namen referenzieren.</p>
 
-<pre><code>// no. doesn't work.
+<pre><code>// nein. funktioniert nicht.
 property string plotId: pluginFrame.plotId</code></pre>
 
-        <p>It only has a reference to its parent, which is tabWidgetLoader. So you need to bind plotId by defining it in the loader.</p>
+        <p>Sie hat nur einen Verweis auf ihren Parent, der tabWidgetLoader ist. Also müssen Sie plotId binden, indem Sie es im Loader definieren.</p>
 
-<pre><code>    // TabWidget to display search results
+<pre><code>    // TabWidget zur Anzeige der Suchergebnisse
     Loader {
         id: tabWidgetLoader
-        // Define the plotId property here to propagate to loader children
+        // Definieren Sie die plotId-Property hier, um zu den Loader-Kindern zu propagieren
         property string plotId: pluginFrame.plotId
         &lt;...&gt;
         source: "d4_tabwidget.qml"
     }</code></pre>
 
-        <p>All properties you want to pass should be linked this way.</p>
+        <p>Alle Properties, die Sie übergeben möchten, sollten auf diese Weise verknüpft werden.</p>
 
-        <h2>3. d4_tabwidget.qml loads the header page</h2>
+        <h2>3. d4_tabwidget.qml lädt die Header-Seite</h2>
 
-        <p>The tab widget defines a TabBar and a SwipeView that are synchronized with each other. The SwipeView swipes between 6 pages. The last 5 pages are strata pages. This is where species are inventoried. The 1st page of the SwipeView is the one we're interested in. It's the headerPageLoader, which is embedded in a ScrollView. The headerPageLoader loads d4_headerpage.qml. Note the propagation of plotId from the tabWidget through to d4_headerpage via dynamic binding.</p>
+        <p>Das Tab-Widget definiert eine TabBar und eine SwipeView, die miteinander synchronisiert sind. Die SwipeView wischt zwischen 6 Seiten. Die letzten 5 Seiten sind Strata-Seiten. Hier werden die Arten inventarisiert. Die 1. Seite der SwipeView ist die, die uns interessiert. Es ist der headerPageLoader, der in eine ScrollView eingebettet ist. Der headerPageLoader lädt d4_headerpage.qml. Beachten Sie die Propagierung von plotId vom tabWidget durch zum d4_headerpage über dynamische Bindung.</p>
 
 <pre><code>    TabBar {
         &lt;...&gt; 
@@ -194,7 +194,7 @@ property string plotId: pluginFrame.plotId</code></pre>
     SwipeView {
         id: swipeView
         &lt;...&gt;    
-        // Header Tab Content (first item)
+        // Header Tab Content (erstes Item)
         ScrollView {
             id: headerScrollView
             &lt;...&gt;
@@ -207,18 +207,18 @@ property string plotId: pluginFrame.plotId</code></pre>
             }
         }
 
-        // Strata Tab Content (remaining items.)
+        // Strata Tab Content (verbleibende Items.)
         Repeater {
             id: strataRepeater
             &lt;...&gt;
         }       
     }</code></pre>
 
-        <h2>4. And that brings us to d4_headerpage, which loads the form in the first page of the tabWidget</h2>
+        <h2>4. Und das bringt uns zur d4_headerpage, die das Formular in der ersten Seite des tabWidget lädt</h2>
 
         <div class="nav-links">
-            <a href="demo4_headerpage_EN.html">📚 The Header Page</a>
-            <a href="demo4_intro_EN.html">📚 &lt;&lt; Demonstration 4 Introduction</a>
+            <a href="demo2a_headerpage_DE.html">📚 Die Header-Seite</a>
+            <a href="demo2a_intro_DE.html">📚 &lt;&lt; Demonstration 2a Einführung</a>
         </div>
     </div>
 </body>

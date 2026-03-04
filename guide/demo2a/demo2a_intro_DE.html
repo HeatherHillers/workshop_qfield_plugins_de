@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Demonstration 4: Feature Editing</title>
+    <title>Demonstration 4: Feature-Bearbeitung</title>
     <style>
         * {
             margin: 0;
@@ -147,55 +147,55 @@
 </head>
 <body>
     <div class="container">
-        <h1>Demonstration 4: Feature Editing</h1>
+        <h1>Demonstration 4: Feature-Bearbeitung</h1>
         
-        <p>This demonstration extends the tab widget introduced in qfield_vegetation_monitoring/demo3_tabwidget. Each year, the biologists collect some basic information about the plot field, such as average vegetation height, and record it in the plot_header table. When we open our tab widget, the header page is the first tab. This demonstration sets up the header page for the tab widget. The UI in this demonstration is too complex to be covered in this workshop. We'll leave it for you to review later. We'll focus here on the good parts - the QField interface for editing features.</p>
+        <p>Diese Demonstration erweitert das Tab-Widget, das in qfield_vegetation_monitoring/demo3_tabwidget eingeführt wurde. Jedes Jahr erfassen die Biologen einige grundlegende Informationen über das Plotfeld, wie die durchschnittliche Vegetationshöhe, und zeichnen sie in der Tabelle plot_header auf. Wenn wir unser Tab-Widget öffnen, ist die Header-Seite der erste Tab. Diese Demonstration richtet die Header-Seite für das Tab-Widget ein. Die UI in dieser Demonstration ist zu komplex, um in diesem Workshop behandelt zu werden. Wir werden es Ihnen überlassen, es später zu überprüfen. Wir werden uns hier auf die guten Teile konzentrieren - die QField-Schnittstelle zur Bearbeitung von Features.</p>
 
-        <h2>What We Will Learn</h2>
+        <h2>Was wir lernen werden</h2>
         <ul>
-            <li>How to add a row to a table via the QField interface</li>
-            <li>How to update a row via the QField interface</li>
-            <li>A LOT of UI stuff that we'll just skim over.</li>
+            <li>Wie man eine Zeile zu einer Tabelle über die QField-Schnittstelle hinzufügt</li>
+            <li>Wie man eine Zeile über die QField-Schnittstelle aktualisiert</li>
+            <li>VIEL UI-Zeug, das wir nur überfliegen werden.</li>
         </ul>
 
-        <h2>What Does It Do?</h2>
+        <h2>Was macht es?</h2>
         <ul>
-            <li>When the user clicks on the canvas, the plot ID is sent from the plugin component to the tab widget and to the header page of the tab widget in d5_headerpage.qml</li>
-            <li>Note: The form is long. The form has an invisible scroll area accessible via the mouse wheel on Windows or swiping on iOS.</li>
-            <li>On load, it checks whether a row already exists in the plot_header table.
+            <li>Wenn der Benutzer auf das Canvas klickt, wird die Plot-ID von der Plugin-Component an das Tab-Widget und an die Header-Seite des Tab-Widgets in d5_headerpage.qml gesendet</li>
+            <li>Hinweis: Das Formular ist lang. Das Formular hat einen unsichtbaren Scrollbereich, der über das Mausrad unter Windows oder Wischen auf iOS zugänglich ist.</li>
+            <li>Beim Laden wird überprüft, ob bereits eine Zeile in der plot_header-Tabelle existiert.
                 <ul>
-                    <li>If no plot_header row exists, one is immediately added. This row has default values for all inputs.
+                    <li>Wenn keine plot_header-Zeile existiert, wird sofort eine hinzugefügt. Diese Zeile hat Standardwerte für alle Eingaben.
                         <ul>
-                            <li>0 for all numeric values</li>
-                            <li>Empty string for text fields</li>
-                            <li>A UUID for the primary key</li>
-                            <li>The current timestamp</li>
-                            <li>The plot ID as foreign key for plot.</li>
+                            <li>0 für alle numerischen Werte</li>
+                            <li>Leerstring für Textfelder</li>
+                            <li>eine UUID für den Primärschlüssel</li>
+                            <li>der aktuelle Zeitstempel</li>
+                            <li>die Plot-ID als Fremdschlüssel für Plot.</li>
                         </ul>
                     </li>
-                    <li>If a plot_header row already exists, the values are loaded into the form</li>
+                    <li>Wenn bereits eine plot_header-Zeile existiert, werden die Werte in das Formular geladen</li>
                 </ul>
             </li>
-            <li>This form has no auto-save by user request.</li>
-            <li>When a value is updated, the save button text changes to indicate unsaved changes.</li>
-            <li>When the user clicks the save button, changes to all values are saved and committed.</li>
+            <li>Dieses Formular hat auf Benutzerwunsch keine automatische Speicherung.</li>
+            <li>Wenn ein Wert aktualisiert wird, ändert sich der Text der Speichern-Schaltfläche, um nicht gespeicherte Änderungen anzuzeigen.</li>
+            <li>Wenn der Benutzer auf die Speichern-Schaltfläche klickt, werden Änderungen an allen Werten gespeichert und committet.</li>
         </ul>
  
-        <img src="img/demo4_screen.png" alt="Plugin screen">
+        <img src="img/demo2a_screen.png" alt="Plugin Bildschirm">
 
-        <h2>Setup</h2>
+        <h2>Einrichtung</h2>
         <ol style="list-style: decimal; padding-left: 40px;">
-            <li style="padding-left: 10px; list-style-position: outside;">Create a new project directory: ${ROOT}/qfield_project_demo_4</li>
-            <li style="padding-left: 10px; list-style-position: outside;">Copy the entire demo directory ${ROOT}/qfield_vegetation_plugin/demo4_header_form to ${ROOT}/qfield_project_demo_4</li>
-            <li style="padding-left: 10px; list-style-position: outside;">Open the project in QGIS if you want to see the structure of the plot_header table. This is included in the project as a private (hidden) non-geometry layer.</li>
-            <li style="padding-left: 10px; list-style-position: outside;">Run QField from the command line to open the project directly as a local project.</li>
+            <li style="padding-left: 10px; list-style-position: outside;">Erstellen Sie ein neues Projektverzeichnis: ${ROOT}/qfield_project_demo_2a</li>
+            <li style="padding-left: 10px; list-style-position: outside;">Kopieren Sie das gesamte Demo-Verzeichnis ${ROOT}/qfield_vegetation_plugin/demo2a_header_form nach ${ROOT}/qfield_project_demo_2a</li>
+            <li style="padding-left: 10px; list-style-position: outside;">Öffnen Sie das Projekt in QGIS, wenn Sie die Struktur der plot_header-Tabelle sehen möchten. Diese ist im Projekt als privater (versteckter) Layer ohne Geometrie enthalten.</li>
+            <li style="padding-left: 10px; list-style-position: outside;">Führen Sie QField von der Befehlszeile aus, um das Projekt direkt als lokales Projekt zu öffnen.</li>
         </ol>
 
-<pre><code>"C:\Program Files\QField\usr\bin\qfield.exe C:\temp\qfield\demo4_header_form\demo4_header_form.qgs</code></pre>
+<pre><code>"C:\Program Files\QField\usr\bin\qfield.exe C:\temp\qfield\demo2a_header_form\demo2a_header_form.qgs</code></pre>
 
         <div class="nav-links">
-            <a href="demo4_headerpage_EN.html">📚 Getting to the Header Page</a>
-            <a href="../demo2/demo2_intro_EN.html">📚 &lt;&lt; Demonstration 2</a>
+            <a href="demo2a/demo2a_plugin_component_DE.html">📚 Zur Header-Seite gelangen</a>
+            <a href="../demo2/demo2_intro_DE.html">📚 &lt;&lt; Demonstration 2</a>
         </div>
     </div>
 </body>
