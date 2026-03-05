@@ -281,16 +281,6 @@
             </ul>
         </div>
 
-        <!-- Slide 5: Controller Pattern -->
-        <div class="slide">
-            <h2>How the Controller Works</h2>
-            <ul>
-                <li><code>fieldValues</code> is a plain JS map &mdash; the Controller is the single source of truth for all form values</li>
-                <li>Each TextField in the View binds to <code>controller.fieldValues[fieldName]</code> and calls <code>controller.updateField()</code> on every keystroke</li>
-                <li>On Save / New / Select: the Controller reads and writes the QgsVectorLayer directly via LayerUtils and FeatureUtils</li>
-                <li>The View never touches the layer &mdash; all data access goes through the Controller</li>
-            </ul>
-        </div>
 
         <!-- Slide 6: Repeater Pattern -->
         <div class="slide">
