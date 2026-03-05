@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model, View, Controller</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6baa75 0%, #4a8a5a 100%);
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 60px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #6baa75;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            font-weight: 700;
+            border-bottom: 3px solid #6baa75;
+            padding-bottom: 15px;
+        }
+        
+        h2 {
+            color: #4a8a5a;
+            font-size: 2em;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        h3 {
+            color: #6baa75;
+            font-size: 1.5em;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        p {
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        ul {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 20px;
+        }
+        
+        li {
+            padding-left: 40px;
+            position: relative;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            color: #333;
+        }
+        
+        li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #6baa75;
+            font-weight: bold;
+            font-size: 1.5em;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #d63384;
+            font-size: 0.95em;
+        }
+        
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+        
+        pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+        }
+        
+        .nav-links {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .nav-links a {
+            color: #6baa75;
+            text-decoration: none;
+            font-size: 1.2em;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #4a8a5a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Plugin-Architektur: FormDataModel, View und Controller</h1>
+
+        <p>Das demo2a_crud-Plugin verteilt seine Aufgaben auf drei QML-Dateien. Öffnen Sie jede davon in Ihrem Editor &mdash; am besten nebeneinander &mdash; während Sie diese Seite durcharbeiten.</p>
+
+        <ul>
+            <li><code>d2a_data_model.qml</code> &mdash; FormDataModel (Singleton)</li>
+            <li><code>d2a_plugin_component.qml</code> &mdash; View</li>
+            <li><code>d2a_form_controller.qml</code> &mdash; Controller</li>
+        </ul>
+
+        <!-- ============================================================ -->
+        <h2>1. FormDataModel &mdash; d2a_data_model.qml</h2>
+
+        <p>Das FormDataModel beantwortet eine einzige Frage: <em>Welche Felder hat das Formular?</em> Es ist ein <code>pragma Singleton</code>, d.h. es gibt genau eine Instanz, die im gesamten Plugin geteilt wird. Es enthält keine Logik und keinen Laufzeitzustand &mdash; nur ein JS-Array mit Feldbeschreibungs-Objekten.</p>
+
+<pre><code>pragma Singleton
+import QtQuick
+
+QtObject {
+    property var fields: [
+        { "name": "name", "label": "Eintragsname" },
+        { "name": "s1",   "label": "Gedanken"     },
+        { "name": "s2",   "label": "Gefühle"      }
+    ]
+}</code></pre>
+
+        <p>Jedes Objekt im Array hat zwei Schlüssel:</p>
+        <ul>
+            <li><code>name</code> &mdash; der Attributname im GeoPackage-Layer. Wird vom Controller verwendet, um Feature-Attribute zu lesen und zu schreiben.</li>
+            <li><code>label</code> &mdash; der lesbare Text, der neben dem Eingabefeld im Formular angezeigt wird.</li>
+        </ul>
+
+        <p>Um ein neues Feld zum Formular hinzuzufügen, muss hier nur ein Eintrag ergänzt werden. Der Rest des Plugins passt sich automatisch an &mdash; das ist der Sinn des Musters.</p>
+
+        <!-- ============================================================ -->
+        <h2>2. View &mdash; d2a_plugin_component.qml</h2>
+
+        <p>Der View beantwortet: <em>Wie sieht das Formular aus, und wie werden Benutzeraktionen verdrahtet?</em> Er besitzt das Layout und erstellt eine <code>FormController</code>-Instanz. Er ruft die QField-API niemals direkt auf.</p>
+
+        <h3>Die Controller-Instanz erstellen</h3>
+        <p>Der View instanziiert den Controller als untergeordnetes Objekt und stellt ihn über einen Alias bereit, damit Unterkomponenten ihn leicht erreichen können:</p>
+<pre><code>FormController {
+    id: formController
+    plotId: pluginFrame.plotId
+    onSelect: function(f_uid) { /* ComboBox-Auswahl synchronisieren */ }
+}
+property var controller: formController</code></pre>
+
+        <h3>Die Feldliste aus FormDataModel lesen</h3>
+        <p>Der View liest <code>FormDataModel.fields</code> einmalig in eine lokale Eigenschaft. Dies ist dasselbe Array, über das der Repeater iteriert:</p>
+<pre><code>property var fieldModel: FormDataModel.fields</code></pre>
+
+        <h3>Die ComboBox &mdash; gebunden an controller.entryListModel</h3>
+        <p>Die Eintrags-Auswahlliste ist an <code>controller.entryListModel</code> gebunden &mdash; ein <code>ListModel</code>, das der Controller aus der Datenbank befüllt. Wenn der Benutzer eine Auswahl trifft, ruft der View <code>controller.loadEntry(f_uid)</code> auf:</p>
+<pre><code>ComboBox {
+    id: entrySelector
+    model: controller.entryListModel
+    textRole: "name"
+    onCurrentIndexChanged: {
+        if (currentIndex >= 0) {
+            var f_uid = model.get(currentIndex).f_uid
+            controller.loadEntry(f_uid)
+        }
+    }
+}</code></pre>
+
+        <h3>Der Repeater und das FormField-Delegate</h3>
+        <p>Anstatt für jedes Feld manuell ein <code>TextField</code> zu schreiben, verwendet der View einen <code>Repeater</code> über <code>fieldModel</code>. Die <code>component FormField</code>-Deklaration ist das Delegate &mdash; die Vorlage, die der Repeater für jeden Eintrag im Model-Array instanziiert.</p>
+
+        <p>Jedes <code>TextField</code> innerhalb von <code>FormField</code>:</p>
+        <ul>
+            <li>Liest seinen Wert aus <code>controller.fieldValues[fieldData.name]</code> &mdash; eine Property-Bindung, die sich automatisch aktualisiert, wenn der Controller eine Änderung signalisiert.</li>
+            <li>Schreibt bei jedem Tastendruck mit <code>controller.updateField(fieldData.name, text)</code> zurück.</li>
+        </ul>
+
+<pre><code>component FormField: Rectangle {
+    property var fieldData
+
+    RowLayout {
+        Text {
+            text: fieldData.label          // aus FormDataModel
+        }
+        TextField {
+            // LESEN: Controller ist die einzige Datenquelle
+            text: controller.fieldValues[fieldData.name] !== undefined
+                  ? controller.fieldValues[fieldData.name] : ""
+
+            // SCHREIBEN: jeder Tastendruck aktualisiert den Controller
+            onTextChanged: {
+                controller.updateField(fieldData.name, text)
+            }
+        }
+    }
+}
+
+Repeater {
+    model: fieldModel          // FormDataModel.fields
+    delegate: FormField {
+        fieldData: modelData   // ein Feldbeschreibungs-Objekt pro Iteration
+    }
+}</code></pre>
+
+        <h3>Schaltflächen</h3>
+        <p>Die drei Aktionsschaltflächen rufen lediglich Controller-Funktionen auf. Der View weiß nicht, wie diese Operationen intern funktionieren:</p>
+<pre><code>// Schaltfläche „Neuer Eintrag"
+onClicked: { controller.createEntry() }
+
+// Schaltfläche „Eintrag speichern"
+onClicked: { controller.saveEntry() }</code></pre>
+
+        <!-- ============================================================ -->
+        <h2>3. Controller &mdash; d2a_form_controller.qml</h2>
+
+        <p>Der Controller beantwortet: <em>Welche Werte sind gerade in den Feldern gespeichert, und wie werden sie persistiert?</em> Er ist die einzige Komponente, die die QField-API aufruft (<code>LayerUtils</code>, <code>FeatureUtils</code>, <code>layer.startEditing()</code> usw.).</p>
+
+        <h3>Der Bearbeitungspuffer: fieldValues</h3>
+        <p><code>fieldValues</code> ist eine einfache JavaScript-Map. Sie ist die Laufzeit-Datenquelle für jedes Feld im Formular. Wenn ein Feature aus der Datenbank gelesen wird, werden seine Werte in diese Map kopiert. Beim Speichern werden die Werte aus der Map zurückgelesen und in den Layer geschrieben.</p>
+<pre><code>property var fieldValues: ({})   // z.B. { "name": "Plot A", "s1": "...", "s2": "..." }
+
+function updateField(fieldName, value) {
+    fieldValues[fieldName] = value
+    fieldValuesChanged()    // QML-Bindungen im View benachrichtigen
+}</code></pre>
+        <p>Der Aufruf von <code>fieldValuesChanged()</code> ist wichtig: Da <code>fieldValues</code> ein JS-Objekt ist (kein nativer QML-Property-Typ), kann die QML-Binding-Engine Änderungen an seinen Inhalten nicht automatisch erkennen. Das manuelle Auslösen des Change-Signals zwingt die <code>text</code>-Bindungen des View zur erneuten Auswertung.</p>
+
+        <h3>Die Auswahlliste: entryListModel</h3>
+        <p><code>entryListModel</code> ist ein <code>ListModel</code>. Es wird durch eine Abfrage des <code>entries</code>-Layers befüllt und für jedes Ergebnis eine Zeile angehängt. Die ComboBox im View ist an dieses Model gebunden.</p>
+<pre><code>property ListModel entryListModel: ListModel {}
+
+function loadEntries(plotId) {
+    entryListModel.clear()
+    var expression = "plot_id = '" + plotId + "'"
+    let it = LayerUtils.createFeatureIteratorFromExpression(layer, expression)
+    while (it.hasNext()) {
+        let feature = it.next()
+        entryListModel.append({
+            "name":  feature.attribute("name"),
+            "f_uid": feature.attribute("f_uid")
+        })
+    }
+    it.close()   // Iterator IMMER schließen
+}</code></pre>
+
+        <h3>Einen Eintrag in das Formular laden</h3>
+        <p>Wenn der Benutzer einen Eintrag auswählt, holt <code>loadEntry()</code> das Feature und kopiert seine Attribute in <code>fieldValues</code>. Dabei wird über <code>FormDataModel.fields</code> iteriert, sodass nur die bekannten Felder geladen werden &mdash; unabhängig davon, welche weiteren Spalten die Tabelle enthalten mag:</p>
+<pre><code>function loadEntry(f_uid) {
+    let it = LayerUtils.createFeatureIteratorFromExpression(
+                 layer, "f_uid = '" + f_uid + "'")
+    let feature = it.next()
+    it.close()
+
+    var map = {}
+    for (var i = 0; i < FormDataModel.fields.length; i++) {
+        var name = FormDataModel.fields[i].name
+        map[name] = feature.attribute(name) || ""
+    }
+    fieldValues = map
+    fieldValuesChanged()
+    currentFuid = f_uid
+}</code></pre>
+
+        <h3>Einen Eintrag speichern</h3>
+        <p><code>saveEntry()</code> liest alle Werte aus <code>fieldValues</code> und schreibt sie mit <code>changeAttributeValue</code> in den Layer. Beachten Sie, wie <code>fields.indexOf(key)</code> verwendet wird, um den Attributindex anhand des Namens nachzuschlagen &mdash; niemals als hart kodierte Zahl:</p>
+<pre><code>function saveEntry() {
+    let it = LayerUtils.createFeatureIteratorFromExpression(
+                 layer, "f_uid = '" + currentFuid + "'")
+    let feature = it.next()
+    it.close()
+
+    layer.startEditing()
+    var fid    = feature.id
+    var fields = feature.fields
+
+    for (var key in fieldValues) {
+        var fieldIndex = fields.indexOf(key)
+        if (fieldIndex >= 0) {
+            layer.changeAttributeValue(fid, fieldIndex, fieldValues[key])
+        }
+    }
+    layer.commitChanges()
+}</code></pre>
+
+        <!-- ============================================================ -->
+        <h2>Datenfluss: Zusammenfassung</h2>
+        <ul>
+            <li><strong>Plot ausgewählt:</strong> View setzt <code>controller.plotId</code> &rarr; Controller ruft <code>loadEntries()</code> auf &rarr; <code>entryListModel</code> wird befüllt &rarr; ComboBox aktualisiert sich automatisch über Bindung.</li>
+            <li><strong>Eintrag ausgewählt:</strong> ComboBox <code>onCurrentIndexChanged</code> &rarr; View ruft <code>controller.loadEntry(f_uid)</code> auf &rarr; Controller holt Feature und befüllt <code>fieldValues</code> &rarr; TextFields aktualisieren sich automatisch über Bindung.</li>
+            <li><strong>Tastendruck:</strong> TextField <code>onTextChanged</code> &rarr; <code>controller.updateField(name, text)</code> &rarr; <code>fieldValues</code> wird im Speicher aktualisiert. Noch kein Datenbankschreibzugriff.</li>
+            <li><strong>Speichern geklickt:</strong> View ruft <code>controller.saveEntry()</code> auf &rarr; Controller liest <code>fieldValues</code>, ruft QField-API auf, schreibt Änderungen in den Layer.</li>
+            <li><strong>Neuer Eintrag geklickt:</strong> View ruft <code>controller.createEntry()</code> auf &rarr; Controller schreibt neues Feature, aktualisiert <code>entryListModel</code>, wählt den neuen Eintrag aus.</li>
+        </ul>
+
+        <div class="nav-links">
+            <a href="demo2a_headerpage_DE.html">📚 Weiter: Die Header-Seite &rarr;</a>
+            <a href="demo2a_intro_DE.html">📚 &lt;&lt; Demonstration 2a Einführung</a>
+        </div>
+    </div>
+</body>
+</html>
