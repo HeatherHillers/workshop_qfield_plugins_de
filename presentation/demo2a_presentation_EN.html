@@ -261,31 +261,34 @@
 
         <!-- Slide 4: Architecture -->
         <div class="slide">
-            <h2>Model View Controller Architecture</h2>
+            <h2>Plugin Architecture: Three Files, Three Roles</h2>
             <ul>
                 <li>
-                    <h4>Model: d2a_data_model.qml</h4>
-                    <p>Configuration of form structure: labels, field names </p>
+                    <h4>FormDataModel &mdash; d2a_data_model.qml</h4>
+                    <p><em>&ldquo;What fields does the form have?&rdquo;</em></p>
+                    <p>A static JS array of field descriptors (name, label). Drives the Repeater &mdash; no logic, no runtime state.</p>
                 </li>
                 <li>
-                    <h4>View: d2a_plugin_component.qml</h4>
-                    <p>Widget layout and style: Creates objects based on the model</p>
+                    <h4>View &mdash; d2a_plugin_component.qml</h4>
+                    <p><em>&ldquo;How does the form look?&rdquo;</em></p>
+                    <p>Layout and widget bindings. A Repeater iterates FormDataModel.fields to create one FormField per entry. Each input reads from and writes back to the Controller.</p>
                 </li>
                 <li>
-                    <h4>Controller: d2a_form_controller.qml</h4>
-                    <p>Coordinates between view and model</p>
-                    <p>Save/New/Select -> queries and edits QgsVectorLayer</p>
+                    <h4>Controller &mdash; d2a_form_controller.qml</h4>
+                    <p><em>&ldquo;What values do the fields hold, and how are they saved?&rdquo;</em></p>
+                    <p>Owns the runtime edit buffer (<code>fieldValues</code>) and the dropdown list (<code>entryListModel</code>). Handles all QField API calls: create, load, save, delete.</p>
                 </li>
             </ul>
         </div>
 
         <!-- Slide 5: Controller Pattern -->
         <div class="slide">
-            <h2>Controller Pattern</h2>
+            <h2>How the Controller Works</h2>
             <ul>
-                <li>View's Input Objects pass updates to the Controller</li>
-                <li>Controller holds values for the View</li>
-                <li>Controller passes and retrieves values to/from QField/QGIS API</li>
+                <li><code>fieldValues</code> is a plain JS map &mdash; the Controller is the single source of truth for all form values</li>
+                <li>Each TextField in the View binds to <code>controller.fieldValues[fieldName]</code> and calls <code>controller.updateField()</code> on every keystroke</li>
+                <li>On Save / New / Select: the Controller reads and writes the QgsVectorLayer directly via LayerUtils and FeatureUtils</li>
+                <li>The View never touches the layer &mdash; all data access goes through the Controller</li>
             </ul>
         </div>
 
