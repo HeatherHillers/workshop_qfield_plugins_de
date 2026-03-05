@@ -174,15 +174,6 @@ Rectangle {
         <h2>A QML Textbox</h2>
         <p>Our simple screen with a label is just a textbox. There is no TextBox in QML. We need 2 objects: Rectangle and Text.</p>
 
-        <h3>Text vs QfText</h3>
-        <p>As with QfToolButton, I would also have the option here to use a QfText. But I decided to use the simple Qt items beyond the main code file. Why?</p>
-        
-        <ul>
-            <li>The QField items are good when you want your plugin to look like a QField component, as if it were an integrated part of QField.</li>
-            <li>But I need to visually distinguish my plugin. So I go my own way.</li>
-            <li>Also, if I stick with the Qt items, I only have to learn about the Qt items.</li>
-        </ul>
-
         <h2>Using PluginTheme</h2>
         <p>We discussed in <a href="demo1_structure_EN.html">Plugin Structure</a> the definition of PluginTheme as a configuration object that contains our color palette. In d1_plugin_component you see that the color of the Rectangle is set to PluginTheme.vanilla and the color of the Text is set to PluginTheme.green. Very simple.</p>
 
