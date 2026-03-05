@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Demonstration 4: Feature-Bearbeitung</title>
+    <title>Demonstration 2a: Feature-Bearbeitung</title>
     <style>
         * {
             margin: 0;
@@ -147,38 +147,36 @@
 </head>
 <body>
     <div class="container">
-        <h1>Demonstration 4: Feature-Bearbeitung</h1>
+        <h1>Demonstration 2a: Feature-Bearbeitung</h1>
         
-        <p>Diese Demonstration erweitert das Tab-Widget, das in qfield_vegetation_monitoring/demo3_tabwidget eingeführt wurde. Jedes Jahr erfassen die Biologen einige grundlegende Informationen über das Plotfeld, wie die durchschnittliche Vegetationshöhe, und zeichnen sie in der Tabelle plot_header auf. Wenn wir unser Tab-Widget öffnen, ist die Header-Seite der erste Tab. Diese Demonstration richtet die Header-Seite für das Tab-Widget ein. Die UI in dieser Demonstration ist zu komplex, um in diesem Workshop behandelt zu werden. Wir werden es Ihnen überlassen, es später zu überprüfen. Wir werden uns hier auf die guten Teile konzentrieren - die QField-Schnittstelle zur Bearbeitung von Features.</p>
+        <p>Diese Demonstration erweitert die Plugin-Komponente in qfield_vegetation_monitoring/demo2_selection. Wir haben dem Projekt eine neue GeoPackage-Ebene namens „entries" hinzugefügt. Sie hat keine Geometrie und enthält eine völlig generische Liste von Attributen, zusammen mit einem Zeitstempel-Attribut, einem Primärschlüssel und einem Fremdschlüssel zur Plots-Ebene – dies ist die plotId, die vom pointHandler im Hauptmodul gesendet wird. Die Plugin-Komponente enthält nun ein sehr einfaches Eintragsauswahlmenü, eine Schaltfläche für neue Einträge, ein einfaches Formular und eine Speicherschaltfläche. Wir werden dieses einfache Formular nutzen, um grundlegende Feature-Bearbeitungsoperationen zu demonstrieren.</p>
+        <p>Dieses Formular und die Entries-Ebene sind nicht Teil des endgültigen Plugins. Dies ist ein Umweg zu Demonstrationszwecken. Es wird Ihnen helfen, den komplizierteren Code in den restlichen Demonstrationen zu verstehen. Dies ist auch die letzte Demonstration, die im Workshop behandelt wird. Die verbleibenden Demo-Projekte stehen Ihnen für eine spätere Lektüre zur Verfügung.</p>
 
         <h2>Was wir lernen werden</h2>
         <ul>
-            <li>Wie man eine Zeile zu einer Tabelle über die QField-Schnittstelle hinzufügt</li>
+            <li>Wie man eine Model-View-Controller-Architektur in QML implementiert (und warum es sich lohnt)</li>
+            <li>Wie man einen Repeater verwendet, um UI-Elemente dynamisch aus einem Modell zu erstellen</li>
+            <li>Wie man eine Zeile über die QField-Schnittstelle hinzufügt</li>
             <li>Wie man eine Zeile über die QField-Schnittstelle aktualisiert</li>
-            <li>VIEL UI-Zeug, das wir nur überfliegen werden.</li>
+            <li>Wie man eine Zeile über die QField-Schnittstelle löscht</li>
         </ul>
 
         <h2>Was macht es?</h2>
         <ul>
-            <li>Wenn der Benutzer auf das Canvas klickt, wird die Plot-ID von der Plugin-Component an das Tab-Widget und an die Header-Seite des Tab-Widgets in d5_headerpage.qml gesendet</li>
-            <li>Hinweis: Das Formular ist lang. Das Formular hat einen unsichtbaren Scrollbereich, der über das Mausrad unter Windows oder Wischen auf iOS zugänglich ist.</li>
-            <li>Beim Laden wird überprüft, ob bereits eine Zeile in der plot_header-Tabelle existiert.
+            <li>Wenn der Benutzer auf die Leinwand klickt, wird die Plugin-Komponente mit der plotId geladen.</li>
+            <li>Wenn eine plotId empfangen wird, überprüft der Controller der Plugin-Komponente, ob ein Eintrag in der entries-Ebene mit einem Fremdschlüssel existiert, der mit der plotId übereinstimmt. Diese werden in das Auswahlmenü geladen.</li>
+            <li>Wenn der Benutzer einen Eintrag auswählt, wird das Formular mit den Werten des Eintrags gefüllt.</li>
+            <li>Wenn der Benutzer auf Neueintrag klickt, fügt der Controller eine neue, leere Eintragszeile zur entries-Ebene hinzu. 
                 <ul>
-                    <li>Wenn keine plot_header-Zeile existiert, wird sofort eine hinzugefügt. Diese Zeile hat Standardwerte für alle Eingaben.
-                        <ul>
-                            <li>0 für alle numerischen Werte</li>
-                            <li>Leerstring für Textfelder</li>
-                            <li>eine UUID für den Primärschlüssel</li>
-                            <li>der aktuelle Zeitstempel</li>
-                            <li>die Plot-ID als Fremdschlüssel für Plot.</li>
-                        </ul>
-                    </li>
-                    <li>Wenn bereits eine plot_header-Zeile existiert, werden die Werte in das Formular geladen</li>
+                    <li>Es wird eine UUID für den Primärschlüssel f_uid festgelegt</li>
+                    <li>Das aktuelle Datum wird für das log_date-Attribut festgelegt</li>
+                    <li>Die plotId wird für das plot_id-Attribut als Fremdschlüssel für die plot-Ebene festgelegt.</li>
+                    <li>Ein Standardname wird festgelegt, damit der Eintrag im Auswahlmenü identifizierbar ist.</li>
+                    <li>Nachdem der Eintrag hinzugefügt wurde, wird eine Aktualisierung des Auswahlmenüs und des Formulars ausgelöst.</li>
                 </ul>
             </li>
-            <li>Dieses Formular hat auf Benutzerwunsch keine automatische Speicherung.</li>
-            <li>Wenn ein Wert aktualisiert wird, ändert sich der Text der Speichern-Schaltfläche, um nicht gespeicherte Änderungen anzuzeigen.</li>
-            <li>Wenn der Benutzer auf die Speichern-Schaltfläche klickt, werden Änderungen an allen Werten gespeichert und committet.</li>
+            <li>Wenn der Benutzer einen Wert aktualisiert, wird die Aktualisierung im Feature-Container des Controllers gespeichert.</li>
+            <li>Wenn der Benutzer auf die Speichern-Schaltfläche klickt, speichert der Controller die Änderungen in der entries-Ebene.</li>
         </ul>
  
         <img src="img/demo2a_screen.png" alt="Plugin Bildschirm">
@@ -194,7 +192,7 @@
 <pre><code>"C:\Program Files\QField\usr\bin\qfield.exe C:\temp\qfield\demo2a_header_form\demo2a_header_form.qgs</code></pre>
 
         <div class="nav-links">
-            <a href="demo2a/demo2a_plugin_component_DE.html">📚 Zur Header-Seite gelangen</a>
+            <a href="demo2a_plugin_component_DE.html">📚 Zur Header-Seite gelangen</a>
             <a href="../demo2/demo2_intro_DE.html">📚 &lt;&lt; Demonstration 2</a>
         </div>
     </div>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Demonstration 4: Feature Editing</title>
+    <title>Demonstration 2a: Feature Editing</title>
     <style>
         * {
             margin: 0;
@@ -147,38 +147,36 @@
 </head>
 <body>
     <div class="container">
-        <h1>Demonstration 4: Feature Editing</h1>
+        <h1>Demonstration 2a: Feature Editing</h1>
         
-        <p>This demonstration extends the tab widget introduced in qfield_vegetation_monitoring/demo3_tabwidget. Each year, the biologists collect some basic information about the plot field, such as average vegetation height, and record it in the plot_header table. When we open our tab widget, the header page is the first tab. This demonstration sets up the header page for the tab widget. The UI in this demonstration is too complex to be covered in this workshop. We'll leave it for you to review later. We'll focus here on the good parts - the QField interface for editing features.</p>
+        <p>This demonstration extends the plugin component in qfield_vegetation_monitoring/demo2_selection. We have added a new geopackage layer to the project called entries.  It has no geometry, and holds a completely generic list of attributes, along with a time stamp attribute, a primary key, and a foreign key to the plots layer which is the plotId sent by the pointHandler in the main module. The plugin component now contains a very simple entry selection menu, a new entry button, a simple form, and a save button. We will use this simple form to demonstrate basic feature edit operations.</p> 
+        <p>This form, and the entries layer, are not part of the final plugin. This is a detour for demonstration purposes.  It will help you to understand the more complicated code in the rest of the demonstrations.  This is also the last demonstration that will be covered in the workshop.  The remaining demo projects are left for your later perusal.</p>
 
         <h2>What We Will Learn</h2>
         <ul>
+            <li>How to implement a Model-View-Controller Architecture in QML (and why you should bother.)</li>
+            <li>How to use a Repeater to dynamically create UI elements from a Model</li>
             <li>How to add a row to a table via the QField interface</li>
             <li>How to update a row via the QField interface</li>
-            <li>A LOT of UI stuff that we'll just skim over.</li>
+            <li>How to delete a row via the QField interface</li>
         </ul>
 
         <h2>What Does It Do?</h2>
         <ul>
-            <li>When the user clicks on the canvas, the plot ID is sent from the plugin component to the tab widget and to the header page of the tab widget in d5_headerpage.qml</li>
-            <li>Note: The form is long. The form has an invisible scroll area accessible via the mouse wheel on Windows or swiping on iOS.</li>
-            <li>On load, it checks whether a row already exists in the plot_header table.
+            <li>When the user clicks on the canvas, the plugin component is loaded with the plotId. </li>
+            <li>When a plotId is received, the plugin component's Controller checks if an entry exists in the entries layer with a foreign key matching the plotId. It loads these to the selection menu.
+            <li>When the user selects an entry, the form is populated with the entry's values.</li>
+            <li>When the user clicks New Entry, the controller adds a new, empty entry row to the entries layer. 
                 <ul>
-                    <li>If no plot_header row exists, one is immediately added. This row has default values for all inputs.
-                        <ul>
-                            <li>0 for all numeric values</li>
-                            <li>Empty string for text fields</li>
-                            <li>A UUID for the primary key</li>
-                            <li>The current timestamp</li>
-                            <li>The plot ID as foreign key for plot.</li>
-                        </ul>
-                    </li>
-                    <li>If a plot_header row already exists, the values are loaded into the form</li>
+                    <li>A UUID is set for the primary key f_uid</li>
+                    <li>The current date is set for the log_date attribute</li>
+                    <li>The plot ID is set for the plot_id attribute as foreign key for the plot layer.</li>
+                    <li>A default name is set so that the entry will be identifiable in the selection menu.</li>
+                    <li>After the entry is added, a refresh of the selection menu and form is triggered.</li>
                 </ul>
             </li>
-            <li>This form has no auto-save by user request.</li>
-            <li>When a value is updated, the save button text changes to indicate unsaved changes.</li>
-            <li>When the user clicks the save button, changes to all values are saved and committed.</li>
+            <li>When the user updates a value, the update is saved to the controller's feature container.</li>
+            <li>When the user clicks the save button, the controller saves the changes to the entries layer.</li>
         </ul>
  
         <img src="img/demo2a_screen.png" alt="Plugin screen">
