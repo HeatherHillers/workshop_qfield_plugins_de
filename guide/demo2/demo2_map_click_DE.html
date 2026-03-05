@@ -300,7 +300,7 @@
 }</code></pre>
 
         <h3>Die Pixelkoordinaten der Bildschirminteraktion abrufen</h3>
-<pre><code>pointHandler.registerHandler("demo2_searchbar", (point, type, interactionType) =&gt; {
+<pre><code>pointHandler.registerHandler("demo2_selection", (point, type, interactionType) =&gt; {
     var shouldHandle = ... 
     if (shouldHandle){
       iface.logMessage(point.x)
@@ -309,7 +309,7 @@
 });</code></pre>
 
         <h3>In Kartenkoordinaten umwandeln</h3>
-<pre><code>pointHandler.registerHandler("demo2_searchbar", (point, type, interactionType) =&gt; {
+<pre><code>pointHandler.registerHandler("demo2_selection", (point, type, interactionType) =&gt; {
     var shouldHandle = ... 
     if (shouldHandle){
       let coords = iface.mapCanvas().mapSettings.screenToCoordinate(Qt.point(point.x, point.y))
@@ -328,7 +328,7 @@
 
         <p>Wir holen den Map-Layer aus der QgsProject-Instanz, die in QField als qgisProject verfügbar ist, das mit org.qgis importiert wurde.</p>
 
-<pre><code>pointHandler.registerHandler("demo2_searchbar", (point, type, interactionType) =&gt; {
+<pre><code>pointHandler.registerHandler("demo2_selection", (point, type, interactionType) =&gt; {
     var shouldHandle = ... 
     if (shouldHandle){
       let layer = qgisProject.mapLayersByName("plots")[0]
@@ -343,7 +343,7 @@
         
         <p>Wir werden dieses Feature abrufen und seine Plot-ID ausgeben. (Noch nicht unsere Koordinaten verwenden.)</p>
 
-<pre><code>pointHandler.registerHandler("demo2_searchbar", (point, type, interactionType) =&gt; {
+<pre><code>pointHandler.registerHandler("demo2_selection", (point, type, interactionType) =&gt; {
     var shouldHandle = ... 
     if (shouldHandle){
       var layer = qgisProject.mapLayersByName("plots")[0]
@@ -386,7 +386,7 @@
         <h3>Schließlich, wenn Sie das Feature finden, schalten Sie das Plugin ein und übergeben Sie die Plot-ID</h3>
         <p>Die Loader-Klasse hat die Property "item", die das Item enthält, das von seiner Source-Component geladen wurde.</p>
         
-        <p>In unserer Plugin-Component haben wir eine Funktion setPlotId definiert, die eine Plot-ID erhält und sie verwendet, um die Suchleiste und Textbox des Plugins zu füllen.</p>
+        <p>In unserer Plugin-Component haben wir eine <code>plotId</code>-Property definiert. Das direkte Setzen dieser Property auf <code>pluginLoader.item</code> löst eine QML-Property-Bindung in der Plugin-Component aus, die die Anzeige automatisch aktualisiert.</p>
         
         <p><strong>Denken Sie daran, den Iterator zu schließen, unabhängig davon, ob das Feature gefunden wird oder nicht!</strong></p>
         
@@ -419,6 +419,9 @@
       return false
     });</code></pre>
 
+        <h3>Hinweis: <code>parent</code> geändert gegenüber Demo 1</h3>
+        <p>In Demo 1 verwendete das Root-Item <code>parent: iface.mapCanvas()</code>. Hier wird stattdessen <code>parent: iface.mainWindow().contentItem</code> verwendet. Dies ist erforderlich, weil der Plugin-Dialog das gesamte QField-Fenster überlagern muss, nicht nur den Kartenbereich darin. <code>mapCanvas()</code> schneidet Kind-Items auf das Kartenrechteck zu, was Teile der Plugin-Oberfläche verbergen würde. <code>mainWindow().contentItem</code> ist die Vollbild-Oberfläche, die alle QField-UI-Elemente gemeinsam nutzen.</p>
+
         <h2>Die gesamte demo2_selection.qml</h2>
 <pre><code> // imports
 
@@ -442,7 +445,7 @@ Item {
   Component.onCompleted: {
  
     // Map Selection: 3. Registrieren Sie den pointHandler und definieren Sie seinen Callback
-    pointHandler.registerHandler("demo2_searchbar", (point, type, interactionType) =&gt; {
+    pointHandler.registerHandler("demo2_selection", (point, type, interactionType) =&gt; {
 
       // Entscheiden Sie über die Interaktion  
       var shouldHandle = (Qt.platform.os === "windows" && interactionType === "clicked") ||
@@ -474,7 +477,7 @@ Item {
 
   // Map Selection: 4. Deregistrieren Sie den pointHandler bei Destruktion (sollte beim Projektschluss sein)
   Component.onDestruction: {
-    pointHandler.deregisterHandler("demo2_searchbar");
+    pointHandler.deregisterHandler("demo2_selection");
   }
 }</code></pre>
 

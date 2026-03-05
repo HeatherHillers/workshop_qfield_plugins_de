@@ -354,7 +354,7 @@ newFeature.setAttribute("log_date", new Date().toISOString())
 // 4. Add feature to layer
 LayerUtils.addFeature(layer, newFeature)
 
-// 5. Änderungen commit
+// 5. Commit changes
 try{
     layer.commitChanges()
 } catch (e) {

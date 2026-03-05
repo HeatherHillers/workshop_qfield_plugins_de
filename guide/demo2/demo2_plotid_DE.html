@@ -129,12 +129,12 @@
         <p>Dieser Teil ist fast pythonisch einfach.</p>
 
         <h2>Senden der Plot-ID an die Component</h2>
-        <p>In demo2_selection.qml hat unser pointHandler die Plot-ID an die Plugin-Component gesendet, indem er sie an die setPlotId-Funktion übergeben hat.</p>
+        <p>In demo2_selection.qml hat unser pointHandler die Plot-ID an die Plugin-Component gesendet, indem er sie direkt der <code>plotId</code>-Property der Component zugewiesen hat.</p>
 
         <ul>
             <li>Wir haben den Plot-ID-Wert mit der QgsFeature invokable attribute-Funktion erhalten</li>
             <li>Die item-Property des pluginLoaders enthält das Root-Element der Plugin-Component, in diesem Fall d2_plugin_component.pluginFrame</li>
-            <li>setPlotId ist eine Funktion, die zu pluginFrame hinzugefügt wurde.</li>
+            <li><code>plotId</code> ist eine Property, die auf pluginFrame definiert ist. Die Zuweisung von außen löst QMLs Bindungssystem aus, das die Anzeige automatisch aktualisiert.</li>
         </ul>
 
 <pre><code>if (shouldHandle){
@@ -151,9 +151,9 @@
 }</code></pre>
 
         <h2>Handhabung der Plot-ID in demo2_plugin_component</h2>
-        <p>Die Funktion setPlotId setzt einfach den Text in der MessageBox. Ba Da Bing.</p>
+        <p>Die <code>plotId</code>-Property ist direkt an den Text der MessageBox gebunden. Wenn sie von außen gesetzt wird, aktualisiert sich die Anzeige automatisch. Ba Da Bing.</p>
 
-<pre><code>  Rectantgle{
+<pre><code>  Rectangle{
     id: pluginFrame
 
     // Plot ID Property - von Parent gesetzt, propagiert über Bindungen

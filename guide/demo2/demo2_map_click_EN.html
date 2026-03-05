@@ -300,7 +300,7 @@
 }</code></pre>
 
         <h3>Get the Pixel Coordinates of the Screen Interaction</h3>
-<pre><code>pointHandler.registerHandler("demo2_searchbar", (point, type, interactionType) =&gt; {
+<pre><code>pointHandler.registerHandler("demo2_selection", (point, type, interactionType) =&gt; {
     var shouldHandle = ... 
     if (shouldHandle){
       iface.logMessage(point.x)
@@ -309,7 +309,7 @@
 });</code></pre>
 
         <h3>Convert to Map Coordinates</h3>
-<pre><code>pointHandler.registerHandler("demo2_searchbar", (point, type, interactionType) =&gt; {
+<pre><code>pointHandler.registerHandler("demo2_selection", (point, type, interactionType) =&gt; {
     var shouldHandle = ... 
     if (shouldHandle){
       let coords = iface.mapCanvas().mapSettings.screenToCoordinate(Qt.point(point.x, point.y))
@@ -328,7 +328,7 @@
 
         <p>We get the map layer from the QgsProject instance, which is available in QField as qgisProject, imported with org.qgis.</p>
 
-<pre><code>pointHandler.registerHandler("demo2_searchbar", (point, type, interactionType) =&gt; {
+<pre><code>pointHandler.registerHandler("demo2_selection", (point, type, interactionType) =&gt; {
     var shouldHandle = ... 
     if (shouldHandle){
       let layer = qgisProject.mapLayersByName("plots")[0]
@@ -343,7 +343,7 @@
         
         <p>We will retrieve this feature and output its plot ID. (Not using our coordinates yet.)</p>
 
-<pre><code>pointHandler.registerHandler("demo2_searchbar", (point, type, interactionType) =&gt; {
+<pre><code>pointHandler.registerHandler("demo2_selection", (point, type, interactionType) =&gt; {
     var shouldHandle = ... 
     if (shouldHandle){
       var layer = qgisProject.mapLayersByName("plots")[0]
@@ -386,7 +386,7 @@
         <h3>Finally, When You Find the Feature, Turn On the Plugin and Pass the Plot ID</h3>
         <p>The Loader class has the "item" property that contains the item loaded from its source component.</p>
         
-        <p>In our plugin component, we have defined a setPlotId function that receives a plot ID and uses it to populate the plugin's search bar and text box.</p>
+        <p>In our plugin component, we have defined a <code>plotId</code> property. Setting it directly on <code>pluginLoader.item</code> triggers a QML property binding in the plugin component, which automatically updates the display.</p>
         
         <p><strong>Remember to close the iterator, regardless of whether the feature is found or not!</strong></p>
         
@@ -419,6 +419,9 @@
       return false
     });</code></pre>
 
+        <h3>Note: <code>parent</code> changed from Demo 1</h3>
+        <p>In Demo 1 the root item used <code>parent: iface.mapCanvas()</code>. Here it uses <code>parent: iface.mainWindow().contentItem</code> instead. This is required because the plugin dialog needs to overlay the entire QField window, not just the map area inside it. <code>mapCanvas()</code> clips child items to the map rectangle, which would hide parts of the plugin UI. <code>mainWindow().contentItem</code> is the full-screen surface that all QField UI elements share.</p>
+
         <h2>The Complete demo2_selection.qml</h2>
 <pre><code> // imports
 
@@ -442,7 +445,7 @@ Item {
   Component.onCompleted: {
  
     // Map Selection: 3. Register the point handler and define its callback
-    pointHandler.registerHandler("demo2_searchbar", (point, type, interactionType) =&gt; {
+    pointHandler.registerHandler("demo2_selection", (point, type, interactionType) =&gt; {
 
       // Decide on the interaction  
       var shouldHandle = (Qt.platform.os === "windows" && interactionType === "clicked") ||
@@ -474,7 +477,7 @@ Item {
 
   // Map Selection: 4. Deregister the point handler on destruction (should be on project close)
   Component.onDestruction: {
-    pointHandler.deregisterHandler("demo2_searchbar");
+    pointHandler.deregisterHandler("demo2_selection");
   }
 }</code></pre>
 
