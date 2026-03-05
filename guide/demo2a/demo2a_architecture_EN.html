@@ -242,6 +242,74 @@ onClicked: { controller.createEntry() }
 // Save Entry button
 onClicked: { controller.saveEntry() }</code></pre>
 
+        <h3>The <code>onSelect</code> feedback loop</h3>
+        <p>After <code>createEntry()</code> runs, the Controller rebuilds <code>entryListModel</code> and then emits the <code>select(newUid)</code> signal to tell the View which entry to highlight. The View catches this in the <code>onSelect</code> handler on the <code>FormController</code> instance and manually walks the model to find the right index:</p>
+<pre><code>FormController {
+    id: formController
+    plotId: pluginFrame.plotId
+    onSelect: function(f_uid) {
+        for (var i = 0; i &lt; controller.entryListModel.count; i++) {
+            if (controller.entryListModel.get(i).f_uid === f_uid) {
+                entrySelector.currentIndex = i
+                break
+            }
+        }
+    }
+}</code></pre>
+        <p>Why can't a property binding do this automatically? Because the ComboBox's <code>currentIndex</code> is an imperative UI state, not a derived value. After the model is rebuilt the ComboBox resets to <code>-1</code>, so the Controller has to <em>push</em> the correct selection back up to the View through this signal. This is the one deliberate upward communication from Controller to View.</p>
+
+        <h3>The inline <code>component</code> declaration</h3>
+        <p>The <code>component FormField: Rectangle { ... }</code> syntax declares a <strong>locally-scoped component type</strong> available only inside this file. It is a QML 6 feature that avoids creating a separate <code>FormField.qml</code> file when the component is only used in one place. The Repeater references it by name as its delegate:</p>
+<pre><code>component FormField: Rectangle {
+    property var fieldData
+    // ... layout ...
+}
+
+Repeater {
+    model: fieldModel
+    delegate: FormField {
+        fieldData: modelData
+    }
+}</code></pre>
+        <p><code>modelData</code> is the implicit variable provided by the Repeater for each item in the model array &mdash; here it is one field descriptor object from <code>FormDataModel.fields</code>.</p>
+
+        <h3><code>onPlotIdChanged</code> &mdash; why there are two triggers</h3>
+        <p>The Controller receives <code>plotId</code> via a property binding (<code>plotId: pluginFrame.plotId</code>) and also has a <code>Component.onCompleted</code> guard. Yet the View independently calls <code>controller.loadEntries(plotId)</code> from its own <code>onPlotIdChanged</code> handler:</p>
+<pre><code>// In the View:
+onPlotIdChanged: {
+    if (plotId) {
+        controller.loadEntries(plotId)
+    }
+}
+
+// In the Controller:
+Component.onCompleted: {
+    if (plotId &amp;&amp; layer) {
+        loadEntries(plotId)
+    }
+}</code></pre>
+        <p>The reason is timing. QML bindings are resolved after <code>Component.onCompleted</code> fires, so the Controller's <code>plotId</code> may still be empty when the component is first created. The View's <code>onPlotIdChanged</code> fires <em>after</em> the binding has delivered a real value, making it the reliable trigger. The Controller's <code>Component.onCompleted</code> is a fallback for cases where <code>plotId</code> is already set at construction time.</p>
+
+        <h3>The debug status strip</h3>
+        <p>Below the main status message there is a second line of diagnostic text that displays live internal state:</p>
+<pre><code>Text {
+    text: "fields: "        + (fieldModel ? fieldModel.length : "null") +
+          " | currentEntry: " + (controller.currentFuid
+                                     ? controller.currentFuid.substring(0,8) : "none") +
+          " | entries: "    + controller.entryListModel.count
+}</code></pre>
+        <p>This is intentional development scaffolding. Because these values are bound to live properties, the strip updates automatically whenever any of them changes, giving immediate feedback without opening a debugger. In a production plugin this strip would be removed or hidden.</p>
+
+        <h3>The <code>closed()</code> signal and plugin teardown</h3>
+        <p>The Close button emits <code>closed()</code> — a signal declared on <code>pluginFrame</code>. The View does not deactivate itself; it only announces that it wants to be closed:</p>
+<pre><code>// In the View:
+signal closed()
+
+Button {
+    onClicked: { closed() }
+}</code></pre>
+        <p>The parent <code>Loader</code> in the main plugin file (<code>demo2a_crud.qml</code>) catches this with a <code>Connections</code> block and sets <code>pluginLoader.active = false</code>, which destroys the component and frees its resources. This is the standard QField plugin teardown pattern: the child signals intent, the parent acts.</p>
+
         <!-- ============================================================ -->
         <h2>3. Controller &mdash; d2a_form_controller.qml</h2>
 
@@ -325,7 +393,7 @@ function loadEntries(plotId) {
         </ul>
 
         <div class="nav-links">
-            <a href="demo2a_headerpage_EN.html">📚 Next: The Header Page &rarr;</a>
+            <a href="../workshop_end_EN.html">📚 Resources &rarr;</a>
             <a href="demo2a_intro_EN.html">📚 &lt;&lt; Demonstration 2a Introduction</a>
         </div>
     </div>
