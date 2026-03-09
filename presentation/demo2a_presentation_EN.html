@@ -281,8 +281,44 @@
             </ul>
         </div>
 
+        <!-- Slide 5: Model -->
+        <div class="slide">
+            <h2>Model</h2>
+            <p>The Model configures inputs to the form. It is used by the Repeater to dynamically create input widgets for each layer attribute in the <code>entries</code> table. </p>
+            <div class="code-block">
+QtObject{
 
-        <!-- Slide 6: Repeater Pattern -->
+    property var fields: [{"name":"name", "label":"Entry Name"},
+                          {"name":"s1",   "label":"Thoughts"},
+                          {"name":"s2",   "label":"Feelings"}]
+    
+}
+
+            </div>
+        </div>
+
+        <!-- Slide 6: View with Model and Controller-->
+        <div class="slide">
+            <h2>Plugin Component with Model and Controller</h2>
+            <p>The Plugin Component is our View.  It contains the Model and Controller.</p>
+            <div class="code-block">
+ Item{
+    id: pluginFrame
+    // not a singleton (has state), must be instantiated
+    FormController{
+        id: formController
+    }
+    //singleton (static) FormDataModel instance is shared across all plugin instances
+    property var fieldModel: FormDataModel.fields
+ }               
+            </div>
+            <ul style="margin-top: 30px;">
+                <li>View uses Model to build Form</li>
+                <li>Controller contains processing code</li>
+            </ul>
+        </div>
+
+        <!-- Slide 7: Repeater Pattern -->
         <div class="slide">
             <h2>Model-View Binding using Repeater</h2>
             <p>The Repeater element in QML allows you to dynamically create multiple instances of a component based on a model. This is useful for creating forms where the number of sections or fields can vary.</p>
@@ -319,7 +355,7 @@
             </ul>
         </div>
 
-        <!-- Slide 7: The Golden Rule -->
+        <!-- Slide 8: The Golden Rule -->
         <div class="slide">
             <h2>⚠️ Warning </h2>
             <h3>Never bypass the QField API</h3>
@@ -336,7 +372,7 @@
             </p>
         </div>
 
-        <!-- Slide 8: CREATE - Insert feature -->
+        <!-- Slide 9: CREATE - Insert feature -->
         <div class="slide">
             <h2>CREATE: Insert Feature</h2>
             <div class="code-block">
@@ -363,7 +399,7 @@ try{
             </div>
         </div>
 
-        <!-- Slide 9: READ - Get feature -->
+        <!-- Slide 10: READ - Get feature -->
         <div class="slide">
             <h2>READ: Get Feature</h2>
             <div class="code-block">
@@ -385,7 +421,7 @@ iterator.close()  // Always close
             </p>
         </div>
 
-        <!-- Slide 10: UPDATE - Update feature -->
+        <!-- Slide 11: UPDATE - Update feature -->
         <div class="slide">
             <h2>UPDATE: Update Feature</h2>
             <div class="code-block">
@@ -414,7 +450,7 @@ try{
             </div>
         </div>
 
-        <!-- Slide 11: DELETE - Delete feature -->
+        <!-- Slide 12: DELETE - Delete feature -->
         <div class="slide">
             <h2>DELETE: Delete Feature</h2>
             <div class="code-block">// 1. Start editing       
@@ -440,7 +476,7 @@ if (!commitSuccess) {
             </div>
         </div>
 
-        <!-- Slide 12: Field Index Warning -->
+        <!-- Slide 13: Field Index Warning -->
         <div class="slide">
             <h2>Important Warning: Field Index</h2>
             <div class="call-to-action">
@@ -463,7 +499,7 @@ layer.changeAttributeValue(fid, fieldIndex, value)
             </div>
         </div>
 
-        <!-- Slide 13: Exercises -->
+        <!-- Slide 14: Exercises -->
         <div class="slide">
             <h2>Exercises for the Next 60 Minutes</h2>
             <div class="call-to-action">
@@ -488,7 +524,7 @@ layer.changeAttributeValue(fid, fieldIndex, value)
     </div>
 
     <div class="slide-number">
-        <span id="current-slide">1</span> / 16
+        <span id="current-slide">1</span> / 14
     </div>
 
     <div class="controls">

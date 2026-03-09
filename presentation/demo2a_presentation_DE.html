@@ -281,7 +281,44 @@
             </ul>
         </div>
 
-        <!-- Slide 6: Repeater Pattern -->
+        <!-- Slide 5: Model -->
+        <div class="slide">
+            <h2>Model</h2>
+            <p>Das Model konfiguriert die Eingaben für das Formular. Es wird vom Repeater verwendet, um dynamisch Eingabewidgets für jedes Layer-Attribut in der Tabelle <code>entries</code> zu erstellen.</p>
+            <div class="code-block">
+QtObject{
+
+    property var fields: [{"name":"name", "label":"Entry Name"},
+                          {"name":"s1",   "label":"Thoughts"},
+                          {"name":"s2",   "label":"Feelings"}]
+    
+}
+
+            </div>
+        </div>
+
+         <!-- Slide 6: View with Model and Controller-->
+        <div class="slide">
+            <h2>Plugin Component mit Model and Controller</h2>
+            <p>Das Plugin-Component ist unsere View. Es enthält das Model und den Controller.</p>
+            <div class="code-block">
+ Item{
+    id: pluginFrame
+    // not a singleton (has state), must be instantiated
+    FormController{
+        id: formController
+    }
+    //singleton (static) FormDataModel instance is shared across all plugin instances
+    property var fieldModel: FormDataModel.fields
+ }               
+            </div>
+            <ul style="margin-top: 30px;">
+                <li>View verwendet Model, um das Formular zu erstellen</li>
+                <li>Controller enthält die Verarbeitungslogik</li>
+            </ul>
+        </div>       
+
+        <!-- Slide 7: Repeater Pattern -->
         <div class="slide">
             <h2>View : Model Interaktion mit Repeater</h2>
             <p> Anstatt jedes Widget manuell zu erstellen, verwenden wir einen Repeater, um die Form-Struktur dynamisch zu generieren</p>
@@ -318,7 +355,7 @@
             </ul>
         </div>
 
-        <!-- Slide 7: Die Goldene Regel -->
+        <!-- Slide 8: Warning -->
         <div class="slide">
             <h2>⚠️ Achtung </h2>
             <h3>Niemals die QField-API umgehen</h3>
@@ -335,7 +372,7 @@
             </p>
         </div>
 
-        <!-- Slide 8: CREATE - Feature einfügen -->
+        <!-- Slide 9: CREATE - Feature einfügen -->
         <div class="slide">
             <h2>CREATE: Feature einfügen</h2>
             <div class="code-block">
@@ -362,7 +399,7 @@ try{
             </div>
         </div>
 
-        <!-- Slide 9: READ - Feature abrufen -->
+        <!-- Slide 10: READ - Feature abrufen -->
         <div class="slide">
             <h2>READ: Feature abrufen</h2>
             <div class="code-block">
@@ -384,7 +421,7 @@ iterator.close()  // Immer schließen
             </p>
         </div>
 
-        <!-- Slide 10: UPDATE - Feature aktualisieren -->
+        <!-- Slide 11: UPDATE - Feature aktualisieren -->
         <div class="slide">
             <h2>UPDATE: Feature aktualisieren</h2>
             <div class="code-block">
@@ -412,7 +449,7 @@ try{
             </div>
         </div>
 
-        <!-- Slide 11: DELETE - Feature löschen -->
+        <!-- Slide 12: DELETE - Feature löschen -->
         <div class="slide">
             <h2>DELETE: Feature löschen</h2>
             <div class="code-block">// 1. Bearbeitung starten       
@@ -437,7 +474,7 @@ if (!commitSuccess) {
             </div>
         </div>
 
-        <!-- Slide 12: Field Index Warnung -->
+        <!-- Slide 13: Field Index Warnung -->
         <div class="slide">
             <h2>Wichtige Warnung: Field Index</h2>
             <div class="call-to-action">
@@ -460,7 +497,7 @@ layer.changeAttributeValue(fid, fieldIndex, value)
             </div>
         </div>
 
-        <!-- Slide 13: Übungen -->
+        <!-- Slide 14: Übungen -->
         <div class="slide">
             <h2>Übungen für die nächsten 60 Minuten</h2>
             <div class="call-to-action">
@@ -485,7 +522,7 @@ layer.changeAttributeValue(fid, fieldIndex, value)
     </div>
 
     <div class="slide-number">
-        <span id="current-slide">1</span> / 13
+        <span id="current-slide">1</span> / 14
     </div>
 
     <div class="controls">
