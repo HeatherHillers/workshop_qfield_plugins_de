@@ -258,25 +258,25 @@
         <h3>Entscheiden Sie, welche Interaktion Sie wollen</h3>
         <p><strong>"clicked"</strong>: Das Auslösen bei Einzelklick kann Konflikte verursachen, da die Feature-Drawer bei einem Einzelklick öffnet.</p>
         <ul>
-            <li>In QField für Windows wird der Einzelklick die Feature-Drawer blockieren und durch unser Plugin ersetzen.</li>
+            <li>In QField Desktop App wird der Einzelklick die Feature-Drawer blockieren und durch unser Plugin ersetzen.</li>
             <li>In QField für iOS wird, wenn Sie einen Einzelklick verwenden, die Attributtabelle über dem Plugin gerendert.</li>
         </ul>
 
         <p><strong>"doubleClicked"</strong>: Das Auslösen bei Doppelklick verhindert Konflikte. Wir können die Feature-Drawer bei einem Einzelklick öffnen lassen und mit einem Doppelklick in das Plugin eintreten.</p>
         <ul>
-            <li>In QField für Windows (im Moment) registriert die Doppelklick-Interaktion nicht.</li>
+            <li>QField Desktop App registriert die Doppelklick-Interaktion nicht.</li>
             <li>In iOS funktioniert das großartig.</li>
         </ul>
 
         <p><strong>"pressAndHold"</strong>: Dies wäre theoretisch auch ein schöner Modus zum Öffnen unseres Plugins, aber in der Praxis ist es eine schlechte Wahl</p>
         <ul>
             <li>In iOS blockiert das Kontextmenü, das sich beim Drücken öffnet, das Öffnen unseres Plugins bei dieser Interaktion.</li>
-            <li>In Windows registriert die Press-and-Hold-Interaktion nicht.</li>
+            <li>QField Desktop App registriert die Press-and-Hold-Interaktion nicht.</li>
         </ul>
 
         <p>Bedeutet das, dass der boolesche Rückgabewert nicht ganz wie angekündigt funktioniert? Vielleicht. Es gibt auch eine Priorität, die auf pointHandler-Callbacks gesetzt wird, die die Verarbeitung des booleschen Rückgabewerts aus dem Callback beeinflussen kann.</p>
 
-        <p>Um Konflikte mit QField zu vermeiden und sicherzustellen, dass unser Plugin in beiden Umgebungen funktioniert, verwenden Sie clicked, wenn wir in Windows sind, und doubleClicked, wenn wir in iOS sind.</p>
+        <p>Um Konflikte mit QField zu vermeiden und sicherzustellen, dass unser Plugin in beiden Umgebungen funktioniert, verwenden Sie für die Desktop App <strong>clicked</strong>, und <strong>doubleClicked</strong>, wenn wir in iOS sind.  Ich habe Android nicht getestet.</p>
 
         <h3>Vergessen Sie Ihr Return nicht</h3>
         <ul>

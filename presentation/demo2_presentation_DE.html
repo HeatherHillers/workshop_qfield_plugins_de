@@ -353,18 +353,19 @@ Item {
         <div class="slide">
             <h2>Point Handler interactionType</h2>
             <div class="code-block">
-var shouldHandle = (Qt.platform.os === "windows" && interactionType === "clicked") ||
-                    (Qt.platform.os !== "windows" && interactionType === "doubleClicked")
+      var isMobile = Qt.platform.os === "ios" || Qt.platform.os === "android"
+      var shouldHandle = (isMobile && interactionType === "doubleClicked") ||
+                          (!isMobile && interactionType === "clicked")      
 
             </div>
             <ul>
                 <li>"clicked":   
-                    <ul><li>Windows: Funktioniert </li>
+                    <ul><li>Windows und Ubuntu Desktop App: Funktioniert </li>
                         <li>iOS:     Feature-Drawer erscheint über Plugin </li>
                     </ul>
                 </li> 
                 <li>"doubleClicked":
-                    <ul><li>Windows: Ignoriert </li>
+                    <ul><li>Windows und Ubuntu Desktop App: Ignoriert </li>
                         <li>iOS:     Funktioniert</li>
                     </ul>
                 </li>
@@ -374,6 +375,9 @@ var shouldHandle = (Qt.platform.os === "windows" && interactionType === "clicked
                     </ul>
                 </li>
             </ul>
+            <p style="margin-top: 30px; font-size: 1.4em;">
+               Android nicht getestet (aber wahrscheinlich ähnlich wie iOS)
+            </p>
         </div>
 
         <!-- Slide 8: Interface Point Handler: point Coordinates -->

@@ -258,25 +258,25 @@
         <h3>Decide Which Interaction You Want</h3>
         <p><strong>"clicked"</strong>: Triggering on single click can cause conflicts, as the feature drawer opens on a single click.</p>
         <ul>
-            <li>In QField for Windows, the single click will block the feature drawer and replace it with our plugin.</li>
+            <li>In QField Desktop App, the single click will block the feature drawer and replace it with our plugin.</li>
             <li>In QField for iOS, if you use a single click, the attribute table will be rendered over the plugin.</li>
         </ul>
 
         <p><strong>"doubleClicked"</strong>: Triggering on double-click prevents conflicts. We can let the feature drawer open on a single click and enter the plugin with a double-click.</p>
         <ul>
-            <li>In QField for Windows (at the moment), the double-click interaction does not register.</li>
+            <li>In QField Desktop App, the double-click interaction does not register.</li>
             <li>In iOS, this works great.</li>
         </ul>
 
         <p><strong>"pressAndHold"</strong>: This would theoretically also be a nice mode for opening our plugin, but in practice it's a poor choice</p>
         <ul>
             <li>In iOS, the context menu that opens on press blocks the opening of our plugin with this interaction.</li>
-            <li>In Windows, the press-and-hold interaction does not register.</li>
+            <li>In QField Desktop App, the press-and-hold interaction does not register.</li>
         </ul>
 
         <p>Does this mean the boolean return value doesn't work quite as advertised? Perhaps. There is also a priority set on pointHandler callbacks that can affect the processing of the boolean return value from the callback.</p>
 
-        <p>To avoid conflicts with QField and ensure our plugin works in both environments, use clicked when we're on Windows, and doubleClicked when we're on iOS.</p>
+        <p>To avoid conflicts with QField and ensure our plugin works in both environments, use clicked when we're on Windows or Ubuntu, and doubleClicked when we're on iOS.  I did not test this on Android.</p>
 
         <h3>Don't Forget Your Return</h3>
         <ul>
